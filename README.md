@@ -5,5 +5,5 @@
 - Andres Alvarez
 - Aylwin Sim
 - Binay Dhawa
-- Sanee Reimo
+- Sanee Salim (101887181)
 - Quan Chong
