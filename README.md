@@ -1,9 +1,9 @@
 # SEPAB-34
-[Software Development Project -A]
+[ Software Development Project -A ]
 
 #### MEMBERS
-- Andres Alvarez
-- Aylwin Sim
-- Binay Dhawa
+- Andres Alvarez (101742154)
+- Aylwin Sim (100074144)
+- Binay Dhawa (101187399)
 - Sanee Salim (101887181)
-- Quan Chong
+- Quan Chong (100076483)
