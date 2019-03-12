@@ -7,3 +7,7 @@
 - Binay Dhawa (101187399)
 - Sanee Salim (101887181)
 - Quan Chong (100076483)
+
+##### SUPERVISOR
+Graham Farrell
+gfarrell@swin.edu.au
