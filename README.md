@@ -1,5 +1,6 @@
 # SEPAB-34
 [ Software Development Project -A ]
+[ Visualisation of urban mobility related wheelchair data ]
 
 #### MEMBERS
 - Andres Alvarez (101742154)
