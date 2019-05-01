@@ -1,4 +1,4 @@
- /* Always set the map height explicitly to define the size of the div
+      /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
     
       /* Optional: Makes the sample page fill the window. */
@@ -11,12 +11,31 @@
       }
       #map {
         height: 100%;
+        position: fixed;
+        z-index: 0;
     
       }
 
+      .nav{
+        background-color: none;
+      }
+
+      /*sidebar */
       #sidebar{
         background-color: rgb(167, 76, 76);
         z-index: 1;
-        width:250px;
+        width: 0px;
+        height:100%;
+        margin-bottom: -100%;
+        position: relative;
+        top:-100%;
        
       }
+
+      #homepage{
+        display: none;
+      }
+      
+     
+
+  
