@@ -15,20 +15,20 @@
 <!--Header -->
 <div id="header">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">SABAQ</a>
+    <a class="navbar-brand" href="prototype.html">SABAQ</a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="#">Map</a>
+          <a class="nav-link" onclick="homepage()">Map</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Data</a>
+          <a class="nav-link" onclick="data()">Data</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
+          <a class="nav-link" onclick="About()">About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Help</a>
+          <a class="nav-link" onclick="Help()">Help</a>
         </li>
       </ul>
     </div>
@@ -50,23 +50,46 @@
 
   <div class="float-right" id="sidebar">
     <div id="homepage">
-      <div class="d-flex justify-content-center">
-        There should be something
+      <div class="d-flex justify-content-center data_class">
+        <ul>
+          <!--This page will hold the data imported from the csv file
+              this there should be a recurring li functions in this segement -->
+          <li>Data file one</li>
+          <li>Data file two</li>
+
+        </ul>
       </div>
 
-      <!--A js to push width to 0 
-      A button to toggle width  
-      Data analytics tool
-       
-    -->
 
       <div id="data">
+        <!-- Could be useless according to quan-->
         <!--Import Data -->
         <h1></h1>
       </div>
+
+
+
+
     </div>
 
   </div>
+
+  <!--About File-->
+  <div id="About" class="modal">
+    <div id="about-content">
+        <span class="close" onclick="close_modal()">&times;</span>
+      Some text we need to sort it out first
+    </div>
+  </div>
+
+  <div id="Help" class="modal">
+    <div id="Help-content">
+        <span class="close" onclick="close_modal()">&times;</span>
+    Documentation of how it would work
+    </div>
+  </div>
+
+
 
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap"
