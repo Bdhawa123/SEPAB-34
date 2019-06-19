@@ -1,0 +1,16 @@
+two speed 
+gyro and ___
+increase colour spectrum 
+	Blue to red 
+	variation in speed 
+
+Customizable colour 
+
+-dash density
+	- white line when smooth
+	- gray as it gets rough 
+
+click and get information at the selected time 
+
+
+-- all informations at the same time
