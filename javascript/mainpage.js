@@ -7,6 +7,26 @@ var sidenav_button = false;
       });
     }
 
+function load_Data()
+{
+    alert("Load data is being called");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function()
+    {
+        if (this.readyState=4 && this.status == 200)
+        {
+            alert("This is inside if")
+            alert(this.responseText);
+        }
+        else
+        {
+            alert("This isn't working ");
+        }
+    };
+    xhttp.open("GET","newfile.txt",true);
+    xhttp.send();
+}
+
 
 function sidenav()
 {
@@ -32,6 +52,9 @@ function homepage()
         document.getElementById("homepage").style.display="block";
         document.getElementById("data").style.display="none";
     }
+    //see if we can load data
+    load_Data();
+
 }
 
 function data()
