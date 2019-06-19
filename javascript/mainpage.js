@@ -43,7 +43,7 @@ window.onload = function(){
             addMarker(latlng, name);
         }
 
-
+// ajax javascript
 function load_Data()
 {
     alert("Load data is being called");
@@ -104,7 +104,6 @@ function homepage()
         document.getElementById("data").style.display="none";
     }
     //see if we can load data
-    load_Data();
 
 }
 
