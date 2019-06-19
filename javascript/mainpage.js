@@ -23,7 +23,7 @@ function load_Data()
             alert("This isn't working ");
         }
     };
-    xhttp.open("GET","newfile.txt",true);
+    xhttp.open("GET","/docs/GPS_Data.csv",true);
     xhttp.send();
 }
 
