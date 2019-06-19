@@ -5,15 +5,19 @@
   <title>Simple Map</title>
   <meta name="viewport" content="initial-scale=1.0">
   <meta charset="utf-8">
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+  <!-- Bootstrap CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- TODO create local fallback -->
+  <!-- <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
   <script type="text/javascript" src="bootstrap/js/bootstrap.min.js" />
   <script type="text/javascript" src ="bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" src="javascript/mainpage.js"></script>
+  <script type="text/javascript" src="javascript/mainpage.js"></script> -->
+
+  <!-- CSS file -->
   <link rel="stylesheet" href="css/main.css" />
 </head>
 
 <body>
-
   <div id="header">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="prototype.html">SABAQ</a>
@@ -35,16 +39,14 @@
       </div>
 
       <button type="button" class="btn btn-primary -right" onclick="sidenav()">
-        Button
+        SideNav
       </button>
     </nav>
-
     <!--Need to replace button with some kind of glyphicon-->
   </div>
 
   <!-- Map -->
-  <div id="map">
-  </div>
+  <div id="map"></div>
 
   <div class="float-right" id="sidebar">
     <div id="homepage">
@@ -64,9 +66,7 @@
         <!--Import Data -->
         <h1></h1>
       </div>
-
     </div>
-
   </div>
 
   <!--About File-->
@@ -83,8 +83,16 @@
       Documentation of how it would work
     </div>
   </div>
+  
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper JS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap"
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap"
     async defer></script>
 </body>
 
