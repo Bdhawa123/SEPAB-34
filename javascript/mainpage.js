@@ -5,6 +5,10 @@ function initMap() {
     center: { lat: -37.819344, lng: 145.040506 },
     zoom: 16
   });
+
+
+
+
 }
 
 //Add marker function Google Maps
@@ -26,6 +30,17 @@ function drawPolyLine(wheelchairPath){
         strokeWeight: 10
     })
     path.setMap(map);
+
+    // on mouse over activates a function
+    
+    path.addListener('mouseover',function(args){
+        alert("This should do something");
+        
+        //returns the lat and lng of the current position of the polygon
+        console.log('latlng', args.latLng);
+        //need to compare the latlng to the database and generate which position the marker is currently at???
+
+    });
 }
 
 window.onload = function(){
@@ -40,29 +55,9 @@ window.onload = function(){
             latlng = new google.maps.LatLng(point.latitude, point.longitude);
             console.log(latlng)
             name = point.Name;
-            addMarker(latlng, name);
+            //addMarker(latlng, name);
         }
 
-// ajax javascript
-function load_Data()
-{
-    alert("Load data is being called");
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function()
-    {
-        if (this.readyState=4 && this.status == 200)
-        {
-            alert("This is inside if")
-            alert(this.responseText);
-        }
-        else
-        {
-            alert("This isn't working ");
-        }
-    };
-    xhttp.open("GET","/docs/GPS_Data.csv",true);
-    xhttp.send();
-}
 
 
         //Polylines from 50 data points
