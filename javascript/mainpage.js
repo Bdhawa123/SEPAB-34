@@ -1,27 +1,24 @@
 //Google Maps Init, centered at swinburne hawthorn
-var map; 
+var map;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: -37.819344, lng: 145.040506 },
-    zoom: 16
-  });
-
-
-
-
+        center: { lat: -37.819344, lng: 145.040506 },
+        zoom: 16,
+        mapTypeControl: false
+    });
 }
 
 //Add marker function Google Maps
-function addMarker(myLatLng, name){
+function addMarker(myLatLng, name) {
     marker = new google.maps.Marker({
         position: myLatLng,
-        map:map,
-        title:name
+        map: map,
+        title: name
     });
 }
 
 //Draw path function Google Maps
-function drawPolyLine(wheelchairPath){
+function drawPolyLine(wheelchairPath) {
     path = new google.maps.Polyline({
         path: wheelchairPath,
         geodesic: true,
@@ -32,10 +29,10 @@ function drawPolyLine(wheelchairPath){
     path.setMap(map);
 
     // on mouse over activates a function
-    
-    path.addListener('mouseover',function(args){
+
+    path.addListener('mouseover', function (args) {
         alert("This should do something");
-        
+
         //returns the lat and lng of the current position of the polygon
         console.log('latlng', args.latLng);
         //need to compare the latlng to the database and generate which position the marker is currently at???
@@ -43,14 +40,14 @@ function drawPolyLine(wheelchairPath){
     });
 }
 
-window.onload = function(){
+window.onload = function () {
     var csvData;
-    $.get("dataprototype/GPSData.csv", function(data){
+    $.get("dataprototype/GPSData.csv", function (data) {
         csvData = $.csv.toObjects(data);
         console.log(csvData);
 
         //50 Markers from data
-        for(i=0; i<50; i++){
+        for (i = 0; i < 50; i++) {
             var point = csvData[i];
             latlng = new google.maps.LatLng(point.latitude, point.longitude);
             console.log(latlng)
@@ -62,7 +59,7 @@ window.onload = function(){
 
         //Polylines from 50 data points
         var wheelchairPath = [];
-        for(i=0; i<50; i++){
+        for (i = 0; i < 50; i++) {
             var point = csvData[i];
             latlng = new google.maps.LatLng(point.latitude, point.longitude);
             wheelchairPath.push(latlng);
@@ -75,60 +72,55 @@ window.onload = function(){
 
 //navigation functions
 var sidenav_button = false;
-function sidenav()
-{
-    if (sidenav_button==true)
-    {
-        document.getElementById("sidebar").style.width="0";
-        document.getElementById("homepage").style.display="none";
+function sidenav() {
+    if (sidenav_button == true) {
+        document.getElementById("header").style.width = "100%";
+        document.getElementById("sidebar").style.width = "0";
+        document.getElementById("homepage").style.display = "none";
+        
         //should change css of the side nav, display 0 and add transition
-        sidenav_button=false;
+        sidenav_button = false;
     }
-    else{
-        document.getElementById("sidebar").style.width="300px";
-        document.getElementById("homepage").style.display="block";
-        sidenav_button= true;    
-    }  
-}
-
-function homepage()
-{
-    if (sidenav_button==true)
-    {
-        document.getElementById("homepage").style.display="block";
-        document.getElementById("data").style.display="none";
-    }
-    //see if we can load data
-
-}
-
-function data()
-{
-    if (sidenav_button==true)
-    {
-        document.getElementById("homepage").style.display="none";
-        document.getElementById("data").style.display="block";
+    else {
+        document.getElementById("header").style.width = "80%";
+        document.getElementById("sidebar").style.width = "300px";
+        document.getElementById("homepage").style.display = "block";
+        sidenav_button = true;
     }
 }
 
-function About()
-{
-    //alert("sdfsd");
-    document.getElementById("About").style.display="block";
-    //document.getElementsByClassName("")
+function homepage() {
+    if (sidenav_button == true) {
+        document.getElementById("homepage").style.display = "block";
+        document.getElementById("data").style.display = "none";
+    }
+
 }
 
-function Help()
-{
-    document.getElementById("Help").style.display="block";
+function data() {
+    if (sidenav_button == true) {
+        document.getElementById("homepage").style.display = "none";
+        document.getElementById("data").style.display = "block";
+    }
 }
 
-function close_modal()
-{  
-    document.getElementById("About").style.display="none";
-    document.getElementById("Help").style.display="none";
+function About() {
+    document.getElementById("About").style.display = "block";
+}
 
+function Help() {
+    document.getElementById("Help").style.display = "block";
+}
+
+function Imp_file(){
     
+    document.getElementById("Import").style.display ="block"
+}
+
+function close_modal() {
+    document.getElementById("About").style.display = "none";
+    document.getElementById("Help").style.display = "none";
+    document.getElementById("Import").style.display = "none";
 }
 
 

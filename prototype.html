@@ -22,9 +22,12 @@
   <link rel="stylesheet" href="css/main.css" />
 </head>
 
-<body>
+<body >
+  <!-- Map -->  
+  <div id="map"></div>
+
   <div id="header">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-transparent">
       <a class="navbar-brand" href="prototype.html">SABAQ</a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
@@ -50,18 +53,28 @@
     <!--Need to replace button with some kind of glyphicon-->
   </div>
 
-  <!-- Map -->
-  <div id="map"></div>
-
+  
+  
   <div class="float-right" id="sidebar">
     <div id="homepage">
-      <div class="d-flex justify-content-center data_class">
-        <ul>
+      <div align="center">
+        
+        <!-- Drag and Drop-->
+        <div id = "dragndrop">
+          <h2>Import Data</h2>
+          <button type ="button" class= "btn btn-primary" onclick="Imp_file()"> Import Data </button><br>
+          <h6><strong>button available only upon user login</strong></div><h6>
+        </div>
+
+
+        <ul align ="center">
           <!--This page will hold the data imported from the csv file
-              this there should be a recurring li functions in this segement -->
+              this there should be a recurring li functions in this segement -->        
           <li>Data file one</li>
           <li>Data file two</li>
-
+          <li>sdlfka</li>
+          <li>dfasdf</li>
+          
         </ul>
       </div>
 
@@ -69,7 +82,10 @@
       <div id="data">
         <!-- Could be useless according to quan-->
         <!--Import Data -->
-        <h1></h1>
+        <h1>Li</h1>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="100" value="50">
+        </div>
       </div>
     </div>
   </div>
@@ -88,6 +104,14 @@
       Documentation of how it would work
     </div>
   </div>
+
+  <div id="Import" class="modal">
+    <div id="Import-content">
+        <span class="close" onclick="close_modal()">&times;</span>
+         Container to upload a csv file
+    </div>
+  </div>
+  
   
   <!-- jQuery CDN -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
