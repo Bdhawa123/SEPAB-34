@@ -6,7 +6,8 @@
   <meta name="viewport" content="initial-scale=1.0">
   <meta charset="utf-8">
   <!-- Bootstrap CDN -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <!-- TODO create local fallback -->
   <!-- <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
   <script type="text/javascript" src="bootstrap/js/bootstrap.min.js" />
@@ -22,8 +23,8 @@
   <link rel="stylesheet" href="css/main.css" />
 </head>
 
-<body >
-  <!-- Map -->  
+<body>
+  <!-- Map -->
   <div id="map"></div>
 
   <div id="header">
@@ -53,41 +54,43 @@
     <!--Need to replace button with some kind of glyphicon-->
   </div>
 
-  
-  
+
+
   <div class="float-right" id="sidebar">
     <div id="homepage">
       <div align="center">
-        
+
         <!-- Drag and Drop-->
-        <div id = "dragndrop">
+        <div id="dragndrop">
           <h2>Import Data</h2>
-          <button type ="button" class= "btn btn-primary" onclick="Imp_file()"> Import Data </button><br>
-          <h6><strong>button available only upon user login</strong></div><h6>
+          <button type="button" class="btn btn-primary" onclick="Import()"> Import Data </button><br>
+          <h6><strong>button available only upon user login</strong>
         </div>
-
-
-        <ul align ="center">
-          <!--This page will hold the data imported from the csv file
-              this there should be a recurring li functions in this segement -->        
-          <li>Data file one</li>
-          <li>Data file two</li>
-          <li>sdlfka</li>
-          <li>dfasdf</li>
-          
-        </ul>
+        <h6>
       </div>
 
 
-      <div id="data">
-        <!-- Could be useless according to quan-->
-        <!--Import Data -->
-        <h1>Li</h1>
-        <div class="slidecontainer">
-            <input type="range" min="1" max="100" value="50">
-        </div>
+      <ul align="center">
+        <!--This page will hold the data imported from the csv file
+              this there should be a recurring li functions in this segement -->
+        <li>Data file one</li>
+        <li>Data file two</li>
+        <li>sdlfka</li>
+        <li>dfasdf</li>
+
+      </ul>
+    </div>
+
+
+    <div id="data">
+      <!-- Could be useless according to quan-->
+      <!--Import Data -->
+      <h1>Li</h1>
+      <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50">
       </div>
     </div>
+  </div>
   </div>
 
   <!--About File-->
@@ -106,26 +109,38 @@
   </div>
 
   <div id="Import" class="modal">
-    <div id="Import-content">
-        <span class="close" onclick="close_modal()">&times;</span>
-         Container to upload a csv file
+    <div id="Import-content" align="center">
+      <span class="close" onclick="close_modal()">&times;</span>
+      
+      <div id ="drop_zone" ondrop ="dropHandler(event)" ondragover="dragOverHandler(event)"> 
+        <p>Drag one or more files to this drop zone</p>
+      </div>
+
+
     </div>
   </div>
-  
-  
+
+
+  <!-- scripts-->
+  <div>
   <!-- jQuery CDN -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <!-- Popper JS CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
   <!-- Bootstrap JS CDN -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
   <!-- jQuery CSV JS-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.3/jquery.csv.min.js"></script>
 
   <!-- Google Maps API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap"
-  async defer></script>
+    async defer></script>
+  </div>
 </body>
 
 </html>

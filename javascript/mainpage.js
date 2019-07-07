@@ -112,10 +112,65 @@ function Help() {
     document.getElementById("Help").style.display = "block";
 }
 
-function Imp_file(){
-    
-    document.getElementById("Import").style.display ="block"
+function Import()
+{
+    document.getElementById("Import").style.display ="block";
 }
+
+
+
+function tryout()
+{
+    fetch('newfile.txt')
+    .then(
+    function(response) {
+      if (response.status !== 200) {
+        console.log('Looks like there was a problem. Status Code: ' +
+          response.status);
+        return;
+      }
+      return response.text();
+    })
+    .then(function(text){
+        console.log(text)
+    })
+  .catch(function(err) {
+    console.log('Fetch Error :-S', err);
+  });
+
+}
+
+function dropHandler(ev){
+    
+    console.log("File Dropped");
+    ev.preventDefault();
+    ev.dataTransfer.dropEffect ="move";
+
+    if (ev.dataTransfer.items) {
+        
+        for (var i = 0; i < ev.dataTransfer.items.length; i++) 
+        {
+          if (ev.dataTransfer.items[i].kind === 'file') {
+            var file = ev.dataTransfer.items[i].getAsFile();
+            console.log('... file[' + i + '].name = ' + file.name);
+            var reader = new FileReader();
+            reader.onload =(evt) => {console.log(evt.target.result)}
+            reader.readAsText(file);
+          }
+        }
+      } else {
+        
+        for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+          console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
+        }
+      }
+}
+
+
+var dragOverHandler=(ev) => { 
+    ev.preventDefault();
+    
+};
 
 function close_modal() {
     document.getElementById("About").style.display = "none";
