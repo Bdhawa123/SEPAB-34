@@ -111,6 +111,15 @@
         border: 1px solid #888;
         width: 60%;
       }
+      #drag{
+        font-weight: bold;
+        border-style:outset; 
+        border-width: 0px 0px 2px 0px;
+        border-color:#D8CACA;
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+        
+      }
 
       .close
       {
@@ -119,9 +128,22 @@
     
       #drop_zone
       {
-        border: 5px solid blue;
-        width:200px;
+        border: 3px dotted #D8CACA;
         height:100px;
+        position: relative;
+      }
+
+      #drop_content{
+        position: relative;
+        float: left;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+       
+      }
+
+      input[type='file'] {
+        color: transparent;
       }
 
 

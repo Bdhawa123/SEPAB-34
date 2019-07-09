@@ -31,10 +31,10 @@ function drawPolyLine(wheelchairPath) {
     // on mouse over activates a function
 
     path.addListener('mouseover', function (args) {
-        alert("This should do something");
 
         //returns the lat and lng of the current position of the polygon
-        console.log('latlng', args.latLng);
+        console.log('latlng', args.latLng.lat());
+        addMarker(args.latLng,"points");
         //need to compare the latlng to the database and generate which position the marker is currently at???
 
     });
@@ -152,6 +152,15 @@ function dropHandler(ev){
         {
           if (ev.dataTransfer.items[i].kind === 'file') {
             var file = ev.dataTransfer.items[i].getAsFile();
+            //validation
+            //send it to some file process
+                    //file side 
+                        //validate
+                        //upload to database
+                        //send response 
+            //get response
+            // show user
+
             console.log('... file[' + i + '].name = ' + file.name);
             var reader = new FileReader();
             reader.onload =(evt) => {console.log(evt.target.result)}
