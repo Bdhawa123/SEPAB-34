@@ -130,6 +130,9 @@ function Import()
     document.getElementById("Import").style.display ="block";
 }
 
+//function for login form 
+var login_modal = () =>{document.getElementById("Login").style.display ="block"};
+
 
 
 function tryout()
@@ -198,6 +201,7 @@ function close_modal() {
     document.getElementById("About").style.display = "none";
     document.getElementById("Help").style.display = "none";
     document.getElementById("Import").style.display = "none";
+    document.getElementById("Login").style.display ="none";
 }
 
 

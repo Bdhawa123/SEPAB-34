@@ -38,6 +38,10 @@
         color:black;
       }
 
+      #login_btn{
+        margin-right:5px;
+      }
+
       /*sidebar */
       #sidebar{
         background-color:white;
@@ -111,6 +115,22 @@
         border: 1px solid #888;
         width: 60%;
       }
+
+      #Login-content{
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        /*border: 1px solid #888;*/
+        width: 30%;
+        margin-top:5%
+      }
+
+      #login_form{
+        padding-top:8%;
+        border:1px solid #888;
+      }
+
+
       #drag{
         font-weight: bold;
         border-style:outset; 
@@ -146,9 +166,6 @@
         color: transparent;
       }
 
-      div img{
-        display:block;
-      }
-
+     
 
   
