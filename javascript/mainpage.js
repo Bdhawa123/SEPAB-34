@@ -17,6 +17,7 @@ function addMarker(myLatLng, name) {
     });
 }
 
+
 //Draw path function Google Maps
 function drawPolyLine(wheelchairPath) {
     path = new google.maps.Polyline({
@@ -35,10 +36,22 @@ function drawPolyLine(wheelchairPath) {
         //returns the lat and lng of the current position of the polygon
         console.log('latlng', args.latLng.lat());
         addMarker(args.latLng,"points");
+        
         //need to compare the latlng to the database and generate which position the marker is currently at???
 
     });
+
+    path.addListener('mouseout', function (args) {
+
+        //returns the lat and lng of the current position of the polygon
+        marker.setMap(null);
+        //need to compare the latlng to the database and generate which position the marker is currently at???
+
+    });
+    
 }
+
+   
 
 window.onload = function () {
     var csvData;
