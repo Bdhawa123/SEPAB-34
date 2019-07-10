@@ -7,6 +7,7 @@
   <meta charset="utf-8">
   <!-- Bootstrap CDN -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <!-- TODO create local fallback -->
   <!-- <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
   <script type="text/javascript" src="bootstrap/js/bootstrap.min.js" />
@@ -60,6 +61,14 @@
 
         </ul>
       </div>
+      <div class="slidecontainer">
+
+      <p>
+        <label for="datapoint">Data range:</label>
+        <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
+      </p>
+        
+      <div id="slider-range"></div>
 
 
       <div id="data">
@@ -98,6 +107,9 @@
   <!-- Google Maps API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap"
   async defer></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
 </body>
 
 </html>
