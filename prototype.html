@@ -8,6 +8,7 @@
   <!-- Bootstrap CDN -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- TODO create local fallback -->
   <!-- <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
   <script type="text/javascript" src="bootstrap/js/bootstrap.min.js" />
@@ -15,13 +16,20 @@
 
   <!-- Main JS file -->
   <script type="text/javascript" src="javascript/mainpage.js"></script>
+
+
+  <!-- D3 JS library -->
+  <script src="https://d3js.org/d3.v4.min.js"></script>
   <!-- CSS file -->
   <link rel="stylesheet" href="css/main.css" />
 </head>
 
 <body>
+  <!-- Map -->
+  <div id="map"></div>
+
   <div id="header">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-transparent">
       <a class="navbar-brand" href="prototype.html">SABAQ</a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
@@ -39,27 +47,26 @@
           </li>
         </ul>
       </div>
-
-      <button type="button" class="btn btn-primary -right" onclick="sidenav()">
-        SideNav
-      </button>
+      <button class="btn btn-primary" id ="login_btn" onclick="login_modal()">Login</button>
+      <button class="btn btn-primary" onclick="sidenav()"><i class="fa fa-bars" ></i></button>
+     
     </nav>
     <!--Need to replace button with some kind of glyphicon-->
   </div>
 
-  <!-- Map -->
-  <div id="map"></div>
+
 
   <div class="float-right" id="sidebar">
     <div id="homepage">
-      <div class="d-flex justify-content-center data_class">
-        <ul>
-          <!--This page will hold the data imported from the csv file
-              this there should be a recurring li functions in this segement -->
-          <li>Data file one</li>
-          <li>Data file two</li>
+      <div align="center">
 
-        </ul>
+        <!-- Drag and Drop-->
+        <div id="dragndrop">
+          <h2>Import Data</h2>
+          <button type="button" class="btn btn-primary" onclick="Import()"> Import Data </button><br>
+          <h6><strong>button available only upon user login</strong>
+        </div>
+        <h6>
       </div>
       <div class="slidecontainer">
 
@@ -71,12 +78,27 @@
       <div id="slider-range"></div>
 
 
-      <div id="data">
-        <!-- Could be useless according to quan-->
-        <!--Import Data -->
-        <h1></h1>
+      <ul align="center">
+        <!--This page will hold the data imported from the csv file
+              this there should be a recurring li functions in this segement -->
+        <li>Data file one</li>
+        <li>Data file two</li>
+        <li>sdlfka</li>
+        <li>dfasdf</li>
+
+      </ul>
+    </div>
+
+
+    <div id="data">
+      <!-- Could be useless according to quan-->
+      <!--Import Data -->
+      <h1>Li</h1>
+      <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50">
       </div>
     </div>
+  </div>
   </div>
 
   <!--About File-->
@@ -93,14 +115,60 @@
       Documentation of how it would work
     </div>
   </div>
+
+  <div id="Import" class="modal">
+    <div id="Import-content" align="center">
+      <span class="close" onclick="close_modal()">&times;</span>
+      <div id ="drag" align="center">Drag and Drop .csv here <br><input type="file" multiple></div> 
+      <div id ="drop_zone" ondrop ="dropHandler(event)" ondragover="dragOverHandler(event)"> 
+        <div id = "drop_content">
+          Drag one or more files to this drop zone
+        </div>
+      </div>
+  </div>
+  </div>
+
+  <div id ="Login" class="modal">
+    <div id= "Login-content" align= "center">
+      <span class="close" onclick="close_modal()">&times;</span>
+      <!--Should hold a form-->
+       <form id="login_form" class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-2">UserName</label>
+            <div class="col-sm-10">
+              <input type="text" name="username" class="form-control"/>
+            </div>
+          </div>
+      
+          <div class="form-group">
+            <label class="control-label col-sm-2">Password</label>
+            <div class="col-sm-10">
+              <input type="password" name="lastname" class="form-control"/>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+       </form>
+    </div>
+  </div>
+
   
+  </div>
+
+
+  <!-- scripts-->
+  <div>
   <!-- jQuery CDN -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <!-- Popper JS CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
   <!-- Bootstrap JS CDN -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
   <!-- jQuery CSV JS-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.3/jquery.csv.min.js"></script>
 
