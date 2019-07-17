@@ -102,7 +102,31 @@ function addMarker(myLatLng, name) {
 
 function removeSpeedPaths(){
     for(i=0;i<paths.length;i++){
-        paths[i].setMap(null)
+        paths[i].setVisible(false)
+    }
+}
+
+
+function drawSpeedPath_2(start, end, csvData){
+    var startpoint = parseInt(start);
+    var endpoint = parseInt(end);
+
+    for(i=startpoint;i<endpoint;i++){
+        var point = new google.maps.LatLng(csvData[i].latitude, csvData[i].longitude);
+        var point2 = new google.maps.LatLng(csvData[i+1].latitude, csvData[i+1].longitude);
+
+        var speed = distance(point.lat(), point.lng(), point2.lat(), point.lng(), "K")/(1/600);
+        // console.log(speed)
+        
+        path = new google.maps.Polyline({
+            path: [point, point2],
+            geodesic: true,
+            strokeColor: 'black',
+            strokeOpacity: 1,
+            strokeWeight: 0,
+            map:map
+        })
+        paths.push(path);
     }
 }
 
@@ -127,9 +151,8 @@ function drawSpeedPath(start, end, csvData){
         })
         paths.push(path);
     }
-
-
 }
+
 
 function getColorForSpeed(speed){
     if(speed<10)
@@ -195,9 +218,9 @@ window.onload = function(){
                 document.getElementById("datapoint").innerHTML = "Point: " + (ui.values[0]+1) + " - Point: " + (ui.values[1]+1)
 
                 //delete speed paths
-                removeSpeedPaths()
+                removeSpeedPaths();
                 //draw speed paths
-                drawSpeedPath(ui.values[0], ui.values[1], csvData)
+                drawSpeedPath(ui.values[0], ui.values[1], csvData);
 
             }
         });
@@ -282,6 +305,13 @@ function tryout()
 
 }
 
+
+//global variable for a list of file
+file =[]
+/*
+create a global file array to hold the list of files
+on submit post these files
+*/
 function dropHandler(ev){
     
     console.log("File Dropped");
@@ -293,7 +323,7 @@ function dropHandler(ev){
         for (var i = 0; i < ev.dataTransfer.items.length; i++) 
         {
           if (ev.dataTransfer.items[i].kind === 'file') {
-            var file = ev.dataTransfer.items[i].getAsFile();
+            file.push(ev.dataTransfer.items[i].getAsFile());
             //validation
             //send it to some file process
                     //file side 
@@ -302,11 +332,8 @@ function dropHandler(ev){
                         //send response 
             //get response
             // show user
-
-            console.log('... file[' + i + '].name = ' + file.name);
-            var reader = new FileReader();
-            reader.onload =(evt) => {console.log(evt.target.result)}
-            reader.readAsText(file);
+            
+        
           }
         }
       } else {
@@ -316,6 +343,42 @@ function dropHandler(ev){
         }
       }
 }
+
+
+
+let submit_file =(ev)=> {
+    ev.preventDefault();
+    alert("adf");
+    console.log(file.length);
+    console.log(file[0].name);
+    //console.log('... file[0].name = ' + file.name);
+    var reader = new FileReader();
+    reader.onload =(evt) => {console.log("alsdfjlad"+evt.target.result)}
+    reader.readAsText(file[0]);
+    //convert file objects into json objects
+    let fileObject =[];
+    for(var i =0; i<file.length;i++)
+    {   
+        //convert into json object to read through -- could be placed where file is read  
+        let newfile = {
+            'lastModified'     : file[i].lastModified,
+            'lastModifiedDate' : file[i].lastModifiedDate,
+            'name'             : file[i].name,
+            'size'             : file[i].size,
+            'type'             : file[i].type 
+         };
+         fileObject.push(JSON.stringify(newfile))
+    };
+    console.log(fileObject);
+
+    
+    $.post("test.py",function(data,status)
+    {
+        alert("This just got posted");
+    });   
+}
+
+
 
 
 var dragOverHandler=(ev) => { 
