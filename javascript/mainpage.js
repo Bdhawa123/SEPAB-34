@@ -169,13 +169,15 @@ function distance(lat1, lon1, lat2, lon2, unit) {
     }
 }
 
+
+
 window.onload = function(){
     var csvData;
     $.get("dataprototype/GPSData.csv", function (data) {
         csvData = $.csv.toObjects(data);
         console.log(csvData);
         var min = 0;
-        var max = 300;
+        var max = 400;
 
         //50 Markers from data
         // drawMarkers(min, max, csvData);
@@ -185,6 +187,7 @@ window.onload = function(){
        
    
         //slider function
+        var sliderHandlePreviousLocations = [-1, -1];
         $("#slider-range").slider({
             range: true,
             min: min,
@@ -194,10 +197,37 @@ window.onload = function(){
                 // $("#datapoint").val( "Point: " + (ui.values[0]+1) + " - Point: " + (ui.values[1]+1) );
                 document.getElementById("datapoint").innerHTML = "Point: " + (ui.values[0]+1) + " - Point: " + (ui.values[1]+1)
 
-                //delete speed paths
-                removeSpeedPaths()
-                //draw speed paths
-                drawSpeedPath(ui.values[0], ui.values[1], csvData)
+                //old code
+                // //delete speed paths
+                // removeSpeedPaths()
+                // //draw speed paths
+                // drawSpeedPath(ui.values[0], ui.values[1], csvData)
+
+                //new code
+                //check if handle has been moved before
+                if(sliderHandlePreviousLocations[0] > -1 || sliderHandlePreviousLocations[1] > -1){
+                    //check if handle is moved, check if handle position is not on min value
+                    if(sliderHandlePreviousLocations[0] != ui.values[0] && ui.values[0] != min){
+                        for(i=min;i<ui.values[0];i++){
+                            //hide path
+                            paths[i].setMap(null);
+                        }
+                    }
+                    //check if handle is moved, check if handle position is not on max value
+                    else if(sliderHandlePreviousLocations[1] != ui.values[1] && ui.values[1] != max-1){
+                        for(i=max-1;i>ui.values[1];i--){
+                            paths[i].setMap(null);
+                        }
+                    }
+                }
+                //assign handle values to array, to record handle position
+                sliderHandlePreviousLocations[0] = ui.values[0];
+                sliderHandlePreviousLocations[1] = ui.values[1];
+
+                //Show paths that are between the 2 handle positions
+                for(i=ui.values[0];i<ui.values[1]+1;i++){
+                    paths[i].setMap(map)
+                }
 
             }
         });
