@@ -198,7 +198,7 @@ window.onload = function(){
         csvData = $.csv.toObjects(data);
         console.log(csvData);
         var min = 0;
-        var max = 300;
+        var max = 50;
 
         //50 Markers from data
         // drawMarkers(min, max, csvData);
@@ -308,6 +308,8 @@ function tryout()
 
 //global variable for a list of file
 file =[]
+jsonfile =[]
+
 /*
 create a global file array to hold the list of files
 on submit post these files
@@ -348,35 +350,61 @@ function dropHandler(ev){
 
 let submit_file =(ev)=> {
     ev.preventDefault();
-    alert("adf");
-    console.log(file.length);
-    console.log(file[0].name);
-    //console.log('... file[0].name = ' + file.name);
-    var reader = new FileReader();
-    reader.onload =(evt) => {console.log("alsdfjlad"+evt.target.result)}
-    reader.readAsText(file[0]);
-    //convert file objects into json objects
-    let fileObject =[];
-    for(var i =0; i<file.length;i++)
-    {   
-        //convert into json object to read through -- could be placed where file is read  
-        let newfile = {
-            'lastModified'     : file[i].lastModified,
-            'lastModifiedDate' : file[i].lastModifiedDate,
-            'name'             : file[i].name,
-            'size'             : file[i].size,
-            'type'             : file[i].type 
-         };
-         fileObject.push(JSON.stringify(newfile))
-    };
-    console.log(fileObject);
-
     
-    $.post("test.py",function(data,status)
+    console.log("Length of the array "+ file.length);
+    const formData = new FormData();
+
+    //create a form data to send the array of files
+    for(let val=0;val<file.length;val++)
     {
-        alert("This just got posted");
-    });   
+        console.log(file[val].name);
+        formData.append('file'+val,file[val]);
+    }
+    
+    var reader = new FileReader();
+    reader.onload =(evt) =>{
+        console.log(evt.target.result);     
+    }
+   let logfile =reader.readAsText(file[0]);
+   //validation required
+
+
+    //post into the server
+    $.ajax(
+        {
+            url : "test.php",
+            type: "POST",
+            data : formData,
+            processData:false,
+            contentType:false,
+            success:function(data, textStatus, response)
+            {
+                alert("success in function call");
+                console.log(response)
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                alert("unsuccessful");
+            }
+        });
+
+    /*
+    $.post("test.php",formData,function(response)
+    {
+        var receivedFile = response
+        console.log(receivedFile)
+        alert("This just got posted");  
+    })
+    .done(function(){
+        alert("success"+fileObject);
+    })
+    .fail(function(){
+        alert("failed");
+    });  
+    */ 
 }
+//should http://fyngyrz.com/?p=2802//
+
 
 
 
