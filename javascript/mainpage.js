@@ -130,32 +130,56 @@ function drawSpeedPath_2(start, end, csvData){
     }
 }
 
+function max_min(startpoint, endpoint,csvData)
+{
+    let speed_array = [];
+    for(i=startpoint;i<endpoint;i++)
+    {
+        var point = new google.maps.LatLng(csvData[i].latitude, csvData[i].longitude);
+        var point2 = new google.maps.LatLng(csvData[i+1].latitude, csvData[i+1].longitude);
+        var speed = distance(point.lat(), point.lng(), point2.lat(), point.lng(), "K")/(1/600);
+        speed_array.push(speed);
+    }
+    return Math.max(...speed_array);
+    
+}
+
+
+
 function drawSpeedPath(start, end, csvData){
     var startpoint = parseInt(start)
     var endpoint = parseInt(end)
+    
+    //get max_speed
+    let max = max_min(startpoint, endpoint,csvData);
+    
+
 
     for(i=startpoint;i<endpoint;i++){
         var point = new google.maps.LatLng(csvData[i].latitude, csvData[i].longitude);
         var point2 = new google.maps.LatLng(csvData[i+1].latitude, csvData[i+1].longitude);
 
         var speed = distance(point.lat(), point.lng(), point2.lat(), point.lng(), "K")/(1/600);
-        // console.log(speed)
+      //  speed_array.push(speed);
+             
         
         path = new google.maps.Polyline({
             path: [point, point2],
             geodesic: true,
-            strokeColor: getColorForSpeed(speed),
+            strokeColor:getColorForSpeed(speed,max),
             strokeOpacity: 1.0,
             strokeWeight: 8,
             map:map
         })
         paths.push(path);
     }
+   // console.log("Max "+Math.max(...speed_array));
+   // console.log("Min "+Math.min(...speed_array));
 }
 
 
-function getColorForSpeed(speed){
-    if(speed<10)
+function getColorForSpeed(speed,max){
+    /*if(speed<10)
         return "purple";
     else if(speed<20)
         return "blue";
@@ -166,7 +190,17 @@ function getColorForSpeed(speed){
     else if(speed<50)
         return "orange"
     else
-        return "red"
+        return "red"*/
+    
+    let firs = 32/max;
+    let sec = 179/max;
+    let thir=  172/max;
+
+    let val1 = 222+firs*speed;
+    let val2 = 45+sec*speed;
+    let val3 = 38+thir*speed;
+    let return_val = "rgb("+val1+","+val2+","+val3+")";
+    return return_val;
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
@@ -350,14 +384,11 @@ function dropHandler(ev){
 
 let submit_file =(ev)=> {
     ev.preventDefault();
-    
-    console.log("Length of the array "+ file.length);
     const formData = new FormData();
 
     //create a form data to send the array of files
     for(let val=0;val<file.length;val++)
     {
-        console.log(file[val].name);
         formData.append('file'+val,file[val]);
     }
     
@@ -387,26 +418,7 @@ let submit_file =(ev)=> {
                 alert("unsuccessful");
             }
         });
-
-    /*
-    $.post("test.php",formData,function(response)
-    {
-        var receivedFile = response
-        console.log(receivedFile)
-        alert("This just got posted");  
-    })
-    .done(function(){
-        alert("success"+fileObject);
-    })
-    .fail(function(){
-        alert("failed");
-    });  
-    */ 
 }
-//should http://fyngyrz.com/?p=2802//
-
-
-
 
 
 var dragOverHandler=(ev) => { 

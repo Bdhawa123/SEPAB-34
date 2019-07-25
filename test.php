@@ -1,11 +1,4 @@
 <?php
-/* 
-    $myfile = fopen("newfile.txt","a+") or die("Unable to open file");
-    fwrite($myfile,"This may or maynot workout");
-
-
-    fclose($myfile);
-    */
 
     //validate file type
     function validate($filetype)
