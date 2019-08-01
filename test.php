@@ -1,5 +1,6 @@
 <?php
     require_once('filereadwrite.php');
+    require_once('server_script.php');
     //validate file type
         // main class
         // flow:
@@ -36,12 +37,7 @@
                 return false;
             }     
         }
-        
-        
-        
-        
-        
-        
+  
         for($val =0; $val<sizeof($_FILES); $val++)
         {
             //get file extension
@@ -60,12 +56,26 @@
         else
         {
             http_response_code(200);
-            echo "File types are valid";
+            echo "File types are valid\r\n";
+            
             //write files into the system
             $filereader = new filereadwrite;
+            $dbstp = new connection;
+            $dbstp->createtable("somename");
             
+            //write file into the location
             $filereader->writefiles();
-            $filereader->delete_deletefiles();
+            
+            //create table
+           
+
+
+            //write files into the database
+            
+            
+            
+            //delete files from the location
+            $filereader->deletefiles();
 
         }
 
