@@ -107,6 +107,7 @@ function removeSpeedPaths(){
 }
 
 
+
 function drawSpeedPath_2(start, end, csvData){
     var startpoint = parseInt(start);
     var endpoint = parseInt(end);
@@ -145,6 +146,14 @@ function max_min(startpoint, endpoint,csvData)
 }
 
 
+//might be useful to denote something else 
+//super impose on top of something
+var lineSymbol = {
+    path: 'M 1,0 0,0',
+    strokeOpacity: 1,
+    scale: 4
+  };
+
 
 function drawSpeedPath(start, end, csvData){
     var startpoint = parseInt(start)
@@ -168,7 +177,12 @@ function drawSpeedPath(start, end, csvData){
             geodesic: true,
             strokeColor:getColorForSpeed(speed,max),
             strokeOpacity: 1.0,
-            strokeWeight: 8,
+            icons: [{
+                icon: lineSymbol,
+                offset: '0',
+                repeat: '10px'
+              }],
+    
             map:map
         })
         paths.push(path);

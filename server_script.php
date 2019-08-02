@@ -65,9 +65,31 @@
 
         function insert($name,$lat,$long)
         {
+            
             echo "this function is being called";
+            $this->dbconnect->query("START TRANSACTION");
             $sql = "INSERT INTO somename(NAME,LONGITUDE,LATITUDE) 
                 VALUES('$name','$lat','$long')";
+             if($this->dbconnect->query($sql))
+             {
+                 echo "Data inserted\r\n";
+             }
+             else
+             {
+                 echo "Failed\r\nx";
+             }
+             $this->dbconnect->query("COMMIT");
+            
+            
+            //might be useful for speed entry multi-line entry
+             /*
+             $sql ="LOAD DATA LOCAL INFILE 'test/$filename' INTO TABLE somename
+             FIELDS TERMINATED BY ',' 
+             ENCLOSED BY '\"' 
+             LINES TERMINATED BY '\r\n'
+             IGNORE 1 LINES";
+             */
+
              if($this->dbconnect->query($sql))
              {
                  echo "Data inserted";

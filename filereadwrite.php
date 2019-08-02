@@ -27,15 +27,18 @@
         {
             
             $dirfiles = scandir('test');
+            print_r($dirfiles);
             for($var = 2; $var<sizeof($dirfiles);$var++)
             {
+
                 $f = "test/".$dirfiles[$var];
                 $filename = fopen($f,"r");
                 fgets($filename);
                 $array =[];
                 $conn = new connection;
-                
-                //$array = fgets($filename);
+                echo $filename;
+
+                $array = fgets($filename);
                 while(!feof($filename))
                 {
                     $newarray = explode(",",fgets($filename));
