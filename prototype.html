@@ -3,20 +3,18 @@
 
 <head>
   <title>Simple Map</title>
-  <meta name="viewport" content="initial-scale=1.0">
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!-- Bootstrap CDN -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
   <!-- TODO create local fallback -->
-  <!-- <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
-  <script type="text/javascript" src="bootstrap/js/bootstrap.min.js" />
-  <script type="text/javascript" src ="bootstrap/js/bootstrap.bundle.min.js"></script> -->
 
   <!-- Main JS file -->
   <script type="text/javascript" src="javascript/mainpage.js"></script>
-
 
   <!-- D3 JS library -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -25,9 +23,6 @@
 </head>
 
 <body>
-  <!-- Map -->
-  <div id="map"></div>
-
   <div id="header">
     <nav class="navbar navbar-expand-lg navbar-transparent">
       <a class="navbar-brand" href="prototype.html">SABAQ</a>
@@ -40,144 +35,163 @@
             <a class="nav-link" onclick="data()">Data</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" onclick="About()">About</a>
+            <a class="nav-link" data-toggle="modal" data-target="#about_modal">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" onclick="Help()">Help</a>
+            <a class="nav-link" data-toggle="modal" data-target="#help_modal">Help</a>
           </li>
         </ul>
       </div>
-      <button class="btn btn-primary" id ="login_btn" onclick="login_modal()">Login</button>
-      <button class="btn btn-primary" onclick="sidenav()"><i class="fa fa-bars" ></i></button>
-     
+      <div class="buttons">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#login_modal">Login</button>
+        <button class="btn btn-primary" onclick="sidenav()"><i class="fa fa-bars"></i></button>
+      </div>
     </nav>
     <!--Need to replace button with some kind of glyphicon-->
   </div>
 
 
-
-  <div class="float-right" id="sidebar">
-    <div id="homepage">
-      <div align="center">
-
-        <!-- Drag and Drop-->
-        <div id="dragndrop">
-          <h2>Import Data</h2>
-          <button type="button" class="btn btn-primary" onclick="Import()"> Import Data </button><br>
-          <h6><strong>button available only upon user login</strong>
+  <!-- Map -->
+  <div class="container-fluid overflow-hidden">
+    <div class="row">
+      <div class="col-10">
+        <div id="map"></div>
+        <div id="slider-range"></div>
+      </div>
+      <div class="col-2">
+        <div class="row">
+          <div id="dragndrop">
+            <h2>Import Data</h2>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
+            </button><br>
+            <h6><strong>button available only upon user login</strong></h6>
+          </div>
         </div>
-        <h6>
-      </div>
-      <div class="slidecontainer">
-
-      <p>
-        <label for="datapoint">Data range:</label>
-        <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
-      </p>
-        
-      <div id="slider-range"></div>
-
-
-      <ul align="center">
-        <!--This page will hold the data imported from the csv file
-              this there should be a recurring li functions in this segement -->
-        <li>Data file one</li>
-        <li>Data file two</li>
-        <li>sdlfka</li>
-        <li>dfasdf</li>
-
-      </ul>
-    </div>
-
-
-    <div id="data">
-      <!-- Could be useless according to quan-->
-      <!--Import Data -->
-      <h1>Li</h1>
-      <div class="slidecontainer">
-        <input type="range" min="1" max="100" value="50">
-      </div>
-    </div>
-  </div>
-  </div>
-
-  <!--About File-->
-  <div id="About" class="modal">
-    <div id="about-content">
-      <span class="close" onclick="close_modal()">&times;</span>
-      Some text we need to sort it out first
-    </div>
-  </div>
-
-  <div id="Help" class="modal">
-    <div id="Help-content">
-      <span class="close" onclick="close_modal()">&times;</span>
-      Documentation of how it would work
-    </div>
-  </div>
-
-  <div id="Import" class="modal">
-    <div id="Import-content" align="center">
-      <span class="close" onclick="close_modal()">&times;</span>
-      <div id ="drag" align="center">Drag and Drop .csv here <br><input type="file" multiple></div> 
-      <div id ="drop_zone" ondrop ="dropHandler(event)" ondragover="dragOverHandler(event)"> 
-        <div id = "drop_content">
-          Drag one or more files to this drop zone
+        <div class="row">
+          <div class="slider">
+            <p>
+              <label for="datapoint">Data range:</label>
+              <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
+            </p>
+          </div>
         </div>
       </div>
-  </div>
-  </div>
-
-  <div id ="Login" class="modal">
-    <div id= "Login-content" align= "center">
-      <span class="close" onclick="close_modal()">&times;</span>
-      <!--Should hold a form-->
-       <form id="login_form" class="form-horizontal">
-          <div class="form-group">
-            <label class="control-label col-sm-2">UserName</label>
-            <div class="col-sm-10">
-              <input type="text" name="username" class="form-control"/>
-            </div>
-          </div>
-      
-          <div class="form-group">
-            <label class="control-label col-sm-2">Password</label>
-            <div class="col-sm-10">
-              <input type="password" name="lastname" class="form-control"/>
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary">Submit</button>
-       </form>
     </div>
   </div>
 
-  
+  <!-- About modal -->
+  <div class="modal fade" id="about_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">About</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          About goes here
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- Help modal -->
+  <div class="modal fade" id="help_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Help</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Documentation of how it would work
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- scripts-->
-  <div>
-  <!-- jQuery CDN -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <!-- Popper JS CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
-  <!-- Bootstrap JS CDN -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+  <!-- Login modal -->
+  <div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="username" class="col-form-label">Username:</label>
+              <input type="text" class="form-control" id="username" />
+            </div>
+            <div class="form-group">
+              <label for="password" class="col-form-label">Password:</label>
+              <input type="text" class="form-control" id="password" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- jQuery CSV JS-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.3/jquery.csv.min.js"></script>
+  <!-- Import modal -->
+  <div class="modal fade" id="import_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Import Data</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="drag" align="center">
+            Drag and Drop .csv here <br>
+            <input type="file" multiple>
+          </div>
+          <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+            <div id="drop_content">
+              Drag one or more files to this drop zone
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <!-- Google Maps API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap"
-  async defer></script>
+    <!-- scripts-->
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- Popper JS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
 
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  
+    <!-- jQuery CSV JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.3/jquery.csv.min.js"></script>
+
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap"
+      async defer></script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 </body>
 
 </html>
