@@ -9,7 +9,7 @@ const paths = [];
  */
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -37.819344, lng: 145.040506},
+    center: { lat: -37.819344, lng: 145.040506 },
     zoom: 16,
     mapTypeControl: false,
   });
@@ -58,7 +58,7 @@ function drawSpeedPath(start, end, csvData) {
     path = new google.maps.Polyline({
       path: [point, point2],
       geodesic: true,
-      strokeColor: getColorForSpeed(speed),
+      strokeColor: color(speed),
       strokeOpacity: 1.0,
       strokeWeight: 8,
       map: map,
@@ -87,6 +87,10 @@ function getColorForSpeed(speed) {
     return 'red';
   }
 }
+
+let color = d3.scaleQuantize()
+    .domain([0, 100])
+    .range(['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']);
 
 /**
  * calculate distance between 2 coords
@@ -127,11 +131,12 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 
 window.onload = function() {
   let csvData;
-  $.get('dataprototype/GPSData.csv', function (data) {
+  $.get('dataprototype/GPSData.csv', function(data) {
     csvData = $.csv.toObjects(data);
     console.log(csvData);
     const min = 0;
-    const max = 300;
+    const max = 400;
+    console.log(color(30));
 
     // 50 Markers from data
     // drawMarkers(min, max, csvData);
@@ -140,7 +145,7 @@ window.onload = function() {
     drawSpeedPath(min, max, csvData);
 
     // slider function
-    const sliderHandlePreviousLocations = [-1, -1];
+    const sliderHandlePreviousLocations = [min, max - 1];
     $('#slider-range').slider({
       range: true,
       min: min,
@@ -149,17 +154,15 @@ window.onload = function() {
       slide: function(event, ui) {
         document.getElementById('datapoint').value = 'Point: ' + (ui.values[0] + 1) + ' - Point: ' + (ui.values[1] + 1);
 
-        // check if handle has been moved before
-        if (sliderHandlePreviousLocations[0] > -1 || sliderHandlePreviousLocations[1] > -1) {
-          if (sliderHandlePreviousLocations[0] != ui.values[0] && ui.values[0] != min) {
-            for (i = min; i < ui.values[0]; i++) {
-              // hide path
-              paths[i].setMap(null);
-            }
-          } else if (sliderHandlePreviousLocations[1] != ui.values[1] && ui.values[1] != max - 1) {
-            for (i = max - 1; i > ui.values[1]; i--) {
-              paths[i].setMap(null);
-            }
+        // check which handle has been moved
+        if (sliderHandlePreviousLocations[0] != ui.values[0]) {
+          for (i = sliderHandlePreviousLocations[0]; i < ui.values[0]; i++) {
+            // hide path
+            paths[i].setMap(null);
+          }
+        } else if (sliderHandlePreviousLocations[1] != ui.values[1]) {
+          for (i = sliderHandlePreviousLocations[1]; i > ui.values[1]; i--) {
+            paths[i].setMap(null);
           }
         }
         // assign handle values to array, to record handle position
@@ -186,8 +189,7 @@ function tryout() {
       .then(
           function(response) {
             if (response.status !== 200) {
-              console.log('Looks like there was a problem. Status Code: ' +
-              response.status);
+              console.log('Looks like there was a problem. Status Code: ' + response.status);
               return;
             }
             return response.text();
