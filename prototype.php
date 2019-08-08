@@ -1,3 +1,36 @@
+<?php
+$con = mysqli_connect("localhost","root","123456","wheelchair");
+
+session_start();
+
+if(isset($_POST['login'])) {
+
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+
+  $query = "SELECT * FROM admin WHERE username = '$username' AND password = '$password'";
+
+  $query_result = mysqli_query($con, $query);
+
+  if(mysqli_num_rows($query_result) == 1){
+
+    // login the user
+    session_start();
+
+    $_SESSION['id']=session_id();
+
+    $_SESSION['username'] = $username;
+
+    // echo "successfully login";
+  } else {
+    // echo "wrong username or password";
+  }
+
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -44,7 +77,21 @@
         </ul>
       </div>
       <div class="buttons">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#login_modal">Login</button>
+        <?php if(isset($_SESSION['id'])) {
+
+        
+        ?>
+        <a class="btn btn-primary" href="logout.php">Sign out</a>
+        <?php
+          } else {
+
+          
+        ?>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#login_modal">Sign in</button>
+        <?php 
+
+          }
+        ?>
         <button class="btn btn-primary" onclick="sidenav()"><i class="fa fa-bars"></i></button>
       </div>
     </nav>
@@ -60,6 +107,10 @@
         <div id="slider-range"></div>
       </div>
       <div class="col-2">
+        <?php if(isset($_SESSION['id'])) {
+
+        
+        ?>
         <div class="row">
           <div id="dragndrop">
             <h2>Import Data</h2>
@@ -76,6 +127,11 @@
             </p>
           </div>
         </div>
+        <?php 
+          }
+        ?>
+
+        
       </div>
     </div>
   </div>
@@ -128,21 +184,21 @@
           </button>
         </div>
         <div class="modal-body">
-          <form>
+          <form action="prototype.php" method="post">
             <div class="form-group">
               <label for="username" class="col-form-label">Username:</label>
-              <input type="text" class="form-control" id="username" />
+              <input type="text" name="username" class="form-control" id="username" />
             </div>
             <div class="form-group">
               <label for="password" class="col-form-label">Password:</label>
-              <input type="text" class="form-control" id="password" />
+              <input type="password" name="password" class="form-control" id="password" />
             </div>
-          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Login</button>
+          <input type="submit" name="login" class="btn btn-primary" value="Login"/>
         </div>
+          </form>
       </div>
     </div>
   </div>
