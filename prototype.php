@@ -215,15 +215,18 @@ if(isset($_POST['login'])) {
           </button>
         </div>
         <div class="modal-body">
-          <div id="drag" align="center">
-            Drag and Drop .csv here <br>
-            <input type="file" multiple>
-          </div>
-          <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
-            <div id="drop_content">
-              Drag one or more files to this drop zone
+          <form onsubmit="submit_file(event)">
+            <div id ="drag" align="center">Drag and Drop .csv here <br>
+              <input type="file" multiple name="button_input">
+            </div> 
+            <div id ="drop_zone" ondrop ="dropHandler(event)" ondragover="dragOverHandler(event)" name="drag_input"> 
+              <div id = "drop_content">
+                Drag one or more files to this drop zone
+              </div>
             </div>
-          </div>
+            <input type="submit" align="center" class="btn btn-primary" value="Submit">
+          </form>
+    
         </div>
       </div>
     </div>
