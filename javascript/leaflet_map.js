@@ -61,7 +61,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
   const radtheta = Math.PI * theta / 180;
 
   let dist = Math.sin(radlat1) * Math.sin(radlat2)
-            + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
   if (dist > 1) {
     dist = 1;
   }
@@ -82,13 +82,19 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 document.addEventListener('DOMContentLoaded', () => {
   const { L, d3 } = window; // Define L, d3
 
-  map = L.map('mapid').setView([-37.819344, 145.040506], 16);
+  map = L.map('mapid', {
+    zoomControl: false,
+  }).setView([-37.843527, 145.010365], 12);
   const tileurl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
   const attribution = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 
   L.tileLayer(tileurl, {
     attribution,
     maxZoom: 19,
+  }).addTo(map);
+
+  L.control.zoom({
+    position: 'topright',
   }).addTo(map);
 
   // d3 color function
@@ -99,30 +105,42 @@ document.addEventListener('DOMContentLoaded', () => {
   $.get('dataprototype/GPSData.csv', (data) => {
     csvData = $.csv.toObjects(data);
     min = 0;
-    max = 100;
+    max = 50;
 
-    for (let i = min; i < max; i += 1) {
-      const lat1 = parseFloat(csvData[i].latitude);
-      const lon1 = parseFloat(csvData[i].longitude);
-      const lat2 = parseFloat(csvData[i + 1].latitude);
-      const lon2 = parseFloat(csvData[i + 1].longitude);
+    const circle = L.circle([parseFloat(csvData[0].latitude), parseFloat(csvData[0].longitude)], {
+      radius: 800,
+    }).addTo(map);
 
-      const latlngs = [[lat1, lon1], [lat2, lon2]];
-      const speed = distance(
-        lat1, lon1,
-        lat2, lon2,
-        'K',
-      ) / (1 / 600);
+    circle.on('click', () => {
+      map.removeLayer(circle);
+      const latlngCircle = circle.getLatLng();
+      map.flyTo(latlngCircle, 16);
 
-      const polyline = L.polyline(latlngs, {
-        color: color(speed),
-        weight: 10,
-      }).addTo(map);
+      for (let i = min; i < max; i += 1) {
+        const lat1 = parseFloat(csvData[i].latitude);
+        const lon1 = parseFloat(csvData[i].longitude);
+        const lat2 = parseFloat(csvData[i + 1].latitude);
+        const lon2 = parseFloat(csvData[i + 1].longitude);
 
-      polylines.push(polyline);
-    }
+        const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
+        const speed = distance(
+          lat1, lon1,
+          lat2, lon2,
+          'K',
+        ) / (1 / 600);
 
-    // init slider
-    sliderInit();
+        const polyline = L.polyline(latlngs, {
+          color: color(speed),
+          weight: 8,
+          lineCap: 'square',
+          smoothFactor: 1,
+        }).addTo(map);
+
+        polylines.push(polyline);
+      }
+
+      // init slider
+      sliderInit();
+    });
   });
 });
