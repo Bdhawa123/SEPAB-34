@@ -20,9 +20,9 @@
   <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
     integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
     crossorigin=""></script>
-  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
-  <!-- TODO create local fallback -->
+  <!-- Leaflet routing machine -->
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
   <!-- D3 JS library -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -32,6 +32,8 @@
 
   <!-- Leaflet test js file -->
   <script type="text/javascript" src="javascript/leaflet_map.js"></script>
+
+  <!-- TODO create local fallback -->
 
   <!-- CSS file -->
   <link rel="stylesheet" href="css/main.css" />
@@ -62,7 +64,6 @@
         <button class="btn btn-primary" onclick="sidenav()"><i class="fa fa-bars"></i></button>
       </div>
     </nav>
-    <!--Need to replace button with some kind of glyphicon-->
   </div>
 
   <!-- Main container -->
@@ -77,29 +78,41 @@
 
         <!-- Slider -->
         <div class="position-fixed fixed-bottom" id="slider-range"></div>
-
       </div>
-      <div class="col-2">
+      <div class="col-2 p-0">
         <div class="row">
-          <div id="dragndrop">
-            <h2>Import Data</h2>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
-            </button><br>
-            <h6><strong>button available only upon user login</strong></h6>
+          <div class="col">
+            <div id="dragndrop">
+              <h2>Import Data</h2>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
+              </button><br>
+              <h6><strong>button available only upon user login</strong></h6>
+            </div>
           </div>
         </div>
+
         <div class="row">
-          <div class="slider">
-            <p>
-              <label for="datapoint">Data range:</label>
-              <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
-            </p>
+          <div class="col">
+            <div class="data-buttons"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="slider">
+              <p>
+                <label for="datapoint">Data range:</label>
+                <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+
+  <!-- Modals -->
   <!-- About modal -->
   <div class="modal fade" id="about_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
