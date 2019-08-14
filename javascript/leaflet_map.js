@@ -79,6 +79,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
   return dist;
 }
 
+// Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
   const { L, d3 } = window; // Define L, d3
 
@@ -102,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .domain([0, 100])
     .range(['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']);
 
+  // load data
   $.get('dataprototype/GPSData.csv', (data) => {
     csvData = $.csv.toObjects(data);
     min = 0;
@@ -111,36 +113,48 @@ document.addEventListener('DOMContentLoaded', () => {
       radius: 800,
     }).addTo(map);
 
+    const circleTooltipText = 'Swinburne';
+    circle.bindTooltip(circleTooltipText).openTooltip();
+
     circle.on('click', () => {
+      // hide circle
       map.removeLayer(circle);
+
+      // fly to circle's latlng
       const latlngCircle = circle.getLatLng();
       map.flyTo(latlngCircle, 16);
 
-      for (let i = min; i < max; i += 1) {
-        const lat1 = parseFloat(csvData[i].latitude);
-        const lon1 = parseFloat(csvData[i].longitude);
-        const lat2 = parseFloat(csvData[i + 1].latitude);
-        const lon2 = parseFloat(csvData[i + 1].longitude);
+      // code is fired after animation ends
+      map.once('moveend', () => {
+        for (let i = min; i < max; i += 1) {
+          const lat1 = parseFloat(csvData[i].latitude);
+          const lon1 = parseFloat(csvData[i].longitude);
+          const lat2 = parseFloat(csvData[i + 1].latitude);
+          const lon2 = parseFloat(csvData[i + 1].longitude);
 
-        const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
-        const speed = distance(
-          lat1, lon1,
-          lat2, lon2,
-          'K',
-        ) / (1 / 600);
+          const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
+          const speed = distance(
+            lat1, lon1,
+            lat2, lon2,
+            'K',
+          ) / (1 / 600);
 
-        const polyline = L.polyline(latlngs, {
-          color: color(speed),
-          weight: 8,
-          lineCap: 'square',
-          smoothFactor: 1,
-        }).addTo(map);
+          const polyline = L.polyline(latlngs, {
+            color: color(speed),
+            weight: 8,
+            lineCap: 'square',
+            smoothFactor: 1,
+          }).addTo(map);
 
-        polylines.push(polyline);
-      }
+          const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
+          polyline.bindTooltip(polylineTooltipText).closeTooltip();
 
-      // init slider
-      sliderInit();
+          polylines.push(polyline);
+
+          // init slider
+          sliderInit();
+        }
+      });
     });
   });
 });
