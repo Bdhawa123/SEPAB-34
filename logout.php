@@ -3,6 +3,6 @@ session_start();
 
 session_destroy();
 
-header("location:prototype.php");
+header("location:login.php");
 
 ?>

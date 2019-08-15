@@ -1,31 +1,7 @@
-<?php
-$con = mysqli_connect("localhost", "root", "123456", "wheelchair");
-
+<?php 
 session_start();
 
-if (isset($_POST['login'])) {
-
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-
-  $query = "SELECT * FROM admin WHERE username = '$username' AND password = '$password'";
-
-  $query_result = mysqli_query($con, $query);
-
-  if (mysqli_num_rows($query_result) == 1) {
-
-    // login the user
-    session_start();
-
-    $_SESSION['id'] = session_id();
-
-    $_SESSION['username'] = $username;
-
-    // echo "successfully login";
-  } else {
-    // echo "wrong username or password";
-  }
-}
+if (isset($_SESSION['id'])) {
 
 
 ?>
@@ -92,28 +68,16 @@ if (isset($_POST['login'])) {
 
       <div class="row">
         <div class="col-12">
-        <a data-toggle="modal" data-target="#import_modal">Import Data </a>
-        
+          <a data-toggle="modal" data-target="#import_modal">Import Data </a>
+
         </div>
 
       </div>
 
-      <?php if (isset($_SESSION['id'])) {
-
-
-        ?>
       <a class="btn btn-primary" class="btn btn-primary" href="logout.php">Sign out</a>
-      <?php
-      } else {
 
-
-        ?>
       <button class="btn btn-primary" data-toggle="modal" data-target="#login_modal">Sign in</button>
-      <?php
 
-      }
-      ?>
-      
 
       <!--
       <div id="dragndrop">
@@ -122,15 +86,14 @@ if (isset($_POST['login'])) {
         </button><br>
         <h6><strong>button available only upon user login</strong></h6>
       </div>
-
+      -->
       <div class="slider">
         <p>
           <label for="datapoint">Data range:</label>
           <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
         </p>
       </div>
-
-      -->
+      
     </div>
 
   </div>
@@ -248,3 +211,11 @@ if (isset($_POST['login'])) {
 </body>
 
 </html>
+
+<?php
+} else {
+
+  header("location:login.php");
+  
+}
+?>
