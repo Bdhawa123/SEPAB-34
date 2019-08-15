@@ -11,20 +11,36 @@
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <!-- TODO create local fallback -->
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <!-- Make sure you put this AFTER Leaflet's CSS -->
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+    crossorigin=""></script>
+
+  <!-- Leaflet routing machine -->
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
   <!-- D3 JS library -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
 
   <!-- Main JS file -->
-  <script type="text/javascript" src="javascript/mainpage.js"></script>
-  
+  <!-- <script type="text/javascript" src="javascript/mainpage.js"></script> -->
+
+  <!-- Leaflet test js file -->
+  <script type="text/javascript" src="javascript/leaflet_map.js"></script>
+
+  <!-- TODO create local fallback -->
+
   <!-- CSS file -->
   <link rel="stylesheet" href="css/main.css" />
 </head>
 
 <body>
-  <div id="header">
+  <div id="header" class="fixed-top font-weight-bold">
     <nav class="navbar navbar-expand-lg navbar-transparent">
       <a class="navbar-brand" href="prototype.html">SABAQ</a>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -48,38 +64,55 @@
         <button class="btn btn-primary" onclick="sidenav()"><i class="fa fa-bars"></i></button>
       </div>
     </nav>
-    <!--Need to replace button with some kind of glyphicon-->
   </div>
 
-
-  <!-- Map -->
+  <!-- Main container -->
   <div class="container-fluid overflow-hidden">
     <div class="row">
       <div class="col-10">
-        <div id="map"></div>
-        <div id="slider-range"></div>
+        <!-- Google Maps -->
+        <!-- <div id="map"></div> -->
+
+        <!-- Leaflet Maps -->
+        <div id="mapid"></div>
+
+        <!-- Slider -->
+        <div class="position-fixed fixed-bottom" id="slider-range"></div>
       </div>
-      <div class="col-2">
+      <div class="col-2 p-0">
         <div class="row">
-          <div id="dragndrop">
-            <h2>Import Data</h2>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
-            </button><br>
-            <h6><strong>button available only upon user login</strong></h6>
+          <div class="col">
+            <div id="dragndrop">
+              <h2>Import Data</h2>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
+              </button><br>
+              <h6><strong>button available only upon user login</strong></h6>
+            </div>
           </div>
         </div>
+
         <div class="row">
-          <div class="slider">
-            <p>
-              <label for="datapoint">Data range:</label>
-              <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
-            </p>
+          <div class="col">
+            <div class="data-buttons"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="slider">
+              <p>
+                <label for="datapoint">Data range:</label>
+                <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+
+  <!-- Modals -->
   <!-- About modal -->
   <div class="modal fade" id="about_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
