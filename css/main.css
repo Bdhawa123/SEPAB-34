@@ -28,6 +28,7 @@ a{
 }
 
 /* Drag and drop inside sidebar*/
+
 #dragndrop {
   margin-top: 5em;
   padding-top:3px;
@@ -42,7 +43,7 @@ a{
   margin-bottom: 5%;
 }
 
-
+/*
 #drag {
   font-weight: bold;
   border-style:outset; 
@@ -67,7 +68,51 @@ a{
   left: 50%;
   transform: translate(-50%, -50%);
   
+}*/
+
+#contain{
+  width: 1000px;
+  height:100%;
 }
+
+#dropzone {
+  border-style: dotted;
+  cursor:'pointer';
+  width: 790px;
+  height:250px;
+}
+
+.hd_inp{
+  display: none;
+}
+
+.innercontainer{
+  border-style: dotted;
+  cursor:'pointer';
+  width:45%;
+  height:100%;
+  
+}
+
+
+.fileimg{
+ 
+  width:20%;
+  height:60%;
+  text-align: center;
+  display: block;
+}
+
+#fileimg1{
+  content:url("../img/fileobj.png");
+  display: none;
+}
+
+#fileimg2{
+  content:url("../img/fileobj.png");
+  display: none;
+}
+
 
 input[type='file'] {
   color: transparent;
