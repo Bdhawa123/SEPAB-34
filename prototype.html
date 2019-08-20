@@ -170,34 +170,34 @@
             </div>
             <input type="submit" align="center" class="btn btn-primary" value="Submit">
           </form>-->
-            <div id ="contain">
+            <div>
               <form onsubmit="submit_file(event)"> 
                 <input type="file" class="hd_inp" id="fileA">           <!--File A should be the first gps co-ordinates-->
                 <input type="file" class="hd_inp" id ="fileB">          <!--File B should be the second data set of gyro and other variations-->
                 
                 
-                <div id ="dropzone" class="row container d-flex justify-content-center">                                    <!--Drop Zone to Each click will trigger file A or B respectively-->
-                    <div class="row">
-                      <div id="fileone" class="d-flex innercontainer col-sm-4"ondrop ="dropHandler(event,'fileimg1')" ondragover="dragOverHandler(event)">        <!--drop listener for fileone-->
-                         
+                <div id ="dropzone" class="row container d-flex justify-content-center">                                    <!--Drop Zone to Each click will trigger file A or B respectively-->      
+                      <div id="fileone" class="innercontainer col-sm-5 align-content-end" ondrop ="dropHandler(event,'fileimg1')" ondragover="dragOverHandler(event)">        <!--drop listener for fileone-->                            
                             <div id="fileimg1" class="fileimg row"> 
                             </div> 
-                            <div id="fileimg12" class="fileimg row"> 
-                          </div>
+                            <div id="fileimg12" class="fileimg"> 
+                                File A
+                          </div>                  
+                      </div>
+                      <div class="col-sm-2">
                         
-                                        
                       </div>
-                      <div class="col-sm-4">
+                
 
-                      </div>
-                      <div id ="filetwo" class="innercontainer col-sm-4" ondrop ="dropHandler(event,'fileimg2')" ondragover="dragOverHandler(event)">      <!--drop listener for filetwo-->
-                            This should contain some other file
+                      <div id ="filetwo" class="innercontainer col-sm-5  align-content-end" ondrop ="dropHandler(event,'fileimg2')" ondragover="dragOverHandler(event)">      <!--drop listener for filetwo-->
+                         
                           <div id="fileimg2" class="fileimg">
                               </div>
                           <div id="fileimg22" class="fileimg"> 
+                              File B
                           </div> 
                       </div>
-                  </div>   
+                  
                 </div>
 
                 <input type="submit" align="center" class="btn btn-primary align-items-center" value="Submit">

@@ -69,17 +69,26 @@ a{
   transform: translate(-50%, -50%);
   
 }*/
-
+/*
 #contain{
-  width: 1000px;
+  width: 700px;
   height:100%;
+}*/
+
+.container{
+  width:100%;
+  
 }
 
 #dropzone {
-  border-style: dotted;
+  
   cursor:'pointer';
-  width: 790px;
   height:250px;
+  padding-top: 3%;
+  padding-right: 5%;
+  padding-bottom: 3%;
+  padding-left: 5%;
+  align-content: center;
 }
 
 .hd_inp{
@@ -91,16 +100,17 @@ a{
   cursor:'pointer';
   width:45%;
   height:100%;
+  align-content: center;
   
 }
 
 
 .fileimg{
  
-  width:20%;
-  height:60%;
-  text-align: center;
+  width:100%;
+  height:80%;
   display: block;
+  text-align: center;
 }
 
 #fileimg1{

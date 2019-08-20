@@ -151,7 +151,7 @@ window.onload = function() {
  });
 
  inpElementB.addEventListener('change',function(){
-     showfiles("fileimg1",inpElementB.files[0].name,inpElementB.files[0]);
+     showfiles("fileimg2",inpElementB.files[0].name,inpElementB.files[0]);
  });
 
     //First file hidden input connected to the div area
@@ -219,28 +219,6 @@ window.onload = function() {
   });
 };
 
-/**
- * tryout
-*/
-function tryout() {
-  fetch('newfile.txt')
-      .then(
-          function(response) {
-            if (response.status !== 200) {
-              console.log('Looks like there was a problem. Status Code: ' + response.status);
-              return;
-            }
-            return response.text();
-          })
-      .then(function(text) {
-        console.log(text);
-      })
-      .catch(function(err) {
-        console.log('Fetch Error :-S', err);
-      });
-}
-
-
 const dragOverHandler=(event)=>{event.preventDefault();}
 /**
  * Drop handler
@@ -292,13 +270,6 @@ function Import()
 //function for login form 
 var login_modal = () =>{document.getElementById("Login").style.display ="block"};
 
-
-
-
-/*
-create a global file array to hold the list of files
-on submit post these files
-*/
 
 
 let submit_file =(ev)=> {
