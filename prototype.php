@@ -5,7 +5,6 @@ if (isset($_SESSION['id'])) {
 
 
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -14,7 +13,8 @@ if (isset($_SESSION['id'])) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!-- Bootstrap CDN -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -25,7 +25,8 @@ if (isset($_SESSION['id'])) {
 
   <!-- Main JS file -->
   <script type="text/javascript" src="javascript/mainpage.js"></script>
-
+  <script type="text/javascript" src="javascript/mainpage-ui.js"></script>
+  
   <!-- CSS file -->
   <link rel="stylesheet" href="css/main.css" />
 
@@ -34,9 +35,7 @@ if (isset($_SESSION['id'])) {
 
 </head>
 
-<body>
-
-  <div id="header">
+<body><div id="header">
     <nav class="navbar navbar-expand-lg navbar-transparent">
       <a class="navbar-brand" href="prototype.html">WHEELCHAIR MAP</a>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -163,7 +162,8 @@ if (isset($_SESSION['id'])) {
   </div>
 
   <!-- Import modal -->
-  <div class="modal fade" id="import_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="import_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -172,24 +172,57 @@ if (isset($_SESSION['id'])) {
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <form onsubmit="submit_file(event)">
-            <div id="drag" align="center">Drag and Drop .csv here <br>
+        <div class="modal-body container align-items-center">
+          <!--<form onsubmit="submit_file(event)">
+            <div id ="drag" align="center">Drag and Drop .csv here <br>
               <input type="file" multiple name="button_input">
-            </div>
-            <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" name="drag_input">
-              <div id="drop_content">
+            </div> 
+            <div id ="drop_zone" ondrop ="dropHandler(event)" ondragover="dragOverHandler(event)" name="drag_input"> 
+              <div id = "drop_content">
                 Drag one or more files to this drop zone
               </div>
             </div>
             <input type="submit" align="center" class="btn btn-primary" value="Submit">
-          </form>
+          </form>-->
+            <div>
+              <form onsubmit="submit_file(event)"> 
+                <input type="file" class="hd_inp" id="fileA">           <!--File A should be the first gps co-ordinates-->
+                <input type="file" class="hd_inp" id ="fileB">          <!--File B should be the second data set of gyro and other variations-->
+                
+                
+                <div id ="dropzone" class="row container d-flex justify-content-center">                                    <!--Drop Zone to Each click will trigger file A or B respectively-->      
+                      <div id="fileone" class="innercontainer col-sm-5 align-content-end" ondrop ="dropHandler(event,'fileimg1')" ondragover="dragOverHandler(event)">        <!--drop listener for fileone-->                            
+                            <div id="fileimg1" class="fileimg row"> 
+                            </div> 
+                            <div id="fileimg12" class="fileimg"> 
+                                File A
+                          </div>                  
+                      </div>
+                      <div class="col-sm-2">
+                        
+                      </div>
+                
 
+                      <div id ="filetwo" class="innercontainer col-sm-5  align-content-end" ondrop ="dropHandler(event,'fileimg2')" ondragover="dragOverHandler(event)">      <!--drop listener for filetwo-->
+                         
+                          <div id="fileimg2" class="fileimg">
+                              </div>
+                          <div id="fileimg22" class="fileimg"> 
+                              File B
+                          </div> 
+                      </div>
+                  
+                </div>
+
+                <input type="submit" align="center" class="btn btn-primary align-items-center" value="Submit">
+
+              </form> 
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- scripts-->
+   <!-- scripts-->
     <!-- jQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <!-- Popper JS CDN -->
@@ -219,3 +252,4 @@ if (isset($_SESSION['id'])) {
   
 }
 ?>
+
