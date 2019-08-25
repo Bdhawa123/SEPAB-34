@@ -1,6 +1,9 @@
 <?php
+  require_once('server_script.php');
 
-$con = mysqli_connect("localhost", "root", "123456", "wheelchair");
+
+  //I've changed the username password and dbname to mine, so you might need to change in your end to login 
+$con = mysqli_connect("localhost", "root", "", "wheelchair-project");
 
 session_start();
 
@@ -11,8 +14,7 @@ function showErrors(){
     if ($error == "wrong")
     {
         echo "<p id='error_msg'>Wrong Username OR Password </p>";
-    }
-    
+    }    
 }
 
 if (isset($_POST['login'])) {

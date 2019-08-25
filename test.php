@@ -41,11 +41,13 @@
         for($val =0; $val<sizeof($_FILES); $val++)
         {
             //get file extension
-            $filename = $_FILES['file'.$val]['name']."\r\n";        
+            $filename = $_FILES['file'.$val]['name']."\r\n";   
+            echo $filename;     
             $filetype = explode(".",$filename);    
             $filetype = $filetype[sizeof($filetype)-1];
             
-            $valid = validate($filetype);    
+            $valid = validate($filetype);   
+            echo $val; 
         }
         
         if ($valid==false)
@@ -60,14 +62,14 @@
             
             //write files into the system
             $filereader = new filereadwrite;
-            $dbstp = new connection;
-            $dbstp->createtable("somename");
-            
+        
             //write file into the location
             $filereader->writefiles();
             
             //create table
-           
+            $dbstp = new connection;
+            //$dbstp->createtable("somename");
+            
 
 
             //write files into the database

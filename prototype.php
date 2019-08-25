@@ -1,9 +1,6 @@
 <?php 
 session_start();
-
 if (isset($_SESSION['id'])) {
-
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -78,14 +75,14 @@ if (isset($_SESSION['id'])) {
       <button class="btn btn-primary" data-toggle="modal" data-target="#login_modal">Sign in</button>
 
 
-      <!--
+      
       <div id="dragndrop">
         <h2>Import Data</h2>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
         </button><br>
         <h6><strong>button available only upon user login</strong></h6>
       </div>
-      -->
+      
       <div class="slider">
         <p>
           <label for="datapoint">Data range:</label>

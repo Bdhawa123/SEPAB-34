@@ -35,16 +35,32 @@
             }
         }
 
+        //should change database
+        function changeDB($dbName)
+        {
+            $sql = "USE $dbName";
+
+            $result = $this->dbconnect->query($sql);
+            if ($result)
+            {
+                echo "Database changed\r\n";
+            }
+            else
+            {
+                echo "Database change unsuccessful\r\n";
+
+            }
+        }
+
         function __destruct()
         {
            $this->dbconnect->close();
            echo "DB Connection closed\r\n";
         }
 
-
-
-        function createtable($name)
+        function create_table_location($name)
         {
+            echo "this function is being called";
             $sql = "CREATE TABLE IF NOT EXISTS $name(
                 NAME VARCHAR(30)PRIMARY KEY,
                 LONGITUDE FLOAT NOT NULL,
@@ -60,8 +76,52 @@
                 echo "Table creation unsuccessful\r\n";
 
             }
-
         }
+
+
+        //need to sort out name and database as well;
+        function create_table_values($name)
+        {
+        
+            $sql = "CREATE TABLE IF NOT EXISTS $name(
+                ID INT AUTOINCREMENT PRIMARY KEY,
+                X FLOAT NOT NULL,
+                Y FLOAT NOT NULL,
+                Z FLOAT NOT NULL)";
+            
+            $result = $this->dbconnect->query($sql);
+            if ($result)
+            {
+                echo "Table was created\r\n";
+            }
+            else
+            {
+                echo "Table creation unsuccessful\r\n";
+
+            }
+        }
+
+        function insert_into_location($values,$filename)
+        {
+            echo "insert into location called \r\n";
+            $sql = "INSERT INTO $filename(NAME,LONGITUDE,LATITUDE) VALUES";
+            $V1="";
+            for($var =0;$var<sizeof($values)-1;$var++)
+            {
+                $array = $values[$var];  
+                if($var==sizeof($values)-2){
+                        $V1.="($array[0]".",$array[1]".",$array[2]);";
+                    }
+                else{
+                        
+                        $V1.="($array[0]".",$array[1]".",$array[2]),";
+                    }
+            }
+            $result = $this->dbconnect->query($sql);
+            echo $sql.$V1;
+        }
+
+
 
         function insert($name,$lat,$long)
         {
@@ -76,7 +136,7 @@
              }
              else
              {
-                 echo "Failed\r\nx";
+                 echo "Failed\r\n";
              }
              $this->dbconnect->query("COMMIT");
             

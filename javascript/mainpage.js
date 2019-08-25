@@ -177,7 +177,7 @@ window.onload = function() {
     console.log(color(30));
 
     // 50 Markers from data
-    // drawMarkers(min, max, csvData);
+    // drawMarkers(min, max,s csvData);
     // console.log(markers)
 
     drawSpeedPath(min, max, csvData);
