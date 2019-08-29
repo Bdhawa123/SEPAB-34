@@ -24,7 +24,8 @@ for($var=0;$var<sizeof($filename_GPS);$var++){
 }
 
 array_push($final_array,array('GPS_Data'=>$array_list));
-
+$new_array = [];
+array_push($final_array,array('root_file'=>$final_array));
 echo json_encode($final_array,JSON_PRETTY_PRINT );                                                    //send the json object list
 
 

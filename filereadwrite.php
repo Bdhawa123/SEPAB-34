@@ -67,11 +67,7 @@
                     $conn->changeDB("CALCULATION_DB");
                     //$conn->create_table_values($values,$table_name)                    
                 }
-
-                
-
-            }
-        
+            }     
         }
 
 

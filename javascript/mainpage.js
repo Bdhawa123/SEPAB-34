@@ -169,8 +169,21 @@ window.onload = function() {
  }
 
 // fileinput finish
+$.ajax(
+  {
+      url : "API.php",
+      type: "GET",
+      success:function(data, textStatus, response)
+      {
+          alert("success in function call");
+          console.log("newline"+response.responseTex);
+      },
+      error: function(jqXHR, textStatus, errorThrown)
+      {
+          alert("unsuccessful");
+      }
+  });
 
- $.get('lib/test.php')
 
   $.get('dataprototype/GPSData.csv', function(data) {
     csvData = $.csv.toObjects(data);
