@@ -1,20 +1,29 @@
 <?php
-
-$con = mysqli_connect("localhost", "root", "123456", "wheelchair");
+//$con = mysqli_connect("localhost", "root", "123456", "wheelchair");
+require_once('server_script.php');
 
 session_start();
 
 function showErrors(){
         
-    // global can only make it work
-    global $error;
-    if ($error == "wrong")
-    {
-        echo "<p id='error_msg'>Wrong Username OR Password </p>";
-    }
+  // global can only make it work
+  global $error;
+  if ($error == "wrong")
+  {
+      echo "<p id='error_msg'>Wrong Username OR Password </p>";
+  }
     
 }
 
+if (isset($_POST['login'])) {
+
+  $db = new connection;
+
+  $error = $db->authoriseUser(strval($_POST['username']), strval($_POST['password']));
+}
+
+
+/*
 if (isset($_POST['login'])) {
 
   $username = $_POST['username'];
@@ -41,6 +50,8 @@ if (isset($_POST['login'])) {
     $error = "wrong";
   }
 }
+
+*/
 
 if (isset($_SESSION['id'])) {
 

@@ -8,9 +8,9 @@
         // the version of php is 7 or higher which means the server update needs to have php version 7 installed any version below 7 would need some changes in the execution of mysql code and a slight amount of possibility in the the config files as well
 
 
-        private $database = "wheelchair-project";
+        private $database = "wheelchair";
         private $user = "root";
-        private $pwd = "";
+        private $pwd = "123456";
         private $host = "localhost";
         private $dbconnect;
 
@@ -21,7 +21,8 @@
             {
                 echo "database connected\r\n ";
             }
-            else {
+            else 
+            {
                 echo "database is not connected\r\n";
             }
         }
@@ -98,6 +99,36 @@
              {
                  echo "Failed";
              }
+        }
+
+        function authoriseUser($username, $password){
+            $query = "SELECT * FROM admin WHERE username = '$username' AND password = '$password'";
+
+            $query_result = $this->dbconnect->query($query);
+
+            if($query_result)
+            {
+
+                if (mysqli_num_rows($query_result) == 1) {
+                    echo "Correct password";
+
+                    // login the user
+                    session_start();
+
+                    $_SESSION['id'] = session_id();
+
+                    // $_SESSION['username'] = $username;
+
+                    // header("location:prototype.php");
+                    
+                } else {
+                    $error = "wrong";
+
+                    return $error;
+                }
+
+            } 
+
         }
 
     }
