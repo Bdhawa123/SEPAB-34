@@ -169,6 +169,9 @@ window.onload = function() {
  }
 
 // fileinput finish
+
+ $.get('lib/test.php')
+
   $.get('dataprototype/GPSData.csv', function(data) {
     csvData = $.csv.toObjects(data);
     console.log(csvData);

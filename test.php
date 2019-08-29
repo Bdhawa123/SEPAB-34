@@ -22,6 +22,9 @@
         // |--query
         
         // send data back--needs new php file(POST back to client)
+
+
+        $current_no = 1;
         
         $valid = true;
         //$location = "/test"
@@ -64,7 +67,7 @@
             $filereader = new filereadwrite;
         
             //write file into the location
-            $filereader->writefiles();
+            $filereader->writefiles($current_no);
             
             //create table
             $dbstp = new connection;
