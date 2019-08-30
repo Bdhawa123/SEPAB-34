@@ -1,0 +1,160 @@
+<html>
+    <style>
+        body{
+            background-color:gray;
+        }
+
+        #dropzone {
+            border-style: dotted;
+            cursor:'pointer';
+            width: 75%;
+            height:55%;
+        }
+
+        .hd_inp{
+            display: none;
+        }
+
+        .innercontainer{
+            border-style: dotted;
+            cursor:'pointer';
+            width:45%;
+            height:45%;
+            
+        }
+
+    
+        .fileimg{
+           
+            width:20%;
+            height:60%;
+            text-align: center;
+            display: block;
+        }
+
+        #fileimg1{
+            content:url("img/fileobj.png");
+            display: none;
+        }
+        
+        #fileimg2{
+            content:url("img/fileobj.png");
+            display: none;
+        }
+
+    </style>
+    <script type="text/javascript">
+       // window.onload = ()=>{alert("This screen has beed loaded")};
+       /*
+            document.getElementById('button').addEventListener('click', () => {
+            document.getElementById('fileInput').click()
+            })
+       */
+
+       //global files
+       let file=[];
+      
+      window.onload = () =>{
+         let fileone= document.getElementById("fileone");
+         let filetwo= document.getElementById("filetwo");
+
+        //file img 
+        var img1 = document.getElementById("fileimg1");
+        var img2 = document.getElementById("fileimg2");
+
+        //input elements
+        const inpElementA = document.getElementById("fileA");
+        const inpElementB = document.getElementById("fileB");
+
+        inpElementA.addEventListener('change',function(){
+            showfiles("fileimg1",inpElementA.files[0].name,inpElementA.files[0]);
+        });
+
+        inpElementB.addEventListener('change',function(){
+            showfiles("fileimg1",inpElementB.files[0].name,inpElementB.files[0]);
+        });
+    
+         
+         
+
+        //First file hidden input connected to the div area
+         fileone.onclick = function(){
+             alert("This kinda should work");
+            document.getElementById("fileA").click();
+         }          
+    
+        
+        //second file hidden input connected to the div area
+        filetwo.onclick= ()=>{ 
+            alert("Please alert2");
+            document.getElementById("fileB").click();
+
+        }
+
+      }
+      
+
+      //fileinputA
+
+
+
+      //dragOverHandler
+      const dragOverHandler=(event)=>{event.preventDefault();}
+
+      function dropHandler(ev,field){
+          console.log("File Dropped");
+          ev.preventDefault();
+        
+          if(ev.dataTransfer.items.length==1)
+        {
+            alert("working");
+        
+            if(ev.dataTransfer.items[0].kind ==='file')
+                {console.log(ev.dataTransfer.files[0].name);
+                 /*document.getElementById(field).style.display="block";
+                 document.getElementById(field+"2").innerHTML=ev.dataTransfer.files[0].name;        //set the second div's container text to the filename*/
+                 showfiles(field,ev.dataTransfer.files[0].name,ev.dataTransfer.files[0]);
+                }
+
+        }
+        else{
+            console.log("Multiple files detected");
+        }
+      }
+
+      function showfiles(idName,filename,fyl)
+      {
+        document.getElementById(idName).style.display="block";
+        document.getElementById(idName+"2").innerHTML = filename;
+        file.push(fyl);
+      }
+
+
+
+   
+    </script>
+    
+    <body>
+        <!--Hidden input field for input file -->
+        <input type="file" class="hd_inp" id="fileA">           <!--File A should be the first gps co-ordinates-->
+        <input type="file" class="hd_inp" id ="fileB">          <!--File B should be the second data set of gyro and other variations-->
+        
+        
+        <div id ="dropzone">                                    <!--Drop Zone to Each click will trigger file A or B respectively-->
+            Click to import a file
+            <div id="fileone" class="innercontainer"ondrop ="dropHandler(event,'fileimg1')" ondragover="dragOverHandler(event)">        <!--drop listener for fileone-->
+                <div id="fileimg1" class="fileimg"> 
+                </div> 
+                <div id="fileimg12" class="fileimg"> 
+                </div> 
+                              
+            </div>
+            <div id ="filetwo" class="innercontainer" ondrop ="dropHandler(event,'fileimg2')" ondragover="dragOverHandler(event)">      <!--drop listener for filetwo-->
+                <div id="fileimg2" class="fileimg">
+                    </div>
+                <div id="fileimg22" class="fileimg"> 
+                </div> 
+            </div>   
+        </div>
+      
+</html>

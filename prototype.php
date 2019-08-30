@@ -25,6 +25,8 @@ if (isset($_SESSION['id'])) {
 
     <!-- Main JS file -->
     <script type="text/javascript" src="javascript/mainpage.js"></script>
+    <script type="text/javascript" src="javascript/mainpage-ui.js"></script>
+  
 
     <!-- CSS file -->
     <link rel="stylesheet" href="css/main.css" />
@@ -164,24 +166,24 @@ if (isset($_SESSION['id'])) {
       <button class="btn btn-primary" data-toggle="modal" data-target="#login_modal">Sign in</button>
 
       -->
-      <!--
       <div id="dragndrop">
         <h2>Import Data</h2>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
         </button><br>
         <h6><strong>button available only upon user login</strong></h6>
       </div>
-
-      
-      
-
-    --
+      <!--resolve -->
+      <div class="slider">
+        <p>
+          <label for="datapoint">Data range:</label>
+          <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
+        </p>
+      </div>
 
   </div>
 
   </div>
 
--->
 
       <!-- About modal -->
       <div class="modal fade" id="about_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -248,31 +250,65 @@ if (isset($_SESSION['id'])) {
       </div>
 
       <!-- Import modal -->
-      <div class="modal fade" id="import_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Import Data</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+      <div class="modal fade" id="import_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Import Data</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body container align-items-center">
+          <!--<form onsubmit="submit_file(event)">
+            <div id ="drag" align="center">Drag and Drop .csv here <br>
+              <input type="file" multiple name="button_input">
+            </div> 
+            <div id ="drop_zone" ondrop ="dropHandler(event)" ondragover="dragOverHandler(event)" name="drag_input"> 
+              <div id = "drop_content">
+                Drag one or more files to this drop zone
+              </div>
             </div>
-            <div class="modal-body">
-              <form onsubmit="submit_file(event)">
-                <div id="drag" align="center">Drag and Drop .csv here <br>
-                  <input type="file" multiple name="button_input">
-                </div>
-                <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" name="drag_input">
-                  <div id="drop_content">
-                    Drag one or more files to this drop zone
-                  </div>
-                </div>
-                <input type="submit" align="center" class="btn btn-primary" value="Submit">
-              </form>
+            <input type="submit" align="center" class="btn btn-primary" value="Submit">
+          </form>-->
+            <div>
+              <form onsubmit="submit_file(event)"> 
+                <input type="file" class="hd_inp" id="fileA">           <!--File A should be the first gps co-ordinates-->
+                <input type="file" class="hd_inp" id ="fileB">          <!--File B should be the second data set of gyro and other variations-->
+                
+                
+                <div id ="dropzone" class="row container d-flex justify-content-center">                                    <!--Drop Zone to Each click will trigger file A or B respectively-->      
+                      <div id="fileone" class="innercontainer col-sm-5 align-content-end" ondrop ="dropHandler(event,'fileimg1')" ondragover="dragOverHandler(event)">        <!--drop listener for fileone-->                            
+                            <div id="fileimg1" class="fileimg row"> 
+                            </div> 
+                            <div id="fileimg12" class="fileimg"> 
+                                File A
+                          </div>                  
+                      </div>
+                      <div class="col-sm-2">
+                        
+                      </div>
+                
 
-            </div>
+                      <div id ="filetwo" class="innercontainer col-sm-5  align-content-end" ondrop ="dropHandler(event,'fileimg2')" ondragover="dragOverHandler(event)">      <!--drop listener for filetwo-->
+                         
+                          <div id="fileimg2" class="fileimg">
+                              </div>
+                          <div id="fileimg22" class="fileimg"> 
+                              File B
+                          </div> 
+                      </div>
+                  
+                </div>
+
+                <input type="submit" align="center" class="btn btn-primary align-items-center" value="Submit">
+
+              </form> 
           </div>
         </div>
+      </div>
+    </div>
 
         <!-- scripts-->
         <!-- jQuery CDN -->
