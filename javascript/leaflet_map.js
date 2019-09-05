@@ -9,12 +9,15 @@ const polylines = [];
 
 // function to initialize slider
 function sliderInit() {
-  let sliderHandlePreviousLocations = [min, max - 1];
+  console.log(Object.keys(polylines).length);
+  // let sliderHandlePreviousLocations = [min, max - 1];
+  let sliderHandlePreviousLocations = [min, Object.keys(polylines).length - 1];
   // slider function
   $('#slider-range').slider({
     range: true,
     min,
-    max: max - 1,
+    // max: max - 1,
+    max: Object.keys(polylines).length - 1,
     values: [min, max],
     slide: (event, ui) => {
       const str = `Point: ${ui.values[0] + 1} - Point: ${ui.values[1] + 1}`;
@@ -118,15 +121,19 @@ function drawPolylines() {
 document.addEventListener('DOMContentLoaded', () => {
   // const { L, d3 } = window; // Define L, d3
 
+  const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
+
   map = L.map('mapid', {
     zoomControl: false,
   }).setView([-37.843527, 145.010365], 12);
-  const tileurl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  const attribution = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+  const tileurl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}';
+  const attribution = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
 
   L.tileLayer(tileurl, {
     attribution,
-    maxZoom: 19,
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken,
   }).addTo(map);
 
   L.control.zoom({
@@ -134,10 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }).addTo(map);
 
   // load data
-  $.get('dataprototype/GPSData.csv', (data) => {
+  $.get('dataprototype/GPS_1Hz_modified.csv', (data) => {
     csvData = $.csv.toObjects(data);
     min = 0;
-    max = 50;
+    // max = 50;
+    max = Object.keys(csvData).length - 1;
 
     // add circles
     const circle = L.circle([parseFloat(csvData[0].latitude), parseFloat(csvData[0].longitude)], {
@@ -152,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     circle.on('click', () => {
       // hide circle
       map.removeLayer(circle);
+      document.getElementById(circleTooltipText).style.visibility = 'hidden';
 
       // fly to circle's latlng
       const latlngCircle = circle.getLatLng();
@@ -159,8 +168,129 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // code is fired after animation ends, draw paths and slider
       map.once('moveend', () => {
-        // draw polylines
-        drawPolylines();
+        // // draw polylines
+        // drawPolylines();
+
+        const selectedPoints = [];
+        const increment = 10;
+        for (let i = min; i < max; i += increment) {
+          const closeToLastCoords = max - i;
+
+          let lat1; let lon1; let lat2; let lon2;
+
+          if (closeToLastCoords > increment) {
+            lat1 = parseFloat(csvData[i].latitude);
+            lon1 = parseFloat(csvData[i].longitude);
+            lat2 = parseFloat(csvData[i + increment].latitude);
+            lon2 = parseFloat(csvData[i + increment].longitude);
+
+            selectedPoints.push(L.latLng(lat1, lon1));
+          } else if (closeToLastCoords < increment || closeToLastCoords !== 0) {
+            lat1 = parseFloat(csvData[i].latitude);
+            lon1 = parseFloat(csvData[i].longitude);
+            lat2 = parseFloat(csvData[max].latitude);
+            lon2 = parseFloat(csvData[max].longitude);
+
+            selectedPoints.push(L.latLng(lat2, lon2));
+          }
+
+          // const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
+          // const speed = distance(
+          //   lat1, lon1,
+          //   lat2, lon2,
+          //   'K',
+          // ) / (1 / 600);
+
+          // // draw polylines
+          // const polyline = L.polyline(latlngs, {
+          //   color: color(speed),
+          //   weight: 8,
+          //   lineCap: 'square',
+          //   smoothFactor: 1,
+          // }).addTo(map);
+
+          // const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
+          // polyline.bindTooltip(polylineTooltipText).closeTooltip();
+
+          // polylines.push(polyline);
+        }
+
+        console.log(selectedPoints);
+
+        // ************************* AJAX CALL ************************
+        const xhr = new XMLHttpRequest();
+
+        // AJAX listener
+        xhr.onload = () => {
+          // Process our return data
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log('success!', xhr);
+            const jsonResponseWaypoints = (JSON.parse(xhr.response)).waypoints;
+            console.log(jsonResponseWaypoints);
+
+            for (let i = 0; i < jsonResponseWaypoints.length - 1; i += 1) {
+              console.log('json draw');
+              const lat1 = jsonResponseWaypoints[i].location[1];
+              const lon1 = jsonResponseWaypoints[i].location[0];
+              const lat2 = jsonResponseWaypoints[i + 1].location[1];
+              const lon2 = jsonResponseWaypoints[i + 1].location[0];
+
+              const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
+              const speed = distance(
+                lat1, lon1,
+                lat2, lon2,
+                'K',
+              ) / (1 / 600);
+
+              // draw polylines
+              const polyline = L.polyline(latlngs, {
+                color: color(speed),
+                weight: 8,
+                lineCap: 'square',
+                smoothFactor: 1,
+              }).addTo(map);
+
+              const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
+              polyline.bindTooltip(polylineTooltipText).closeTooltip();
+
+              polylines.push(polyline);
+            }
+          } else {
+            console.log('The request failed!');
+          }
+        };
+
+        const urls = [];
+        let count = 0;
+        const apiLimit = 25;
+
+        for (let i = 0; i < selectedPoints.length - 1; i += apiLimit) {
+          count += 1;
+          console.log(`Count${count}: ${i}`);
+
+          let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/';
+          let waypointsList = '';
+
+          for (let j = i; j < apiLimit + i; j += 1) {
+            console.log(`j: ${j}`);
+            if (j === selectedPoints.length - 1) {
+              break;
+            }
+            waypointsList += `${selectedPoints[j].lng},${selectedPoints[j].lat};`;
+          }
+          waypointsList = waypointsList.slice(0, -1);
+          console.log(waypointsList);
+          url = `${url + waypointsList}?access_token=${accessToken}`;
+          console.log(url);
+          // urls.push(url);
+          xhr.open('GET', url, false);
+          xhr.send();
+        }
+
+        // Promise.all([])
+        // xhr.open('GET', url);
+        // xhr.send();
+
         // init slider
         sliderInit();
       });
@@ -177,6 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', () => {
       // hide circle
       map.removeLayer(circle);
+      document.getElementById(circleTooltipText).style.visibility = 'hidden';
 
       // fly to circle's latlng
       const latlngCircle = circle.getLatLng();
@@ -186,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
       map.once('moveend', () => {
         // draw polylines
         drawPolylines();
-        // init slider
+        // init slider;
         sliderInit();
       });
     });
