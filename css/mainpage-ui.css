@@ -1,0 +1,59 @@
+.sidenav {
+  display: none;
+  height: auto;
+  width: 33%;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  overflow-x: hidden;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 8px;
+}
+
+#demo-menu-lower-right {
+  position: absolute;
+  top: 14px;
+  right: 36px;
+  font-size: 24px;
+}
+.closebtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 32px;
+}
+
+.mdl-card__title {
+  width: auto;
+}
+
+.mdl-card__title-text {
+  width: 80%;
+  margin-top: 48px !important;
+}
+
+.demo-card-wide.mdl-card {
+  width: auto;
+}
+
+.demo-card-wide > .mdl-card__title {
+  background-color: #FFDE03;
+}
+
+.mdl-menu__container.is-upgraded.is-visible {
+  right: 55px !important;
+  top: 55px !important;
+}
+
+.my_subtitle {
+  color: inherit;
+  font-weight: bold;
+  margin: 0px;
+}
+
+.my_result_title {
+  color: #343a40;
+  display: inline;
+}

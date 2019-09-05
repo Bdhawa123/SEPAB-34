@@ -14,54 +14,152 @@
         private $host = "localhost";
         private $dbconnect;
 
-        function __construct()
-        {
+        function __construct(){
             $this->dbconnect = new mysqli($this->host,$this->user,$this->pwd,$this->database);
-            if ($this->dbconnect)
+            /*if ($this->dbconnect)
             {
                 echo "database connected\r\n ";
             }
-            else {
+            else 
+            {
                 echo "database is not connected\r\n";
-            }
+            }*/
         }
 
         function connect()
         {
             $dbconnect = @mysqli_connect($host,$user,$pswd,$dbname);
-            if(!$dbconnect)
-            {
+            /*if(!$dbconnect){
                 echo "The database has been connected\r\n";
+            }*/
+        }   
+
+        //should change database
+        function changeDB($dbName){
+            $sql = "USE $dbName";     
+            $result = $this->dbconnect->query($sql);
+            /*if ($result){
+                echo "Database changed\r\n";
             }
+            else{
+                echo "Database change unsuccessful\r\n";
+            }*/
         }
 
-        function __destruct()
-        {
+        function __destruct(){
+
            $this->dbconnect->close();
-           echo "DB Connection closed\r\n";
+           /*echo "DB Connection closed\r\n";*/
         }
 
+        function create_table_location($name){
 
-
-        function createtable($name)
-        {
             $sql = "CREATE TABLE IF NOT EXISTS $name(
-                NAME VARCHAR(30)PRIMARY KEY,
+                NAME INT PRIMARY KEY,
                 LONGITUDE FLOAT NOT NULL,
                 LATITUDE FLOAT NOT NULL)";
             
             $result = $this->dbconnect->query($sql);
-            if ($result)
-            {
+            if ($result){
+                echo "GPS table was created successfully\r\n";
+            }
+            else{
+                echo "GPS table creation unsuccessful\r\n";
+            }
+        }
+
+
+        //get table from database selected as array
+       function fetch_table()
+       {
+           //$sql = $this->dbconnect->prepare("SHOW TABLES;");
+           $tables =$this->dbconnect->query("SHOW TABLES");
+           $return_array = [];
+
+            if(mysqli_num_rows($tables)>0){
+                while($row = mysqli_fetch_array($tables)){
+                    array_push($return_array,$row); 
+                }
+            }
+            return $return_array;   
+        }
+
+
+        //get table data from the defined table sorted
+        function fetch_table_data($table_name){
+            $sql = "SELECT * FROM $table_name ORDER BY NAME";
+            $result = $this->dbconnect->query($sql);
+            $ret_arr = [];
+
+            if(mysqli_num_rows($result)>0){
+                while($row = mysqli_fetch_array($result)){
+                    array_push($ret_arr,$row); 
+                }
+            }
+            return $ret_arr;   
+        }
+
+        
+        function create_table_values($name){
+        
+            $sql = "CREATE TABLE IF NOT EXISTS $name(
+                ID INT AUTOINCREMENT PRIMARY KEY,
+                X FLOAT NOT NULL,
+                Y FLOAT NOT NULL,
+                Z FLOAT NOT NULL)";
+            
+            $result = $this->dbconnect->query($sql);
+            if ($result){
                 echo "Table was created\r\n";
             }
-            else
-            {
+            else{
                 echo "Table creation unsuccessful\r\n";
+            }
+        }
 
+
+        //create a location table in the database
+    
+        function insert_into_location($values,$filename){
+
+            $this->create_table_location($filename);                     //create table GPS 
+            echo "value of name: $filename";
+            
+            $sql = "INSERT INTO $filename(NAME,LONGITUDE,LATITUDE) VALUES";
+            $V1="";
+            
+            for($var =0;$var<sizeof($values)-1;$var++){
+
+                $array = $values[$var];  
+               
+                if (!empty($array[0])){     
+                    $array[0] = preg_replace('/\D/', '', $array[0]);
+
+                    if($var==sizeof($values)-2){
+                            $V1.="('$array[0]'".",$array[1]".",$array[2]);";
+                    }
+                    else{                          
+                            $V1.="('$array[0]'".",$array[1]".",$array[2]),";
+                    }
+                }
+                else{
+                    echo "value is not valid";
+                }
             }
 
+            $V1 = str_replace(' ', '', $V1);                    //remove spaces
+            $V1 = preg_replace('/\s+/', '', $V1);               //remove tabs
+            $sql= $sql.$V1;
+            $result = $this->dbconnect->query($sql);            //query             
+            if($result){
+                echo "Created successfully";
+            }
+            else{
+                echo "\r\nunsuccessful\r\n";
+            }
         }
+
+
 
         function insert($name,$lat,$long)
         {
@@ -76,7 +174,7 @@
              }
              else
              {
-                 echo "Failed\r\nx";
+                 echo "Failed\r\n";
              }
              $this->dbconnect->query("COMMIT");
             
@@ -98,6 +196,36 @@
              {
                  echo "Failed";
              }
+        }
+
+        function authoriseUser($username, $password){
+            $query = "SELECT * FROM admin WHERE username = '$username' AND password = '$password'";
+
+            $query_result = $this->dbconnect->query($query);
+
+            if($query_result)
+            {
+
+                if (mysqli_num_rows($query_result) == 1) {
+                    echo "Correct password";
+
+                    // login the user
+                    session_start();
+
+                    $_SESSION['id'] = session_id();
+
+                    // $_SESSION['username'] = $username;
+
+                    // header("location:prototype.php");
+                    
+                } else {
+                    $error = "wrong";
+
+                    return $error;
+                }
+
+            } 
+
         }
 
     }

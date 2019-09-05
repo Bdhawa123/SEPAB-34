@@ -3,6 +3,8 @@ let map;
 // let marker;
 // const markers = [];
 const paths = [];
+file =[];         //global variable for files
+
 
 /**
  * init map
@@ -131,6 +133,58 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 
 window.onload = function() {
   let csvData;
+
+//file input //
+  let fileone= document.getElementById("fileone");
+  let filetwo= document.getElementById("filetwo");
+
+ //file img 
+ var img1 = document.getElementById("fileimg1");
+ var img2 = document.getElementById("fileimg2");
+
+ //input elements
+ const inpElementA = document.getElementById("fileA");
+ const inpElementB = document.getElementById("fileB");
+
+ inpElementA.addEventListener('change',function(){
+     showfiles("fileimg1",inpElementA.files[0].name,inpElementA.files[0]);
+ });
+
+ inpElementB.addEventListener('change',function(){
+     showfiles("fileimg2",inpElementB.files[0].name,inpElementB.files[0]);
+ });
+
+    //First file hidden input connected to the div area
+    fileone.onclick = function(){
+      alert("This kinda should work");
+     document.getElementById("fileA").click();
+  }          
+
+ 
+ //second file hidden input connected to the div area
+ filetwo.onclick= ()=>{ 
+     alert("Please alert2");
+     document.getElementById("fileB").click();
+
+ }
+
+// fileinput finish
+$.ajax(
+  {
+      url : "API.php",
+      type: "GET",
+      success:function(data, textStatus, response)
+      {
+          alert("success in function call");
+          console.log("newline"+response.responseTex);
+      },
+      error: function(jqXHR, textStatus, errorThrown)
+      {
+          alert("unsuccessful");
+      }
+  });
+
+
   $.get('dataprototype/GPSData.csv', function(data) {
     csvData = $.csv.toObjects(data);
     console.log(csvData);
@@ -139,7 +193,7 @@ window.onload = function() {
     console.log(color(30));
 
     // 50 Markers from data
-    // drawMarkers(min, max, csvData);
+    // drawMarkers(min, max,s csvData);
     // console.log(markers)
 
     drawSpeedPath(min, max, csvData);
@@ -181,63 +235,40 @@ window.onload = function() {
   });
 };
 
-/**
- * tryout
-*/
-function tryout() {
-  fetch('newfile.txt')
-      .then(
-          function(response) {
-            if (response.status !== 200) {
-              console.log('Looks like there was a problem. Status Code: ' + response.status);
-              return;
-            }
-            return response.text();
-          })
-      .then(function(text) {
-        console.log(text);
-      })
-      .catch(function(err) {
-        console.log('Fetch Error :-S', err);
-      });
-}
-
+const dragOverHandler=(event)=>{event.preventDefault();}
 /**
  * Drop handler
  * @param {*} ev
  */
-function dropHandler(ev) {
-  console.log('File Dropped');
+function dropHandler(ev,field){
+  console.log("File Dropped");
   ev.preventDefault();
-  ev.dataTransfer.dropEffect = 'move';
 
-  if (ev.dataTransfer.items) {
-    for (let i = 0; i < ev.dataTransfer.items.length; i++) {
-      if (ev.dataTransfer.items[i].kind === 'file') {
-        const file = ev.dataTransfer.items[i].getAsFile();
-        // validation
-        // send it to some file process
-        // file side
-        // validate
-        // upload to database
-        // send response
-        // get response
-        // show user
+  if(ev.dataTransfer.items.length==1)
+  {
+      alert("working");
 
-        console.log('... file[' + i + '].name = ' + file.name);
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          console.log(evt.target.result);
-        };
-        reader.readAsText(file);
-      }
-    }
-  } else {
-    for (let i = 0; i < ev.dataTransfer.files.length; i++) {
-      console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
-    }
+      if(ev.dataTransfer.items[0].kind ==='file')
+          {console.log(ev.dataTransfer.files[0].name);
+          showfiles(field,ev.dataTransfer.files[0].name,ev.dataTransfer.files[0]);
+          }
+
+}
+  else{
+      console.log("Multiple files detected");
   }
 }
+
+//display files in the webpage as icons
+function showfiles(idName,filename,fyl)
+{
+  document.getElementById(idName).style.display="block";
+  document.getElementById(idName+"2").innerHTML = filename;
+  file.push(fyl);
+}
+
+
+
 
 function About() {
     document.getElementById("About").style.display = "block";
@@ -254,70 +285,6 @@ function Import()
 
 //function for login form 
 var login_modal = () =>{document.getElementById("Login").style.display ="block"};
-
-
-
-function tryout()
-{
-    fetch('newfile.txt')
-    .then(
-    function(response) {
-      if (response.status !== 200) {
-        console.log('Looks like there was a problem. Status Code: ' +
-          response.status);
-        return;
-      }
-      return response.text();
-    })
-    .then(function(text){
-        console.log(text)
-    })
-  .catch(function(err) {
-    console.log('Fetch Error :-S', err);
-  });
-
-}
-
-
-//global variable for a list of file
-file =[]
-jsonfile =[]
-
-/*
-create a global file array to hold the list of files
-on submit post these files
-*/
-function dropHandler(ev){
-    
-    console.log("File Dropped");
-    ev.preventDefault();
-    ev.dataTransfer.dropEffect ="move";
-
-    if (ev.dataTransfer.items) {
-        
-        for (var i = 0; i < ev.dataTransfer.items.length; i++) 
-        {
-          if (ev.dataTransfer.items[i].kind === 'file') {
-            file.push(ev.dataTransfer.items[i].getAsFile());
-            //validation
-            //send it to some file process
-                    //file side 
-                        //validate
-                        //upload to database
-                        //send response 
-            //get response
-            // show user
-            
-        
-          }
-        }
-      } else {
-        
-        for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-          console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
-        }
-      }
-}
 
 
 
@@ -358,9 +325,3 @@ let submit_file =(ev)=> {
             }
         });
 }
-
-
-var dragOverHandler=(ev) => { 
-    ev.preventDefault();
-    
-};
