@@ -260,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         };
 
-        const urls = [];
         let count = 0;
         const apiLimit = 25;
 
