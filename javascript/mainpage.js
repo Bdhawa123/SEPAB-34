@@ -309,7 +309,7 @@ let submit_file =(ev)=> {
     //post into the server
     $.ajax(
         {
-            url : "test.php",
+            url : "server/test.php",
             type: "POST",
             data : formData,
             processData:false,

@@ -40,20 +40,19 @@ if (isset($_SESSION['id'])) {
 
     <div id="header">
       <nav class="navbar navbar-expand-lg navbar-transparent">
-        <a class="navbar-brand" href="prototype.html">WHEELCHAIR MAP</a>
+        <a class="navbar-brand" href="prototype.php">WHEELCHAIR MAP</a>
         <div class="collapse navbar-collapse" id="navbarNav">
         </div>
         <div class="buttons">
           <button class="btn btn-primary" onclick="openNav()"><i class="fa fa-bars"></i></button>
         </div>
       </nav>
-      <!--Need to replace button with some kind of glyphicon-->
     </div>
 
 
     <!-- Map -->
     <div class="container-fluid overflow-hidden">
-      <!-- <div id="map"></div> -->
+    
       <!-- Leaflet Maps -->
       <div id="mapid"></div>
       <div id="slider-range"></div>
@@ -136,7 +135,7 @@ if (isset($_SESSION['id'])) {
       <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="my_vert_button">
         <li class="mdl-menu__item" data-toggle="modal" data-target="#import_modal">Import Data</li>
         <li class="mdl-menu__item">Settings</li>
-        <li class="mdl-menu__item"><a href="logout.php">Logout</a></li>
+        <li class="mdl-menu__item"><a href="server/logout.php">Logout</a></li>
       </ul>
       <!--
 
@@ -341,6 +340,6 @@ if (isset($_SESSION['id'])) {
 <?php
 } else {
 
-  header("location:login.php");
+  header("location:server/login.php");
 }
 ?>
