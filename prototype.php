@@ -40,8 +40,22 @@ if (isset($_SESSION['id'])) {
 
     <div id="header">
       <nav class="navbar navbar-expand-lg navbar-transparent">
-        <a class="navbar-brand" href="prototype.php">WHEELCHAIR MAP</a>
+        <a class="navbar-brand" href="prototype.php">SABAQ</a>
         <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" onclick="homepage()">Map</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="data()">Data</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="modal" data-target="#about_modal">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="modal" data-target="#help_modal">Help</a>
+            </li>
+          </ul>
         </div>
         <div class="buttons">
           <button class="btn btn-primary" onclick="openNav()"><i class="fa fa-bars"></i></button>
@@ -52,7 +66,7 @@ if (isset($_SESSION['id'])) {
 
     <!-- Map -->
     <div class="container-fluid overflow-hidden">
-    
+
       <!-- Leaflet Maps -->
       <div id="mapid"></div>
       <div id="slider-range"></div>
@@ -252,8 +266,8 @@ if (isset($_SESSION['id'])) {
             <!--<form onsubmit="submit_file(event)">
             <div id ="drag" align="center">Drag and Drop .csv here <br>
               <input type="file" multiple name="button_input">
-            </div> 
-            <div id ="drop_zone" ondrop ="dropHandler(event)" ondragover="dragOverHandler(event)" name="drag_input"> 
+            </div>
+            <div id ="drop_zone" ondrop ="dropHandler(event)" ondragover="dragOverHandler(event)" name="drag_input">
               <div id = "drop_content">
                 Drag one or more files to this drop zone
               </div>
