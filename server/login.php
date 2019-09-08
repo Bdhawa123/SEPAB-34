@@ -56,7 +56,7 @@ if (isset($_POST['login'])) {
 if (isset($_SESSION['id'])) {
 
 
-  header("location:prototype.php");
+  header("location:../prototype.php");
 } else {
 
 
@@ -80,13 +80,13 @@ if (isset($_SESSION['id'])) {
   <script src="https://d3js.org/d3.v4.min.js"></script>
 
   <!-- Main JS file -->
-  <script type="text/javascript" src="javascript/mainpage.js"></script>
+  <script type="text/javascript" src="../javascript/mainpage.js"></script>
 
   <!-- CSS file -->
-  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="../css/main.css" />
 
   <!-- custom main ui css -->
-  <link rel="stylesheet" href="css/mainpage-ui.css" />
+  <link rel="stylesheet" href="../css/mainpage-ui.css" />
 
 </head>
 

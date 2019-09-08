@@ -133,7 +133,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 
 window.onload = function() {
   let csvData;
-
+  console.log("This shouldn't be causing an issue");
 //file input //
   let fileone= document.getElementById("fileone");
   let filetwo= document.getElementById("filetwo");
