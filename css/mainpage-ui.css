@@ -3,7 +3,7 @@
   height: auto;
   width: 33%;
   position: fixed;
-  z-index: 2;
+  z-index: 999;
   top: 0;
   right: 0;
   overflow-x: hidden;
