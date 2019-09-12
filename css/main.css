@@ -132,18 +132,10 @@ input[type='file'] {
   min-height: 100vh;
 }
 
-#slider-range {
-  margin: 20px 12px;
-}
-
 #slider-range > .ui-widget-header {
   background-color: #9ec3ff;
 }
 
 #mapid {
   min-height: 100vh;
-}
-
-# header{
-  position: fixed;
 }
