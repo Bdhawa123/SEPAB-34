@@ -17,8 +17,8 @@ function sliderInit() {
     max: max - 1,
     values: [min, max],
     slide: (event, ui) => {
-      const str = `Point: ${ui.values[0] + 1} - Point: ${ui.values[1] + 1}`;
-      document.getElementById('datapoint').value = str;
+      document.getElementById('my_point_start').innerHTML = `${ui.values[0] + 1}`;
+      document.getElementById('my_point_end').innerHTML = `${ui.values[1] + 1}`;
 
       // check which handle has been moved
       if (sliderHandlePreviousLocations[0] !== ui.values[0]) {
@@ -47,8 +47,8 @@ function sliderInit() {
   });
 
   // default data text value
-  const str = `Point: ${$('#slider-range').slider('values', 0) + 1} - Point: ${$('#slider-range').slider('values', 1) + 1}`;
-  document.getElementById('datapoint').value = str;
+  document.getElementById('my_point_start').innerHTML = `${$('#slider-range').slider('values', 0) + 1}`;
+  document.getElementById('my_point_end').innerHTML = `${$('#slider-range').slider('values', 1) + 1}`
 }
 
 // d3 color function
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }).addTo(map);
 
   L.control.zoom({
-    position: 'topright',
+    position: 'bottomright',
   }).addTo(map);
 
   // load data
