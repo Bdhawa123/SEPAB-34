@@ -44,11 +44,11 @@ window.onload = function () {
             url: "API.php",
             type: "GET",
             success: function (data, textStatus, response) {
-                alert("success in function call");
-                console.log(response.responseText);
+                Content = response.responseText;
+                //console.log(response.responseText);
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                alert("unsuccessful");
+                console.log("unsuccessful");
             }
         });
 

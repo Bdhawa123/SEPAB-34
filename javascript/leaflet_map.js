@@ -116,8 +116,31 @@ function drawPolylines() {
 
 // Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // const { L, d3 } = window; // Define L, d3
 
+    //get First set of data to draw circles
+    $.ajax(
+        {
+            url: "API.php",
+            type: "GET",
+            success: function (data, textStatus, response) {
+                alert("success in function call");
+                let Content = JSON.parse(response.responseText)[0].GPS_Data;
+                console.log(Content);
+                console.log("Length of array " + Content.length);
+
+                // fetch all the values to generate 
+                for (let i = 0; i < Content.length; i++) {
+                    console.log("File");
+                    console.log(Content[i].data[0].Name);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("unsuccessful");
+            }
+        });
+
+
+    // const { L, d3 } = window; // Define L, d3
   map = L.map('mapid', {
     zoomControl: false,
   }).setView([-37.843527, 145.010365], 12);
