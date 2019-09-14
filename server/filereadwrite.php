@@ -14,7 +14,7 @@
                 //place where the files get temperorily saved
                 $file2upload = $_FILES['file'.$val]['tmp_name']; // $_FILES['id']['array']-> name, type, error, size
                  
-                 if(move_uploaded_file($file2upload,'test/'.basename("file".$val)))//upload file(file,directory and the filename(filename needs to be there otherwise it won't work))
+                 if(move_uploaded_file($file2upload,'../test/'.basename("file".$val)))//upload file(file,directory and the filename(filename needs to be there otherwise it won't work))
                  {
                     
                     echo"true\r\n";
@@ -32,13 +32,13 @@
         function readfiles()
         {
             
-            $dirfiles = scandir('test');
+            $dirfiles = scandir('../test');
             print_r($dirfiles);
             //read the two file copied into the database 
             for($var = 2; $var<sizeof($dirfiles);$var++)
             {
 
-                $f = "test/".$dirfiles[$var];               //var files is 2 because of two hidden inputs in the folder
+                $f = "../test/".$dirfiles[$var];               //var files is 2 because of two hidden inputs in the folder
                 $filename = fopen($f,"r");
                 $table_name = $dirfiles[$var];
 
@@ -75,11 +75,11 @@
 
         function deletefiles()
         {
-            $dirfiles = scandir('test');
+            $dirfiles = scandir('../test');
             echo sizeof($dirfiles);
             for($var = 2; $var<sizeof($dirfiles);$var++)
             {
-                if (unlink('test/'.$dirfiles[$var]))
+                if (unlink('../test/'.$dirfiles[$var]))
                    { echo "delete successful\r\n";}
                 else
                     {echo "delete unsuccessful\r\n";}

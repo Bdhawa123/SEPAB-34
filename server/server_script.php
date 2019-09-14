@@ -10,7 +10,7 @@
 
         private $database = "wheelchair";
         private $user = "root";
-        private $pwd = "123456";
+        private $pwd = "";
         private $host = "localhost";
         private $dbconnect;
 
