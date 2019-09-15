@@ -1,5 +1,5 @@
 <?php
- require_once('server_script.php');
+ require_once('server/server_script.php');
 /*----------------------------This will return a json request --------------------------------------------*/
 $filename_GPS=[];                                        //name of the files, should be sequenced in order
 $data=[];                                                //hold data of the corresponding fiel list

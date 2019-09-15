@@ -1,15 +1,15 @@
 // Google Maps Init, centered at Swinburne Hawthorn
-let map;
+//let map;
 // let marker;
 // const markers = [];
-const paths = [];
+/*const paths = [];*/
 file =[];         //global variable for files
 
 
 /**
  * init map
  */
-function initMap() {
+/*function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: -37.819344, lng: 145.040506 },
     zoom: 16,
@@ -37,6 +37,7 @@ function initMap() {
  * @param {*} end
  * @param {*} csvData
  */
+/*
 function drawSpeedPath(start, end, csvData) {
   const startpoint = parseInt(start);
   const endpoint = parseInt(end);
@@ -74,7 +75,8 @@ function drawSpeedPath(start, end, csvData) {
  * @param {*} speed
  * @return {string} color
  */
-function getColorForSpeed(speed) {
+/*
+ function getColorForSpeed(speed) {
   if (speed < 10) {
     return 'purple';
   } else if (speed < 20) {
@@ -103,6 +105,7 @@ let color = d3.scaleQuantize()
  * @param {*} unit
  * @return {float} distance
  */
+
 function distance(lat1, lon1, lat2, lon2, unit) {
   if ((lat1 == lat2) && (lon1 == lon2)) {
     return 0;
@@ -132,6 +135,8 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 }
 
 window.onload = function() {
+
+  this.console.log("asdhf");
   let csvData;
   console.log("This shouldn't be causing an issue");
 //file input //
