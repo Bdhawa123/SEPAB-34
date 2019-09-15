@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Google Maps Init, centered at Swinburne Hawthorn
 //let map;
 // let marker;
@@ -65,11 +66,30 @@ function drawSpeedPath(start, end, csvData) {
       strokeOpacity: 1.0,
       strokeWeight: 8,
       map: map,
-    });
-    paths.push(path);
-  }
-}
+=======
 
+file =[];         //global variable for files
+window.onload = function () {
+    let csvData;
+    console.log("This shouldn't be causing an issue");
+    //file input //
+    let fileone = document.getElementById("fileone");
+    let filetwo = document.getElementById("filetwo");
+
+    //file img 
+    var img1 = document.getElementById("fileimg1");
+    var img2 = document.getElementById("fileimg2");
+
+    //input elements
+    const inpElementA = document.getElementById("fileA");
+    const inpElementB = document.getElementById("fileB");
+
+    inpElementA.addEventListener('change', function () {
+        showfiles("fileimg1", inpElementA.files[0].name, inpElementA.files[0]);
+>>>>>>> c81347aa4f98280e3579d409aea49dc9d7ccfa42
+    });
+
+<<<<<<< HEAD
 /**
  * return Get path color by speed
  * @param {*} speed
@@ -118,22 +138,28 @@ function distance(lat1, lon1, lat2, lon2, unit) {
     let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
     if (dist > 1) {
       dist = 1;
-    }
-    dist = Math.acos(dist);
-    dist = dist * 180 / Math.PI;
-    dist = dist * 60 * 1.1515;
+=======
+    inpElementB.addEventListener('change', function () {
+        showfiles("fileimg2", inpElementB.files[0].name, inpElementB.files[0]);
+    });
 
-    if (unit == 'K') {
-      dist = dist * 1.609344;
+    //First file hidden input connected to the div area
+    fileone.onclick = function () {
+        alert("This kinda should work");
+        document.getElementById("fileA").click();
+>>>>>>> c81347aa4f98280e3579d409aea49dc9d7ccfa42
     }
-    if (unit == 'N') {
-      dist = dist * 0.8684;
+
+
+    //second file hidden input connected to the div area
+    filetwo.onclick = () => {
+        alert("Please alert2");
+        document.getElementById("fileB").click();
+
     }
-    // console.log(dist)
-    return dist;
-  }
 }
 
+<<<<<<< HEAD
 window.onload = function() {
 
   this.console.log("asdhf");
@@ -142,135 +168,56 @@ window.onload = function() {
 //file input //
   let fileone= document.getElementById("fileone");
   let filetwo= document.getElementById("filetwo");
-
- //file img 
- var img1 = document.getElementById("fileimg1");
- var img2 = document.getElementById("fileimg2");
-
- //input elements
- const inpElementA = document.getElementById("fileA");
- const inpElementB = document.getElementById("fileB");
-
- inpElementA.addEventListener('change',function(){
-     showfiles("fileimg1",inpElementA.files[0].name,inpElementA.files[0]);
- });
-
- inpElementB.addEventListener('change',function(){
-     showfiles("fileimg2",inpElementB.files[0].name,inpElementB.files[0]);
- });
-
-    //First file hidden input connected to the div area
-    fileone.onclick = function(){
-      alert("This kinda should work");
-     document.getElementById("fileA").click();
-  }          
-
- 
- //second file hidden input connected to the div area
- filetwo.onclick= ()=>{ 
-     alert("Please alert2");
-     document.getElementById("fileB").click();
-
- }
-
-// fileinput finish
-$.ajax(
-  {
-      url : "API.php",
-      type: "GET",
-      success:function(data, textStatus, response)
-      {
-          alert("success in function call");
-          console.log("newline"+response.responseTex);
-      },
-      error: function(jqXHR, textStatus, errorThrown)
-      {
-          alert("unsuccessful");
-      }
-  });
+=======
+    // fileinput finish
+    $.ajax(
+        {
+            url: "API.php",
+            type: "GET",
+            success: function (data, textStatus, response) {
+                Content = response.responseText;
+                //console.log(response.responseText);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("unsuccessful");
+            }
+        });
+>>>>>>> c81347aa4f98280e3579d409aea49dc9d7ccfa42
 
 
-  $.get('dataprototype/GPSData.csv', function(data) {
-    csvData = $.csv.toObjects(data);
-    console.log(csvData);
-    const min = 0;
-    const max = 400;
-    console.log(color(30));
 
-    // 50 Markers from data
-    // drawMarkers(min, max,s csvData);
-    // console.log(markers)
 
-    drawSpeedPath(min, max, csvData);
+    const dragOverHandler = (event) => { event.preventDefault(); }
+    /**
+     * Drop handler
+     * @param {*} ev
+     */
+    function dropHandler(ev, field) {
+        console.log("File Dropped");
+        ev.preventDefault();
 
-    // slider function
-    const sliderHandlePreviousLocations = [min, max - 1];
-    $('#slider-range').slider({
-      range: true,
-      min: min,
-      max: max - 1,
-      values: [min, max],
-      slide: function(event, ui) {
-        document.getElementById('datapoint').value = 'Point: ' + (ui.values[0] + 1) + ' - Point: ' + (ui.values[1] + 1);
+        if (ev.dataTransfer.items.length == 1) {
+            alert("working");
 
-        // check which handle has been moved
-        if (sliderHandlePreviousLocations[0] != ui.values[0]) {
-          for (i = sliderHandlePreviousLocations[0]; i < ui.values[0]; i++) {
-            // hide path
-            paths[i].setMap(null);
-          }
-        } else if (sliderHandlePreviousLocations[1] != ui.values[1]) {
-          for (i = sliderHandlePreviousLocations[1]; i > ui.values[1]; i--) {
-            paths[i].setMap(null);
-          }
+            if (ev.dataTransfer.items[0].kind === 'file') {
+                console.log(ev.dataTransfer.files[0].name);
+                showfiles(field, ev.dataTransfer.files[0].name, ev.dataTransfer.files[0]);
+            }
+
         }
-        // assign handle values to array, to record handle position
-        sliderHandlePreviousLocations[0] = ui.values[0];
-        sliderHandlePreviousLocations[1] = ui.values[1];
-
-        // Show paths that are between the 2 handle positions
-        for (i = ui.values[0]; i < ui.values[1] + 1; i++) {
-          paths[i].setMap(map);
+        else {
+            console.log("Multiple files detected");
         }
-      },
-    });
+    }
 
-    // Default values
-    $('#datapoint').val('Point: ' + ($('#slider-range').slider('values', 0) + 1) + ' - Point: ' + ($('#slider-range').slider('values', 1) + 1));
-  });
-};
+    //display files in the webpage as icons
+    function showfiles(idName, filename, fyl) {
+        document.getElementById(idName).style.display = "block";
+        document.getElementById(idName + "2").innerHTML = filename;
+        file.push(fyl);
+    }
 
-const dragOverHandler=(event)=>{event.preventDefault();}
-/**
- * Drop handler
- * @param {*} ev
- */
-function dropHandler(ev,field){
-  console.log("File Dropped");
-  ev.preventDefault();
 
-  if(ev.dataTransfer.items.length==1)
-  {
-      alert("working");
-
-      if(ev.dataTransfer.items[0].kind ==='file')
-          {console.log(ev.dataTransfer.files[0].name);
-          showfiles(field,ev.dataTransfer.files[0].name,ev.dataTransfer.files[0]);
-          }
-
-}
-  else{
-      console.log("Multiple files detected");
-  }
-}
-
-//display files in the webpage as icons
-function showfiles(idName,filename,fyl)
-{
-  document.getElementById(idName).style.display="block";
-  document.getElementById(idName+"2").innerHTML = filename;
-  file.push(fyl);
-}
 
 
 

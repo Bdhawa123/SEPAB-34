@@ -75,11 +75,11 @@
 
         function deletefiles()
         {
-            $dirfiles = scandir('test');
+            $dirfiles = scandir('../test');
             echo sizeof($dirfiles);
             for($var = 2; $var<sizeof($dirfiles);$var++)
             {
-                if (unlink('test/'.$dirfiles[$var]))
+                if (unlink('../test/'.$dirfiles[$var]))
                    { echo "delete successful\r\n";}
                 else
                     {echo "delete unsuccessful\r\n";}

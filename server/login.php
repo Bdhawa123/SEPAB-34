@@ -10,7 +10,7 @@ function showErrors(){
   global $error;
   if ($error == "wrong")
   {
-      echo "<p id='error_msg'>Wrong Username OR Password </p>";
+      echo "<p id='error_msg' class='small text-danger'>Wrong Username OR Password </p>";
   }
     
 }
@@ -78,48 +78,51 @@ if (isset($_SESSION['id'])) {
 
   <!-- D3 JS library -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
-
-  <!-- Main JS file -->
-  <script type="text/javascript" src="../javascript/mainpage.js"></script>
-
-  <!-- CSS file -->
-  <link rel="stylesheet" href="../css/main.css" />
+  
 
   <!-- custom main ui css -->
-  <link rel="stylesheet" href="../css/mainpage-ui.css" />
+  <link rel="stylesheet" href="../css/login-ui.css"/>
 
 </head>
 
 <body>
 
 <!-- Login modal -->
+<div class="bg">
 
-
+<div class="container">
+<div class="row justify-content-center align-items-center" style="height:100vh">
+    <div class="col-md-8 col-sm-12">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+          
+          <h2>Login</h2>
           
         </div>
         <div class="modal-body">
           <form action="login.php" method="post">
             <div class="form-group">
-              <label for="username" class="col-form-label">Username:</label>
+              <label for="username" class="col-form-label">Username</label>
               <input type="text" name="username" class="form-control" id="username" />
             </div>
             <div class="form-group">
-              <label for="password" class="col-form-label">Password:</label>
+              <label for="password" class="col-form-label">Password</label>
               <input type="password" name="password" class="form-control" id="password" />
             </div>
             <?php showErrors(); ?>
         </div>
         <div class="modal-footer">
-          <input type="submit" name="login" class="btn btn-primary" value="Login" />
+          
+          <input type="submit" name="login" class="btn btn-success btn-lg btn-block" value="Login" />
         </div>
         </form>
       </div>
     </div>
-
+</div>
+</div>
+</div>
+</div>
 
 
 </body>

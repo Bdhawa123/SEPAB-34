@@ -38,7 +38,7 @@ if (isset($_SESSION['id'])) {
 
   <body>
 
-    <div id="header">
+    <div id="header" class="fixed-top">
       <nav class="navbar navbar-expand-lg navbar-transparent">
         <a class="navbar-brand" href="prototype.php">SABAQ</a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -69,7 +69,6 @@ if (isset($_SESSION['id'])) {
 
       <!-- Leaflet Maps -->
       <div id="mapid"></div>
-      <div id="slider-range"></div>
 
       <div id="mySidenav" class="sidenav">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
@@ -91,20 +90,22 @@ if (isset($_SESSION['id'])) {
               </label>
             </div>
             <br />
+            <div id="slider-range" class="my-3"></div>
+            <div class="data-buttons"></div>
             <p class="my_subtitle">Results</p>
             <div class="row">
               <div class="col-sm-6">
 
                 <label>From</label>
                 <br />
-                <h3 id="my_point_1" class="my_result_title">1</h3>
+                <h3 id="my_point_start" class="my_result_title">NaN</h3>
                 <span>point</span>
                 <!--<input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">-->
               </div>
               <div class="col-sm-6">
                 <label for="datapoint">To</label>
                 <br />
-                <h3 id="my_point_2" class="my_result_title">2000</h3>
+                <h3 id="my_point_end" class="my_result_title">NaN</h3>
                 <span>point</span>
               </div>
             </div>
@@ -169,19 +170,16 @@ if (isset($_SESSION['id'])) {
       <button class="btn btn-primary" data-toggle="modal" data-target="#login_modal">Sign in</button>
 
       -->
+
+      <!-- 
       <div id="dragndrop">
         <h2>Import Data</h2>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
         </button><br>
         <h6><strong>button available only upon user login</strong></h6>
-      </div>
+      </div> -->
       <!--resolve -->
-      <div class="slider">
-        <p>
-          <label for="datapoint">Data range:</label>
-          <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
-        </p>
-      </div>
+
 
     </div>
 
@@ -341,8 +339,13 @@ if (isset($_SESSION['id'])) {
 
       <!-- Main JS file -->
       <script type="text/javascript" src="javascript/leaflet_map.js"></script>
+<<<<<<< HEAD
       <!-- <script type="text/javascript" src="javascript/mainpage.js"></script> -->
       <script type="text/javascript" src="javascript/mainpage.js"></script>
+=======
+      <script type="text/javascript" src="javascript/mainpage.js"></script> 
+    
+>>>>>>> c81347aa4f98280e3579d409aea49dc9d7ccfa42
 
       <!-- Custom UI CSS -->
       <script type="text/javascript" src="javascript/mainpage-ui.js"></script>

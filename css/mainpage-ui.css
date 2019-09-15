@@ -57,3 +57,16 @@
   color: #343a40;
   display: inline;
 }
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 450px) {
+/* Styles */
+.sidenav {
+  width: 50%;
+}
+}
+
+.fixed-top {
+  z-index: 777;
+}
