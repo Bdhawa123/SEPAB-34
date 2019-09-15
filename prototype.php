@@ -339,13 +339,8 @@ if (isset($_SESSION['id'])) {
 
       <!-- Main JS file -->
       <script type="text/javascript" src="javascript/leaflet_map.js"></script>
-<<<<<<< HEAD
-      <!-- <script type="text/javascript" src="javascript/mainpage.js"></script> -->
-      <script type="text/javascript" src="javascript/mainpage.js"></script>
-=======
       <script type="text/javascript" src="javascript/mainpage.js"></script> 
     
->>>>>>> c81347aa4f98280e3579d409aea49dc9d7ccfa42
 
       <!-- Custom UI CSS -->
       <script type="text/javascript" src="javascript/mainpage-ui.js"></script>

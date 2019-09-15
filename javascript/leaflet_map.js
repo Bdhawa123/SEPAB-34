@@ -131,7 +131,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 // fetch all the values to generate 
                 for (let i = 0; i < Content.length; i++) {
                     console.log("File");
-                    console.log(Content[i].data[0].Name);
+                    //console.log(Content[i].data[0].Latitude);
+                    let datafile = Content[i].data[0];
+
+                    const circle = L.circle([parseFloat(datafile.Latitude), parseFloat(datafile.Longitude)], {
+                      radius: 800,
+                    }).addTo(map);
+
+
+                    circle.on('click',()=>{
+                      console.log("Circle has been clicked");
+                      console.log(Content[i].Table_Name);
+                      $.ajax({
+                        type:"POST",
+                        url:"server/newfile.php",
+                        //dataType:'json',
+                        data:{functionname:'showMap',arguments:Content[i].Table_Name},
+                        success:function(data,textStatus, response){
+                          console.log(response.responseText);
+                        },
+                        error:function(){
+                          console.log("Somekind of an error");
+                        }
+
+                      });
+
+                    });
+
+
+
+      
+                
+                  
+
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -157,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }).addTo(map);
 
   // load data
+  /*
   $.get('dataprototype/GPSData.csv', (data) => {
     csvData = $.csv.toObjects(data);
     min = 0;
@@ -214,5 +247,5 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
     document.querySelector('.data-buttons').appendChild(button);
-  });
+  });*/
 });

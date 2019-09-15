@@ -1,72 +1,3 @@
-<<<<<<< HEAD
-// Google Maps Init, centered at Swinburne Hawthorn
-//let map;
-// let marker;
-// const markers = [];
-/*const paths = [];*/
-file =[];         //global variable for files
-
-
-/**
- * init map
- */
-/*function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: -37.819344, lng: 145.040506 },
-    zoom: 16,
-    mapTypeControl: false,
-  });
-}
-
-// /**
-//  * A function that adds a marker on the map
-//  * @param {*} myLatLng
-//  * @param {*} name
-//  */
-// function addMarker(myLatLng, name) {
-//   marker = new google.maps.Marker({
-//     position: myLatLng,
-//     map,
-//     title: name,
-//   });
-//   markers.push(marker);
-// }
-
-/**
- * Draw speed path
- * @param {*} start
- * @param {*} end
- * @param {*} csvData
- */
-/*
-function drawSpeedPath(start, end, csvData) {
-  const startpoint = parseInt(start);
-  const endpoint = parseInt(end);
-
-  for (i = startpoint; i < endpoint; i++) {
-    const point = new google.maps.LatLng(
-        csvData[i].latitude,
-        csvData[i].longitude
-    );
-
-    const point2 = new google.maps.LatLng(
-        csvData[i + 1].latitude,
-        csvData[i + 1].longitude
-    );
-
-    const speed = distance(
-        point.lat(), point.lng(),
-        point2.lat(), point.lng(), 'K') / (1 / 600);
-    // console.log(speed)
-
-    path = new google.maps.Polyline({
-      path: [point, point2],
-      geodesic: true,
-      strokeColor: color(speed),
-      strokeOpacity: 1.0,
-      strokeWeight: 8,
-      map: map,
-=======
 
 file =[];         //global variable for files
 window.onload = function () {
@@ -86,89 +17,27 @@ window.onload = function () {
 
     inpElementA.addEventListener('change', function () {
         showfiles("fileimg1", inpElementA.files[0].name, inpElementA.files[0]);
->>>>>>> c81347aa4f98280e3579d409aea49dc9d7ccfa42
     });
 
-<<<<<<< HEAD
-/**
- * return Get path color by speed
- * @param {*} speed
- * @return {string} color
- */
-/*
- function getColorForSpeed(speed) {
-  if (speed < 10) {
-    return 'purple';
-  } else if (speed < 20) {
-    return 'blue';
-  } else if (speed < 30) {
-    return 'green';
-  } else if (speed < 40) {
-    return 'yellow';
-  } else if (speed < 50) {
-    return 'orange';
-  } else {
-    return 'red';
-  }
-}
-
-let color = d3.scaleQuantize()
-    .domain([0, 100])
-    .range(['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']);
-
-/**
- * calculate distance between 2 coords
- * @param {*} lat1
- * @param {*} lon1
- * @param {*} lat2
- * @param {*} lon2
- * @param {*} unit
- * @return {float} distance
- */
-
-function distance(lat1, lon1, lat2, lon2, unit) {
-  if ((lat1 == lat2) && (lon1 == lon2)) {
-    return 0;
-  } else {
-    const radlat1 = Math.PI * lat1 / 180;
-    const radlat2 = Math.PI * lat2 / 180;
-    const theta = lon1 - lon2;
-    const radtheta = Math.PI * theta / 180;
-
-    let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    if (dist > 1) {
-      dist = 1;
-=======
     inpElementB.addEventListener('change', function () {
         showfiles("fileimg2", inpElementB.files[0].name, inpElementB.files[0]);
     });
 
     //First file hidden input connected to the div area
     fileone.onclick = function () {
-        alert("This kinda should work");
+        
         document.getElementById("fileA").click();
->>>>>>> c81347aa4f98280e3579d409aea49dc9d7ccfa42
     }
 
 
     //second file hidden input connected to the div area
     filetwo.onclick = () => {
-        alert("Please alert2");
+       
         document.getElementById("fileB").click();
 
     }
 }
 
-<<<<<<< HEAD
-window.onload = function() {
-
-  this.console.log("asdhf");
-  let csvData;
-  console.log("This shouldn't be causing an issue");
-//file input //
-  let fileone= document.getElementById("fileone");
-  let filetwo= document.getElementById("filetwo");
-=======
     // fileinput finish
     $.ajax(
         {
@@ -182,7 +51,6 @@ window.onload = function() {
                 console.log("unsuccessful");
             }
         });
->>>>>>> c81347aa4f98280e3579d409aea49dc9d7ccfa42
 
 
 
@@ -197,7 +65,6 @@ window.onload = function() {
         ev.preventDefault();
 
         if (ev.dataTransfer.items.length == 1) {
-            alert("working");
 
             if (ev.dataTransfer.items[0].kind === 'file') {
                 console.log(ev.dataTransfer.files[0].name);
