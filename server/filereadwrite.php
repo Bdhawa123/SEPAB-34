@@ -46,6 +46,7 @@
                 $array =[];
                 $conn = new connection;
 
+                
                 $array_sz = sizeof(explode(",",fgets($filename)));
                 echo "size of array".$array_sz."\r\n";
 
@@ -56,7 +57,8 @@
                     }
                 
            
-
+                $conn-> create_db();
+                
                 if ($array_sz=="3"){
                         //create table GPS
                         $conn->changeDB("GPS_DB");

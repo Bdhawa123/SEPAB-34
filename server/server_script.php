@@ -198,6 +198,18 @@
              }
         }
 
+        function create_db(){
+
+    
+            if($this->dbconnect->query("CREATE DATABASE 'GPS_DB'")){
+                echo "Databases are successfully created"; 
+            }
+            else
+            {
+                echo "Not being created";
+            }
+        }
+
         function authoriseUser($username, $password){
             $query = "SELECT * FROM admin WHERE username = '$username' AND password = '$password'";
 
