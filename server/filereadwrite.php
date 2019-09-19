@@ -17,11 +17,11 @@
                  if(move_uploaded_file($file2upload,'../test/'.basename("file".$val)))//upload file(file,directory and the filename(filename needs to be there otherwise it won't work))
                  {
                     
-                    echo"true\r\n";
+                    //echo"true\r\n";
                 }
                 else
                 {
-                    echo"false\r\n";
+                   // echo"false\r\n";
                 }                
             } 
             
@@ -33,8 +33,8 @@
         {
             
             $dirfiles = scandir('../test');
-            echo "dir files";
-            print_r($dirfiles);
+            //echo "dir files";
+            //print_r($dirfiles);
             //read the two file copied into the database 
             for($var = 2; $var<sizeof($dirfiles);$var++)
             {
@@ -49,7 +49,7 @@
 
                 
                 $array_sz = sizeof(explode(",",fgets($filename)));
-                echo "size of array".$array_sz."\r\n";
+                //echo "size of array".$array_sz."\r\n";
 
                 $values=[];              
                 while(!feof($filename)){
@@ -79,13 +79,13 @@
         function deletefiles()
         {
             $dirfiles = scandir('../test');
-            echo sizeof($dirfiles);
+            //echo sizeof($dirfiles);
             for($var = 2; $var<sizeof($dirfiles);$var++)
             {   
                 if (unlink('../test/'.$dirfiles[$var]))
-                   { echo "delete successful\r\n";}
+                   {// echo "delete successful\r\n";}
                 else
-                    {echo "delete unsuccessful\r\n";}
+                    {//echo "delete unsuccessful\r\n";}
             }
 
         }

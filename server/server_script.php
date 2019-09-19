@@ -8,9 +8,9 @@
         // the version of php is 7 or higher which means the server update needs to have php version 7 installed any version below 7 would need some changes in the execution of mysql code and a slight amount of possibility in the the config files as well
 
 
-        private $database = "wheelchair-project";
+        private $database = "wheelchair_project";
         private $user = "root";
-        private $pwd = "";
+        private $pwd = "root1234";
         private $host = "localhost";
         private $dbconnect;
 
@@ -109,12 +109,12 @@
                 Z FLOAT NOT NULL)";
             
             $result = $this->dbconnect->query($sql);
-            if ($result){
+            /*if ($result){
                 echo "Table was created\r\n";
             }
             else{
                 echo "Table creation unsuccessful\r\n";
-            }
+            }*/
         }
 
 
@@ -152,11 +152,8 @@
             $sql= $sql.$V1;
             
             $result = $this->dbconnect->query($sql);            //query             
-            if($result){
-                echo "Data inserted successfully";
-            }
-            else{
-                echo "\r\nunsuccessful\r\n";
+            if($result==false){
+                echo "Data insertion unsuccessfull";
             }
         }
 
@@ -200,14 +197,11 @@
         }
 
         function create_db(){  
-            echo "create db called";
-            if($this->dbconnect->query("CREATE DATABASE GPS_DB" )){
-                echo "Databases are successfully created"; 
-            }
-            else
-            {
-                echo "Databses isn't being created";
-            }
+            //echo "create db called";
+            $result = $this->dbconnect->query("CREATE DATABASE GPS_DB")                   //create database 
+            /*if ($result == false){
+                echo "database hasn't been created!";
+            }*/
         }
 
         function authoriseUser($username, $password){
