@@ -120,12 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
     //get First set of data to draw circles
     $.ajax(
         {
-            url: "API.php",
-            type: "GET",
+            url: "server/newfile.php",
+            type: "POST",
+            data:{functionname:'firstAPI'},
             success: function (data, textStatus, response) {
-                alert("success in function call");
+                //console.log("success in function call");
+                //JSON.parse(response.responseText)[0].GPS_Data;
                 let Content = JSON.parse(response.responseText)[0].GPS_Data;
-                console.log(Content);
+                //console.log(Content);
                 console.log("Length of array " + Content.length);
 
                 // fetch all the values to generate 
