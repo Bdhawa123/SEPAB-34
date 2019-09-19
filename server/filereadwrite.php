@@ -33,6 +33,7 @@
         {
             
             $dirfiles = scandir('../test');
+            echo "dir files";
             print_r($dirfiles);
             //read the two file copied into the database 
             for($var = 2; $var<sizeof($dirfiles);$var++)
@@ -58,7 +59,7 @@
                 
            
                 $conn-> create_db();
-                
+
                 if ($array_sz=="3"){
                         //create table GPS
                         $conn->changeDB("GPS_DB");
@@ -80,7 +81,7 @@
             $dirfiles = scandir('../test');
             echo sizeof($dirfiles);
             for($var = 2; $var<sizeof($dirfiles);$var++)
-            {
+            {   
                 if (unlink('../test/'.$dirfiles[$var]))
                    { echo "delete successful\r\n";}
                 else

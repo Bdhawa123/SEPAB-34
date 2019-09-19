@@ -38,12 +38,12 @@
         function changeDB($dbName){
             $sql = "USE $dbName";     
             $result = $this->dbconnect->query($sql);
-            /*if ($result){
+            if ($result){
                 echo "Database changed\r\n";
             }
             else{
                 echo "Database change unsuccessful\r\n";
-            }*/
+            }
         }
 
         function __destruct(){
@@ -150,9 +150,10 @@
             $V1 = str_replace(' ', '', $V1);                    //remove spaces
             $V1 = preg_replace('/\s+/', '', $V1);               //remove tabs
             $sql= $sql.$V1;
+            
             $result = $this->dbconnect->query($sql);            //query             
             if($result){
-                echo "Created successfully";
+                echo "Data inserted successfully";
             }
             else{
                 echo "\r\nunsuccessful\r\n";
@@ -198,15 +199,14 @@
              }
         }
 
-        function create_db(){
-
-    
-            if($this->dbconnect->query("CREATE DATABASE 'GPS_DB'")){
+        function create_db(){  
+            echo "create db called";
+            if($this->dbconnect->query("CREATE DATABASE GPS_DB" )){
                 echo "Databases are successfully created"; 
             }
             else
             {
-                echo "Not being created";
+                echo "Databses isn't being created";
             }
         }
 

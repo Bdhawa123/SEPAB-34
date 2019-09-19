@@ -45,12 +45,12 @@
         {
             //get file extension
             $filename = $_FILES['file'.$val]['name']."\r\n";   
-            echo $filename;     
+            echo "fileNames ".$filename;     
             $filetype = explode(".",$filename);    
             $filetype = $filetype[sizeof($filetype)-1];
             
             $valid = validate($filetype);   
-            echo $val; 
+            echo " validate result ".$val; 
         }
         
         if ($valid==false)
