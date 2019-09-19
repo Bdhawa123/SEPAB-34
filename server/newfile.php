@@ -49,9 +49,9 @@ switch($_POST['functionname']){
         //print_r($con_file->fetch_table_data($_POST['arguments']));
         $array_return = $con_file->fetch_table_data($_POST['arguments']);
         foreach ($array_return as $obj){
-            array_push($new_array,array('Name'=>$obj[0],'Latitude'=>$obj[1],'Longitude'=>$obj[2]));
+            array_push($new_array,array('Name'=>$obj[0],'latitude'=>$obj[1],'longitude'=>$obj[2]));
         }
-        print_r($new_array);
+        echo json_encode($new_array);
 
         break;
 
