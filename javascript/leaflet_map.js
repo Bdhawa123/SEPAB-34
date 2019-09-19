@@ -87,7 +87,9 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 }
 
 function drawPolylines() {
+  console.log(csvData)
   for (let i = min; i < max; i += 1) {
+    console.log(csvData[2])
     const lat1 = parseFloat(csvData[i].latitude);
     const lon1 = parseFloat(csvData[i].longitude);
     const lat2 = parseFloat(csvData[i + 1].latitude);
@@ -117,62 +119,80 @@ function drawPolylines() {
 // Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
 
-    //get First set of data to draw circles
-    $.ajax(
-        {
-            url: "API.php",
-            type: "GET",
-            success: function (data, textStatus, response) {
-                alert("success in function call");
-                let Content = JSON.parse(response.responseText)[0].GPS_Data;
-                console.log(Content);
-                console.log("Length of array " + Content.length);
+  //get First set of data to draw circles
+  $.ajax(
+    {
+      url: "server/newfile.php",
+      type: "POST",
+      data: { functionname: 'firstAPI' },
+      success: function (data, textStatus, response) {
+        //console.log("success in function call");
+        //JSON.parse(response.responseText)[0].GPS_Data;
+        let Content = JSON.parse(response.responseText)[0].GPS_Data;
+        //console.log(Content);
+        console.log("Length of array " + Content.length);
 
-                // fetch all the values to generate 
-                for (let i = 0; i < Content.length; i++) {
-                    console.log("File");
-                    //console.log(Content[i].data[0].Latitude);
-                    let datafile = Content[i].data[0];
+        // fetch all the values to generate 
+        for (let i = 0; i < Content.length; i++) {
+          console.log("File");
+          //console.log(Content[i].data[0].Latitude);
+          let datafile = Content[i].data[0];
+          console.log(datafile);
+          const circle = L.circle([parseFloat(datafile.Latitude), parseFloat(datafile.Longitude)], {
+            radius: 800,
+          }).addTo(map);
 
-                    const circle = L.circle([parseFloat(datafile.Latitude), parseFloat(datafile.Longitude)], {
-                      radius: 800,
-                    }).addTo(map);
+          // circle add tooltip
+          const circleTooltipText = 'Swinburne';
+          circle.bindTooltip(circleTooltipText).openTooltip();
+
+          circle.on('click', () => {
+            min = 0
+            max = 50
+            console.log("Circle has been clicked");
+            console.log(Content[i].Table_Name);
+            console.log(map)
+            map.removeLayer(circle);
+
+            $.ajax({
+              type: "POST",
+              url: "server/newfile.php",
+              //dataType:'json',
+              data: { functionname: 'showMap', arguments: Content[i].Table_Name },
+              success: function (data, textStatus, response) {
+                console.log(JSON.parse(response.responseText));
+                json = JSON.parse(response.responseText);
+                csvData = json           
+
+                // fly to circle's latlng
+                const latlngCircle = circle.getLatLng();
+                map.flyTo(latlngCircle, 16);
+
+                // code is fired after animation ends, draw paths and slider
+                map.once('moveend', () => {
+                  // draw polylines
+                  drawPolylines();
+                  // init slider
+                  sliderInit();
+                });
+              },
+              error: function () {
+                console.log("Somekind of an error");
+              }
+
+            });
+
+          });
+
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert("unsuccessful");
+      }
+    });
 
 
-                    circle.on('click',()=>{
-                      console.log("Circle has been clicked");
-                      console.log(Content[i].Table_Name);
-                      $.ajax({
-                        type:"POST",
-                        url:"server/newfile.php",
-                        //dataType:'json',
-                        data:{functionname:'showMap',arguments:Content[i].Table_Name},
-                        success:function(data,textStatus, response){
-                          console.log(response.responseText);
-                        },
-                        error:function(){
-                          console.log("Somekind of an error");
-                        }
-
-                      });
-
-                    });
-
-
-
-      
-                
-                  
-
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert("unsuccessful");
-            }
-        });
-
-
-    // const { L, d3 } = window; // Define L, d3
+  // const { L, d3 } = window; // Define L, d3
   map = L.map('mapid', {
     zoomControl: false,
   }).setView([-37.843527, 145.010365], 12);
