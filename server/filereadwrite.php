@@ -14,29 +14,22 @@
                 //place where the files get temperorily saved
                 $file2upload = $_FILES['file'.$val]['tmp_name']; // $_FILES['id']['array']-> name, type, error, size
                  
-                 if(move_uploaded_file($file2upload,'../test/'.basename("file".$val)))//upload file(file,directory and the filename(filename needs to be there otherwise it won't work))
-                 {
-                    
-                    //echo"true\r\n";
-                }
-                else
-                {
-                   // echo"false\r\n";
-                }                
+                 $resutlt =move_uploaded_file($file2upload,'../test/'.basename("file".$val));        //upload file(file,directory and the filename(filename needs to be there otherwise it won't work))
+                 if ($resutlt==false){                                                              //if the files aren't copied echo a false result for the moment
+                     echo "file not copied into test folder";
+                 }                
             } 
             
             $this->readfiles();          
         }
 
         //read files into the database
-        function readfiles()
+        function readfiles()                                        
         {
             
-            $dirfiles = scandir('../test');
-            //echo "dir files";
-            //print_r($dirfiles);
-            //read the two file copied into the database 
-            for($var = 2; $var<sizeof($dirfiles);$var++)
+            $dirfiles = scandir('../test');                                 //scan the files of the directory
+           
+            for($var = 2; $var<sizeof($dirfiles);$var++)                        //start with two  as the first two are occpupied by . and ..
             {
 
                 $f = "../test/".$dirfiles[$var];               //var files is 2 because of two hidden inputs in the folder
@@ -48,21 +41,21 @@
                 $conn = new connection;
 
                 
-                $array_sz = sizeof(explode(",",fgets($filename)));
+                $array_sz = sizeof(explode(",",fgets($filename)));                      //get data out of the csv files
                 //echo "size of array".$array_sz."\r\n";
 
                 $values=[];              
                 while(!feof($filename)){
-                        $newarray = explode(",",fgets($filename));
-                        array_push($values,$newarray); 
+                        $newarray = explode(",",fgets($filename));                      
+                        array_push($values,$newarray);                                  
                     }
                 
            
-                $conn-> create_db();
+                $conn-> create_db();                                                    //create database if it doesn't exist
 
-                if ($array_sz=="3"){
+                if ($array_sz=="3"){                                                    
                         //create table GPS
-                        $conn->changeDB("GPS_DB");
+                        $conn->changeDB("GPS_DB");                                      
                         //$conn->create_table_location($table_name);
                         $conn->insert_into_location($values,$table_name);
                 }
@@ -82,10 +75,8 @@
             //echo sizeof($dirfiles);
             for($var = 2; $var<sizeof($dirfiles);$var++)
             {   
-                if (unlink('../test/'.$dirfiles[$var]))
-                   {// echo "delete successful\r\n";}
-                else
-                    {//echo "delete unsuccessful\r\n";}
+                if (unlink('../test/'.$dirfiles[$var])==false)
+                  {echo "Delete unsuccessful";}
             }
 
         }

@@ -1,33 +1,11 @@
 <?php
     require_once('filereadwrite.php');
     require_once('server_script.php');
-    //validate file type
-        // main class
-        // flow:
-        //     recieve file
-        //     validate it 
-        //         store the file
-        //         get the file content
-        //         delete the file
-        //             file content-> json
-        //                 call for php script to insert the file into db
-        //                     create connection
-        //                     create newtable
-        //                         store values
-        //                             destroy connection
-        
-        // validate
-        
-        // |--connection
-        // |--query
-        
-        // send data back--needs new php file(POST back to client)
-
-
+    
         $current_no = 1;
         
         $valid = true;
-        //$location = "/test"
+     
         
         function validate($filetype)
         {
@@ -44,33 +22,31 @@
         for($val =0; $val<sizeof($_FILES); $val++)
         {
             //get file extension
-            $filename = $_FILES['file'.$val]['name']."\r\n";   
-            echo "fileNames ".$filename;     
-            $filetype = explode(".",$filename);    
-            $filetype = $filetype[sizeof($filetype)-1];
+            $filename = $_FILES['file'.$val]['name']."\r\n";        //filename     
+            $filetype = explode(".",$filename);                 
+            $filetype = $filetype[sizeof($filetype)-1];             //get the number of file uplaoded
             
-            $valid = validate($filetype);   
-            echo " validate result ".$val; 
+            $valid = validate($filetype);                           //validate filetype
+           
         }
         
-        if ($valid==false)
+        if ($valid==false)                                          //if file type is valid
         {
             http_response_code(400);
             echo "validate false";                                                        //set response code to false
         }
         else
         {
-            http_response_code(200);
-            echo "File types are valid\r\n";
+            http_response_code(200);                               
             
             //write files into the system
             $filereader = new filereadwrite;
         
             //write file into the location
-            $filereader->writefiles($current_no);
+            $filereader->writefiles($current_no);                       //write file name as numbers            
             
             //create table
-            $dbstp = new connection;
+            $dbstp = new connection;                                    //open connection
             //$dbstp->createtable("somename");
             
 

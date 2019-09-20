@@ -8,9 +8,9 @@
         // the version of php is 7 or higher which means the server update needs to have php version 7 installed any version below 7 would need some changes in the execution of mysql code and a slight amount of possibility in the the config files as well
 
 
-        private $database = "wheelchair_project";
+        private $database = "wheelchair-project";
         private $user = "root";
-        private $pwd = "root1234";
+        private $pwd = "";
         private $host = "localhost";
         private $dbconnect;
 
@@ -38,18 +38,15 @@
         function changeDB($dbName){
             $sql = "USE $dbName";     
             $result = $this->dbconnect->query($sql);
-            if ($result){
-                echo "Database changed\r\n";
-            }
-            else{
-                echo "Database change unsuccessful\r\n";
+            if (!$result){
+                echo "Database change unsuccessful";
             }
         }
 
         function __destruct(){
 
            $this->dbconnect->close();
-           /*echo "DB Connection closed\r\n";*/
+        
         }
 
         function create_table_location($name){
@@ -60,11 +57,9 @@
                 LATITUDE FLOAT NOT NULL)";
             
             $result = $this->dbconnect->query($sql);
-            if ($result){
-                echo "GPS table was created successfully\r\n";
-            }
-            else{
-                echo "GPS table creation unsuccessful\r\n";
+
+            if(!$result){
+                echo "Table creation was unsuccessfull";
             }
         }
 
@@ -81,6 +76,10 @@
                     array_push($return_array,$row); 
                 }
             }
+            else
+            {
+                return $false;
+            }
             return $return_array;   
         }
 
@@ -96,6 +95,9 @@
                     array_push($ret_arr,$row); 
                 }
             }
+            else{
+                return $false;
+            }
             return $ret_arr;   
         }
 
@@ -109,6 +111,7 @@
                 Z FLOAT NOT NULL)";
             
             $result = $this->dbconnect->query($sql);
+
             /*if ($result){
                 echo "Table was created\r\n";
             }
@@ -152,7 +155,7 @@
             $sql= $sql.$V1;
             
             $result = $this->dbconnect->query($sql);            //query             
-            if($result==false){
+            if(!$result){
                 echo "Data insertion unsuccessfull";
             }
         }
@@ -198,10 +201,8 @@
 
         function create_db(){  
             //echo "create db called";
-            $result = $this->dbconnect->query("CREATE DATABASE GPS_DB")                   //create database 
-            /*if ($result == false){
-                echo "database hasn't been created!";
-            }*/
+            $result = $this->dbconnect->query("CREATE DATABASE GPS_DB");                   //create database 
+           
         }
 
         function authoriseUser($username, $password){

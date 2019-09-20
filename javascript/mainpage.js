@@ -25,35 +25,15 @@ window.onload = function () {
 
     //First file hidden input connected to the div area
     fileone.onclick = function () {
-        
         document.getElementById("fileA").click();
     }
-
-
     //second file hidden input connected to the div area
     filetwo.onclick = () => {
-       
         document.getElementById("fileB").click();
-
     }
+
+    
 }
-
-    // fileinput finish
-    $.ajax(
-        {
-            url: "API.php",
-            type: "GET",
-            success: function (data, textStatus, response) {
-                Content = response.responseText;
-                //console.log(response.responseText);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("unsuccessful");
-            }
-        });
-
-
-
 
     const dragOverHandler = (event) => { event.preventDefault(); }
     /**
@@ -75,6 +55,7 @@ window.onload = function () {
         else {
             console.log("Multiple files detected");
         }
+        ev.dataTransfer.clearData();
     }
 
     //display files in the webpage as icons
@@ -136,6 +117,9 @@ let submit_file =(ev)=> {
             success:function(data, textStatus, response)
             {
                 alert("success in function call");
+                $(".hd_inp").val('');
+                $(".fileimg").css("display","none");
+                file.length =0;
                 console.log(response)
             },
             error: function(jqXHR, textStatus, errorThrown)
