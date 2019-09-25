@@ -32,7 +32,9 @@ if (isset($_SESSION['id'])) {
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
-    <!-- materializecss -->
+    <!-- D3 related css -->
+    <link rel="stylesheet" href="css/LineGraphStyle.css" />
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
 
   </head>
 
@@ -78,7 +80,7 @@ if (isset($_SESSION['id'])) {
           <div class="mdl-card__supporting-text">
             <p class="my_subtitle">Filters</p>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <input class="form-check-input" type="checkbox" value="" id="visSpeedCheck" onclick="controlGraph()">
               <label class="form-check-label" for="defaultCheck1">
                 Visualize Speed
               </label>
@@ -152,6 +154,19 @@ if (isset($_SESSION['id'])) {
         <li class="mdl-menu__item">Settings</li>
         <li class="mdl-menu__item"><a href="server/logout.php">Logout</a></li>
       </ul>
+
+      <div id="myGraph" class="graph">
+        <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+          <div id="myLineGraph">
+            
+          </div>
+
+          <div id="slider-range2" style="width: 90%px; margin-left:5%; margin-right:5%"></div>
+        </div>
+      </div>
+
+
+
       <!--
 
     <div id="mySidenav" class="sidenav">
@@ -344,6 +359,19 @@ if (isset($_SESSION['id'])) {
 
       <!-- Custom UI CSS -->
       <script type="text/javascript" src="javascript/mainpage-ui.js"></script>
+
+      <!-- Custom Line Chart -->
+      <script src="javascript/lineGraphScript.js"></script>
+
+      <!-- D3 and others -->
+      <script src="https://d3js.org/d3.v5.min.js"></script>
+
+      <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+
+      <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
   </body>
 

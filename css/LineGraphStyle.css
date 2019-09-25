@@ -1,0 +1,42 @@
+
+.domain {
+    display: none;
+}
+
+.axis text {
+    font-family: 'Proxima-Nova', sans-serif;
+    font-size: 13px;
+    pointer-events: none;
+    fill: #7e7e7e;
+}
+
+
+
+.line {
+    stroke: #2f5491;
+    stroke-width: 1px;
+    fill: none;
+}
+
+.axis line {
+    fill: none;
+    stroke: #ccc;
+    stroke-dasharray: 2px 3px;
+    shape-rendering: crispEdges;
+    stroke-width: 1px;
+}
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.focus {
+    font-family: 'Proxima-Nova', sans-serif;
+    font-size: 14px;
+    fill: black;
+}
+
+.focus circle {
+    fill: #5e8dc9;
+}

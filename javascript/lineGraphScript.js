@@ -4,10 +4,10 @@
 function init(){
 
     // Margin
-    var margin = {top: 50, right: 150, bottom: 50, left: 50};
+    var margin = {top: 50, right: 50, bottom: 50, left: 50};
 
     var widther = window.outerWidth-10;
-    var heighther = 500;
+    var heighther = 200;
 
     var w = widther - margin.left - margin.right,
         h = heighther - margin.top - margin.bottom;
@@ -25,7 +25,7 @@ function init(){
         };
     }
 
-    d3.csv('../dataprototype/line-chart.csv', rowConverter)
+    d3.csv('dataprototype/line-chart.csv', rowConverter)
       .then(function(data) {
 
         //dataset = data;
@@ -64,7 +64,7 @@ function init(){
         //yScale.domain(d3.extent(dataset, function(d) { return d; }));
 
         // Set up the SVG and Path
-        var svg = d3.select("body")
+        var svg = d3.select("#myLineGraph")
             .append("svg")
             .attr("width", w + margin.left + margin.right)
             .attr("height", h + margin.top + margin.bottom)
@@ -82,7 +82,7 @@ function init(){
             .attr("transform", "translate(0, "+ h + ")")
             .call(xAxis);
 
-        var yAxis = d3.axisLeft(yScale).tickSize(-w).tickPadding(8).ticks(6);
+        var yAxis = d3.axisLeft(yScale).tickSize(-w).tickPadding(8).ticks(4);
 
         // Add Y-Axis
         svg.append("g")
@@ -175,7 +175,7 @@ function init(){
         }
 
         $(function() {
-            $("#slider-range").slider({
+            $("#slider-range2").slider({
                 range: true,
                 min: 0,
                 max: maxDomain,
