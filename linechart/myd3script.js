@@ -190,7 +190,49 @@ function init(){
             })
         });
 
+        // RESPONSIVENESS
+        d3.select(window).on("resize", resized);
+
+        function resized() {
+
+            w1 = window.outerWidth-10;
+
+
+            // (1) Update xScale
+
+            xScale.range([0, w1 - margin.left - margin.right]); // <- Scale knows value changes
+
+            svg.select(".x.axis").call(xAxis);
+
+            // (2) Update line chart
+            d3.select("svg").attr("width", w1);
+
+            valueline = d3.line()
+            .x(function(d) { 
+                return xScale(d.time); })
+            .y(function(d) {  
+                return yScale(d.speed); 
+            })
+            .curve(d3.curveMonotoneX);
+
+            d3.select(".line").attr("d", valueline);
+
+            // (3) Update yAxis
+            yAxis.tickSize(-w1 +margin.right + margin.left);
+
+            svg.select(".y.axis").call(yAxis);
+
+            // (4) update invisible rectangle
+            d3.selectAll("rect").attr("width", w1 - margin.left - margin.right);
+
+            // (4) update mouseover
+
+
+        }
+
     });
+
+
 
     
 
