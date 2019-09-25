@@ -2,23 +2,19 @@
 const { L, d3 } = window; // Define L, d3
 
 let csvData;
-let min;
-let max;
 let map;
-const polylines = [];
+let polylines = [];
+const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
 
 // function to initialize slider
 function sliderInit() {
-  console.log(Object.keys(polylines).length);
-  // let sliderHandlePreviousLocations = [min, max - 1];
-  let sliderHandlePreviousLocations = [min, Object.keys(polylines).length - 1];
+  let sliderHandlePreviousLocations = [0, Object.keys(polylines).length - 1];
   // slider function
   $('#slider-range').slider({
     range: true,
-    min,
-    // max: max - 1,
+    min: 0,
     max: Object.keys(polylines).length - 1,
-    values: [min, max],
+    values: [0, Object.keys(polylines).length - 1],
     slide: (event, ui) => {
       const str = `Point: ${ui.values[0] + 1} - Point: ${ui.values[1] + 1}`;
       document.getElementById('datapoint').value = str;
@@ -60,14 +56,16 @@ const color = d3.scaleQuantize()
   .range(['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']);
 
 // function to calculate distance between 2 points
-function distance(lat1, lon1, lat2, lon2, unit) {
-  if ((lat1 === lat2) && (lon1 === lon2)) {
+function distance(latlngs, unit) {
+  const { lat: lat1, lng: lng1 } = latlngs[0];
+  const { lat: lat2, lng: lng2 } = latlngs[1];
+  if ((lat1 === lat2) && (lng1 === lng2)) {
     return 0;
   }
 
   const radlat1 = Math.PI * lat1 / 180;
   const radlat2 = Math.PI * lat2 / 180;
-  const theta = lon1 - lon2;
+  const theta = lng1 - lng2;
   const radtheta = Math.PI * theta / 180;
 
   let dist = Math.sin(radlat1) * Math.sin(radlat2)
@@ -89,40 +87,109 @@ function distance(lat1, lon1, lat2, lon2, unit) {
   return dist;
 }
 
-function drawPolylines() {
-  for (let i = min; i < max; i += 1) {
-    const lat1 = parseFloat(csvData[i].latitude);
-    const lon1 = parseFloat(csvData[i].longitude);
-    const lat2 = parseFloat(csvData[i + 1].latitude);
-    const lon2 = parseFloat(csvData[i + 1].longitude);
 
-    const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
-    const speed = distance(
-      lat1, lon1,
-      lat2, lon2,
-      'K',
-    ) / (1 / 600);
+function drawPolyline(latlngs) {
+  const speed = distance(
+    latlngs,
+    'K',
+  ) / (1 / 600);
 
-    const polyline = L.polyline(latlngs, {
-      color: color(speed),
-      weight: 8,
-      lineCap: 'square',
-      smoothFactor: 1,
-    }).addTo(map);
+  // draw polylines
+  const polyline = L.polyline(latlngs, {
+    color: '#313695 ',
+    weight: 8,
+    lineCap: 'square',
+    smoothFactor: 1,
+  }).addTo(map);
 
-    const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
-    polyline.bindTooltip(polylineTooltipText).closeTooltip();
+  const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
+  polyline.bindTooltip(polylineTooltipText).closeTooltip();
 
-    polylines.push(polyline);
+  polylines.push(polyline);
+}
+
+function xhrAdjust(newPoints, min, max) {
+  let isLast = false;
+  let count = -1;
+  // directions api limit
+  const apiLimit = 25;
+
+  // matching api limit
+  // const apiLimit = 100;
+  const straightPoints = newPoints;
+  const adjustedPoints = [];
+
+  // AJAX listener
+  const xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      // MATCHING API ***
+      // const { tracepoints } = (JSON.parse(xhr.response));
+      // for (let i = 0; i < tracepoints.length; i += 1) {
+      //   if (tracepoints[i]) {
+      //     const [lng, lat] = tracepoints[i].location;
+      //     straightPoints.push(L.latLng(lat, lng));
+      //   } else {
+      //     straightPoints.push(newPoints[i + (count * apiLimit)]);
+      //   }
+      // }
+
+      // DIRECTIONS API ***
+      const { waypoints } = (JSON.parse(xhr.response));
+      for (let i = 0; i < waypoints.length; i += 1) {
+        const [lng, lat] = waypoints[i].location;
+        adjustedPoints.push(L.latLng(lat, lng));
+      }
+      if (isLast) {
+        console.log('last');
+        count = 0;
+        for (let i = min; i < max - 1; i += 1) {
+          straightPoints[i] = adjustedPoints[count];
+          count += 1;
+        }
+
+        for (let i = 0; i < polylines.length; i += 1) {
+          map.removeLayer(polylines[i]);
+        }
+        polylines = [];
+
+        for (let i = 0; i < straightPoints.length - 1; i += 1) {
+          const latlngs = [straightPoints[i], straightPoints[i + 1]];
+          drawPolyline(latlngs);
+        }
+        $('#slider-range').slider('destroy');
+        sliderInit();
+      }
+    }
+  };
+
+  for (let i = min; i < max - 1; i += apiLimit) {
+    count += 1;
+    console.log(`Count${count}: ${i}`);
+    let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/';
+    // const geometry = '&geometries=geojson';
+    let waypointsList = '';
+
+    for (let j = i; j < apiLimit + i; j += 1) {
+      if (j === max - 1) {
+        isLast = true;
+        break;
+      }
+      waypointsList += `${newPoints[j].lng},${newPoints[j].lat};`;
+    }
+    waypointsList = waypointsList.slice(0, -1);
+    // url = `${url + waypointsList}?access_token=${accessToken}${geometry}`;
+    url = `${url + waypointsList}?access_token=${accessToken}`;
+    console.log(url);
+    xhr.open('GET', url, false);
+    xhr.send();
   }
 }
 
+
 // Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // const { L, d3 } = window; // Define L, d3
-
-  const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
-
   map = L.map('mapid', {
     zoomControl: false,
   }).setView([-37.843527, 145.010365], 12);
@@ -143,9 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // load data
   $.get('dataprototype/GPS_1Hz_modified.csv', (data) => {
     csvData = $.csv.toObjects(data);
-    min = 0;
-    // max = 50;
-    max = Object.keys(csvData).length - 1;
+    const min = 0;
+    const max = Object.keys(csvData).length - 1;
 
     // add circles
     const circle = L.circle([parseFloat(csvData[0].latitude), parseFloat(csvData[0].longitude)], {
@@ -164,131 +230,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // fly to circle's latlng
       const latlngCircle = circle.getLatLng();
-      map.flyTo(latlngCircle, 16);
+      map.flyTo(latlngCircle, 18);
 
       // code is fired after animation ends, draw paths and slider
       map.once('moveend', () => {
-        // // draw polylines
-        // drawPolylines();
-
-        const selectedPoints = [];
+        const newPoints = [];
         const increment = 10;
         for (let i = min; i < max; i += increment) {
           const closeToLastCoords = max - i;
 
-          let lat1; let lon1; let lat2; let lon2;
+          let lat1; let lng1; let lat2; let lng2;
 
           if (closeToLastCoords > increment) {
             lat1 = parseFloat(csvData[i].latitude);
-            lon1 = parseFloat(csvData[i].longitude);
+            lng1 = parseFloat(csvData[i].longitude);
             lat2 = parseFloat(csvData[i + increment].latitude);
-            lon2 = parseFloat(csvData[i + increment].longitude);
-
-            selectedPoints.push(L.latLng(lat1, lon1));
-          } else if (closeToLastCoords < increment || closeToLastCoords !== 0) {
-            lat1 = parseFloat(csvData[i].latitude);
-            lon1 = parseFloat(csvData[i].longitude);
-            lat2 = parseFloat(csvData[max].latitude);
-            lon2 = parseFloat(csvData[max].longitude);
-
-            selectedPoints.push(L.latLng(lat2, lon2));
-          }
-
-          // const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
-          // const speed = distance(
-          //   lat1, lon1,
-          //   lat2, lon2,
-          //   'K',
-          // ) / (1 / 600);
-
-          // // draw polylines
-          // const polyline = L.polyline(latlngs, {
-          //   color: color(speed),
-          //   weight: 8,
-          //   lineCap: 'square',
-          //   smoothFactor: 1,
-          // }).addTo(map);
-
-          // const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
-          // polyline.bindTooltip(polylineTooltipText).closeTooltip();
-
-          // polylines.push(polyline);
-        }
-
-        console.log(selectedPoints);
-
-        // ************************* AJAX CALL ************************
-        const xhr = new XMLHttpRequest();
-
-        // AJAX listener
-        xhr.onload = () => {
-          // Process our return data
-          if (xhr.status >= 200 && xhr.status < 300) {
-            console.log('success!', xhr);
-            const jsonResponseWaypoints = (JSON.parse(xhr.response)).waypoints;
-            console.log(jsonResponseWaypoints);
-
-            for (let i = 0; i < jsonResponseWaypoints.length - 1; i += 1) {
-              console.log('json draw');
-              const lat1 = jsonResponseWaypoints[i].location[1];
-              const lon1 = jsonResponseWaypoints[i].location[0];
-              const lat2 = jsonResponseWaypoints[i + 1].location[1];
-              const lon2 = jsonResponseWaypoints[i + 1].location[0];
-
-              const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
-              const speed = distance(
-                lat1, lon1,
-                lat2, lon2,
-                'K',
-              ) / (1 / 600);
-
-              // draw polylines
-              const polyline = L.polyline(latlngs, {
-                color: color(speed),
-                weight: 8,
-                lineCap: 'square',
-                smoothFactor: 1,
-              }).addTo(map);
-
-              const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
-              polyline.bindTooltip(polylineTooltipText).closeTooltip();
-
-              polylines.push(polyline);
-            }
+            lng2 = parseFloat(csvData[i + increment].longitude);
           } else {
-            console.log('The request failed!');
+            lat1 = parseFloat(csvData[i].latitude);
+            lng1 = parseFloat(csvData[i].longitude);
+            lat2 = parseFloat(csvData[max].latitude);
+            lng2 = parseFloat(csvData[max].longitude);
           }
-        };
+          newPoints.push(L.latLng(lat1, lng1));
 
-        let count = 0;
-        const apiLimit = 25;
-
-        for (let i = 0; i < selectedPoints.length - 1; i += apiLimit) {
-          count += 1;
-          console.log(`Count${count}: ${i}`);
-
-          let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/';
-          let waypointsList = '';
-
-          for (let j = i; j < apiLimit + i; j += 1) {
-            console.log(`j: ${j}`);
-            if (j === selectedPoints.length - 1) {
-              break;
-            }
-            waypointsList += `${selectedPoints[j].lng},${selectedPoints[j].lat};`;
-          }
-          waypointsList = waypointsList.slice(0, -1);
-          console.log(waypointsList);
-          url = `${url + waypointsList}?access_token=${accessToken}`;
-          console.log(url);
-          // urls.push(url);
-          xhr.open('GET', url, false);
-          xhr.send();
+          const latlngs = [L.latLng(lat1, lng1), L.latLng(lat2, lng2)];
+          drawPolyline(latlngs);
         }
 
-        // Promise.all([])
-        // xhr.open('GET', url);
-        // xhr.send();
+        const button = document.createElement('button');
+        button.innerHTML = 'Adjust';
+        button.id = 'adjust path';
+        button.classList.add('btn');
+        button.classList.add('btn-primary');
+
+        button.addEventListener('click', () => {
+          const sliderMin = $('#slider-range').slider('values', 0);
+          const sliderMax = $('#slider-range').slider('values', 1);
+          // XHR adjust paths
+          xhrAdjust(newPoints, sliderMin, sliderMax);
+        });
+
+        document.querySelector('.adjust-buttons').appendChild(button);
+        console.log(newPoints);
 
         // init slider
         sliderInit();
@@ -315,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // code is fired after animation ends, draw paths and slider
       map.once('moveend', () => {
         // draw polylines
-        drawPolylines();
+        drawPolyline();
         // init slider;
         sliderInit();
       });
