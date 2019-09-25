@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+<head>
+    <title>Line Chart</title>
+
+    <style>
+        /*.line {
+            fill: none;
+            stroke: #ffab00;
+            stroke-width: 0.5;
+        }*/
+        .domain {
+            display: none;
+        }
+
+        .axis text {
+            font-family: 'Proxima-Nova', sans-serif;
+            font-size: 13px;
+            pointer-events: none;
+            fill: #7e7e7e;
+        }
+
+        
+
+        .line {
+            stroke: #2f5491;
+            stroke-width: 1px;
+            fill: none;
+        }
+
+        .axis line {
+            fill: none;
+            stroke: #ccc;
+            stroke-dasharray: 2px 3px;
+            shape-rendering: crispEdges;
+            stroke-width: 1px;
+        }
+
+        .overlay {
+            fill: none;
+            pointer-events: all;
+        }
+
+        .focus {
+            font-family: 'Proxima-Nova', sans-serif;
+            font-size: 14px;
+            fill: black;
+        }
+
+        .focus circle {
+            fill: #5e8dc9;
+        }
+
+
+
+    </style>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <script src="myd3script.js"></script>
+
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
+</head>
+<body>
+    <div id="slider-range" style="width: 80%px; margin-left:10%; margin-right:10%"></div>
+    
+
+    <div id="chart2">
+
+    </div>
+
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+</body>
+
+
+
+
+</html>
