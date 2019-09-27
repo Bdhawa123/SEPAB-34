@@ -92,7 +92,7 @@ function drawPolyline(latlngs) {
   const speed = distance(
     latlngs,
     'K',
-  ) / (1 / 600);
+  ) * (1000);
 
   // draw polylines
   const polyline = L.polyline(latlngs, {
@@ -108,83 +108,90 @@ function drawPolyline(latlngs) {
   polylines.push(polyline);
 }
 
-function xhrAdjust(newPoints, min, max) {
-  let isLast = false;
+
+function requestAdjustedWaypoints(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        resolve(xhr.response);
+      } else {
+        reject(xhr.statusText);
+      }
+    };
+    xhr.send();
+  });
+}
+
+
+async function ajaxPathAdjust(oldPoints, min, max) {
   let count = -1;
-  // directions api limit
   const apiLimit = 25;
-
-  // matching api limit
-  // const apiLimit = 100;
-  const straightPoints = newPoints;
+  const newPoints = oldPoints;
   const adjustedPoints = [];
-
-  // AJAX listener
-  const xhr = new XMLHttpRequest();
-
-  xhr.onreadystatechange = () => {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      // MATCHING API ***
-      // const { tracepoints } = (JSON.parse(xhr.response));
-      // for (let i = 0; i < tracepoints.length; i += 1) {
-      //   if (tracepoints[i]) {
-      //     const [lng, lat] = tracepoints[i].location;
-      //     straightPoints.push(L.latLng(lat, lng));
-      //   } else {
-      //     straightPoints.push(newPoints[i + (count * apiLimit)]);
-      //   }
-      // }
-
-      // DIRECTIONS API ***
-      const { waypoints } = (JSON.parse(xhr.response));
-      for (let i = 0; i < waypoints.length; i += 1) {
-        const [lng, lat] = waypoints[i].location;
-        adjustedPoints.push(L.latLng(lat, lng));
-      }
-      if (isLast) {
-        console.log('last');
-        count = 0;
-        for (let i = min; i < max - 1; i += 1) {
-          straightPoints[i] = adjustedPoints[count];
-          count += 1;
-        }
-
-        for (let i = 0; i < polylines.length; i += 1) {
-          map.removeLayer(polylines[i]);
-        }
-        polylines = [];
-
-        for (let i = 0; i < straightPoints.length - 1; i += 1) {
-          const latlngs = [straightPoints[i], straightPoints[i + 1]];
-          drawPolyline(latlngs);
-        }
-        $('#slider-range').slider('destroy');
-        sliderInit();
-      }
-    }
-  };
 
   for (let i = min; i < max - 1; i += apiLimit) {
     count += 1;
-    console.log(`Count${count}: ${i}`);
+    // console.log(`Count${count}: ${i}`);
     let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/';
     // const geometry = '&geometries=geojson';
     let waypointsList = '';
 
     for (let j = i; j < apiLimit + i; j += 1) {
       if (j === max - 1) {
-        isLast = true;
         break;
       }
-      waypointsList += `${newPoints[j].lng},${newPoints[j].lat};`;
+      waypointsList += `${oldPoints[j].lng},${oldPoints[j].lat};`;
     }
     waypointsList = waypointsList.slice(0, -1);
-    // url = `${url + waypointsList}?access_token=${accessToken}${geometry}`;
     url = `${url + waypointsList}?access_token=${accessToken}`;
     console.log(url);
-    xhr.open('GET', url, false);
-    xhr.send();
+
+    // eslint-disable-next-line no-await-in-loop
+    const result = await requestAdjustedWaypoints(url);
+    const { waypoints } = (JSON.parse(result));
+    for (let j = 0; j < waypoints.length; j += 1) {
+      const [lng, lat] = waypoints[j].location;
+      adjustedPoints.push(L.latLng(lat, lng));
+    }
   }
+
+  count = 0;
+  for (let i = min; i < max - 1; i += 1) {
+    newPoints[i] = adjustedPoints[count];
+    count += 1;
+  }
+
+  for (let i = 0; i < polylines.length; i += 1) {
+    map.removeLayer(polylines[i]);
+  }
+  polylines = [];
+
+  for (let i = 0; i < newPoints.length - 1; i += 1) {
+    const latlngs = [newPoints[i], newPoints[i + 1]];
+    drawPolyline(latlngs);
+  }
+  $('#slider-range').slider('destroy');
+  sliderInit();
+}
+
+
+function createAdjustPathsButton(newPoints) {
+  const button = document.createElement('button');
+  button.innerHTML = 'Adjust';
+  button.id = 'adjust path';
+  button.classList.add('btn');
+  button.classList.add('btn-primary');
+
+  button.addEventListener('click', () => {
+    const sliderMin = $('#slider-range').slider('values', 0);
+    const sliderMax = $('#slider-range').slider('values', 1);
+    // XHR adjust paths
+    ajaxPathAdjust(newPoints, sliderMin, sliderMax);
+  });
+
+  return button;
 }
 
 
@@ -198,7 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   L.tileLayer(tileurl, {
     attribution,
-    maxZoom: 18,
+    maxNativeZoom: 20,
+    maxZoom: 20,
     id: 'mapbox.streets',
     accessToken,
   }).addTo(map);
@@ -235,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // code is fired after animation ends, draw paths and slider
       map.once('moveend', () => {
         const newPoints = [];
-        const increment = 10;
+        const increment = 5;
         for (let i = min; i < max; i += increment) {
           const closeToLastCoords = max - i;
 
@@ -258,21 +266,8 @@ document.addEventListener('DOMContentLoaded', () => {
           drawPolyline(latlngs);
         }
 
-        const button = document.createElement('button');
-        button.innerHTML = 'Adjust';
-        button.id = 'adjust path';
-        button.classList.add('btn');
-        button.classList.add('btn-primary');
-
-        button.addEventListener('click', () => {
-          const sliderMin = $('#slider-range').slider('values', 0);
-          const sliderMax = $('#slider-range').slider('values', 1);
-          // XHR adjust paths
-          xhrAdjust(newPoints, sliderMin, sliderMax);
-        });
-
-        document.querySelector('.adjust-buttons').appendChild(button);
-        console.log(newPoints);
+        const adjustButton = createAdjustPathsButton(newPoints);
+        document.querySelector('.adjust-buttons').appendChild(adjustButton);
 
         // init slider
         sliderInit();
