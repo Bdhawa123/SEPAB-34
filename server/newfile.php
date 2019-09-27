@@ -45,9 +45,11 @@ switch($_POST['functionname']){
         $con_file = new connection;
         $new_array = [];
         //print_r($con_file->fetch_table_data($_POST['arguments']));
+        $con_file->changeDB("gps_db");
         $array_return = $con_file->fetch_table_data($_POST['arguments']);
+        
         foreach ($array_return as $obj){
-            array_push($new_array,array('Name'=>$obj[0],'latitude'=>$obj[2],'longitude'=>$obj[3],'Time'=>$obj[1],'GYRO_X'=>$obj[4],'GYRO_Y'=>$obj[5]));
+            array_push($new_array,array('Name'=>$obj[0],'latitude'=>$obj[2],'longitude'=>$obj[3]));
         }
         echo json_encode($new_array);
 

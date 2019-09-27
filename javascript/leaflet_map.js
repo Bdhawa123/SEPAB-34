@@ -130,16 +130,15 @@ document.addEventListener('DOMContentLoaded', () => {
         //JSON.parse(response.responseText)[0].GPS_Data;
         let Content = JSON.parse(response.responseText)[0].GPS_Data;          //GPS inside gps data
         let Data = Content.data;
-        console.log(Content);
         console.log("Length of array " + Content.length);
 
         // fetch all the values to generate 
         for (let i = 0; i < Content.length; i++) {
           
           let datafile = Content[i].data[0];
-          console.log(datafile.Latitude);
+          console.log(typeof(datafile.Latitude));
           console.log("Datafile",datafile);
-          const circle = L.circle([parseFloat('33.8688'), parseFloat('151.2093')], {
+          const circle = L.circle([(parseFloat(datafile.Latitude)*-1  ), parseFloat(datafile.Longitude)], {
             radius: 800,
           }).addTo(map);
           console.log(circle)
@@ -162,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
               //dataType:'json',
               data: { functionname: 'showMap', arguments: Content[i].Table_Name },
               success: function (data, textStatus, response) {
-                console.log(JSON.parse(response.responseText));
+                console.log("Response being generated",JSON.parse(response.responseText));
                 json = JSON.parse(response.responseText);
                 csvData = json           
 
