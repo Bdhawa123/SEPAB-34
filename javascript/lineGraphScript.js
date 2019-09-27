@@ -6,7 +6,7 @@ function init(){
     // Margin
     var margin = {top: 50, right: 50, bottom: 50, left: 50};
 
-    var widther = window.outerWidth-10;
+    var widther = window.innerWidth;
     var heighther = 200;
 
     var w = widther - margin.left - margin.right,
@@ -15,7 +15,7 @@ function init(){
     var dataset = [];
     var maxDomain = 1;
 
-    var converter = 1000;
+    var converter = 100;
 
     var rowConverter = function(d){
 
@@ -28,40 +28,27 @@ function init(){
     d3.csv('dataprototype/line-chart.csv', rowConverter)
       .then(function(data) {
 
-        //dataset = data;
-
         for(var i = 0; i < data.length; i++){
 
             if (i%converter == 0){
                
-        
                 dataset.push(data[i]);   
             }
         }
 
         maxDomain = d3.max(dataset, function(d){
-            
             return d.time;
         });
 
-        maxDomain = maxDomain;
-
-        console.log("Largest: " + maxDomain);
-
         var xScale = d3.scaleLinear()
-        .domain([0, maxDomain])
-        .range([0, w]);
+            .domain([0, maxDomain])
+            .range([0, w]);
 
-        //xScale.domain(d3.extent(dataset, function(d) { return d.time; }));
-
-        // Don't touch y scale
+        // Y scale is static
         var yScale = d3.scaleLinear()
-        .domain([0, d3.max(dataset, function(d){
-            return d.speed;
-        })])
-        .range([h, 0]);
-
-        //yScale.domain(d3.extent(dataset, function(d) { return d; }));
+            .domain([0, d3.max(dataset, function(d){
+                return d.speed;
+            })]).range([h, 0]);
 
         // Set up the SVG and Path
         var svg = d3.select("#myLineGraph")
@@ -76,7 +63,6 @@ function init(){
         // (1) Add translate to align x-axis at the bottom
         var xAxis = d3.axisBottom(xScale).tickSize(-h).tickPadding(8).ticks(5);
 
-
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0, "+ h + ")")
@@ -89,12 +75,11 @@ function init(){
             .attr("class", "y axis")
             .call(yAxis);
 
-
         // Data line
         var valueline = d3.line()
-            .x(function(d) { return xScale(d.time); })
-            .y(function(d) {  
-                
+            .x(function(d) { 
+                return xScale(d.time); 
+            }).y(function(d) {  
                 return yScale(d.speed); 
             })
             .curve(d3.curveMonotoneX);
@@ -111,7 +96,6 @@ function init(){
             .attr("width", w)
             .attr("height", h);
     
-
         path.attr("clip-path", "url(#clip)")
             .attr("class", "line")
             .attr("d", valueline);
@@ -128,7 +112,6 @@ function init(){
         focus.append("text")
             .attr("x", 9)
             .attr("dy", ".35em");    
-
 
         //Creates larger area for tooltip   
         var overlay = svg.append("rect")
@@ -160,16 +143,6 @@ function init(){
 
             var t = svg.transition().duration(0);
 
-            /*var size = end - begin;
-            var step = size / 10;
-            var ticks = [];
-            for (var i = 0; i <= 10; i++) {
-                ticks.push(Math.floor(begin + step * i));
-            }
-
-            xAxis.tickValues(ticks);*/
-
-
             t.select(".x.axis").call(xAxis);
             path.attr("d", valueline);
         }
@@ -195,17 +168,16 @@ function init(){
 
         function resized() {
 
-            w1 = window.outerWidth-10;
-
+            widther1 = window.innerWidth;
+            w1 = widther1 - margin.left - margin.right;
 
             // (1) Update xScale
-
-            xScale.range([0, w1 - margin.left - margin.right]); // <- Scale knows value changes
+            xScale.range([0, w1]); // <- Scale knows value changes
 
             svg.select(".x.axis").call(xAxis);
 
             // (2) Update line chart
-            d3.select("svg").attr("width", w1);
+            d3.select("svg").attr("width", widther1);
 
             valueline = d3.line()
             .x(function(d) { 
@@ -218,24 +190,16 @@ function init(){
             d3.select(".line").attr("d", valueline);
 
             // (3) Update yAxis
-            yAxis.tickSize(-w1 +margin.right + margin.left);
+            yAxis.tickSize(-w1);
 
             svg.select(".y.axis").call(yAxis);
 
-            // (4) update invisible rectangle
-            d3.selectAll("rect").attr("width", w1 - margin.left - margin.right);
-
-            // (4) update mouseover
-
+            // (4) update mouseover & invisible rectangle
+            d3.selectAll("rect").attr("width", w1);
 
         }
 
     });
-
-
-
-    
-
 }
 
 window.onload = init;

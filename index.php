@@ -42,7 +42,7 @@ if (isset($_SESSION['id'])) {
 
     <div id="header" class="fixed-top">
       <nav class="navbar navbar-expand-lg navbar-transparent">
-        <a class="navbar-brand" href="prototype.php">SABAQ</a>
+        <a class="navbar-brand" href="index.php">SABAQ</a>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -246,7 +246,7 @@ if (isset($_SESSION['id'])) {
             </button>
           </div>
           <div class="modal-body">
-            <form action="prototype.php" method="post">
+            <form action="index.php" method="post">
               <div class="form-group">
                 <label for="username" class="col-form-label">Username:</label>
                 <input type="text" name="username" class="form-control" id="username" />
