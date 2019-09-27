@@ -81,17 +81,16 @@ a{
 
 .container{
   width:100%;
+  }
 
-}
 
 #dropzone {
 
-  cursor:'pointer';
+  /*cursor:'pointer';*/
   height:250px;
   padding-top: 3%;
-  padding-right: 5%;
   padding-bottom: 3%;
-  padding-left: 5%;
+  padding-left: 8%;
   align-content: center;
 }
 
@@ -100,12 +99,14 @@ a{
 }
 
 .innercontainer{
-  border-style: dotted;
-  cursor:'pointer';
-  width:45%;
-  height:100%;
-  align-content: center;
-
+  border-style: groove;
+  cursor: 'pointer';
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 
@@ -119,14 +120,14 @@ a{
 
 #fileimg1{
   content:url("../img/fileobj.png");
-  display: none;
-}
 
-#fileimg2{
-  content:url("../img/fileobj.png");
-  display: none;
+  height: 175px;
+  width:175px;
+  display:none;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
 }
-
 
 input[type='file'] {
   color: transparent;

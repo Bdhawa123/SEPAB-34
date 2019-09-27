@@ -52,13 +52,17 @@
         function create_table_location($name){
 
             $sql = "CREATE TABLE IF NOT EXISTS $name(
-                NAME INT PRIMARY KEY,
+                NAME INT PRIMARY KEY AUTO_INCREMENT,
+                TIME FLOAT NOT NULL,
+                LATITUDE FLOAT NOT NULL,
                 LONGITUDE FLOAT NOT NULL,
-                LATITUDE FLOAT NOT NULL)";
+                GYRO_X FLOAT NOT NULL,
+                GYRO_Y FLOAT NOT NULL)";
             
             $result = $this->dbconnect->query($sql);
 
             if(!$result){
+                echo $name;
                 echo "Table creation was unsuccessfull";
             }
         }
@@ -101,34 +105,13 @@
             return $ret_arr;   
         }
 
-        
-        function create_table_values($name){
-        
-            $sql = "CREATE TABLE IF NOT EXISTS $name(
-                ID INT AUTOINCREMENT PRIMARY KEY,
-                X FLOAT NOT NULL,
-                Y FLOAT NOT NULL,
-                Z FLOAT NOT NULL)";
-            
-            $result = $this->dbconnect->query($sql);
 
-            /*if ($result){
-                echo "Table was created\r\n";
-            }
-            else{
-                echo "Table creation unsuccessful\r\n";
-            }*/
-        }
-
-
-        //create a location table in the database
-    
+        //create a location table in the database    
         function insert_into_location($values,$filename){
-
             $this->create_table_location($filename);                     //create table GPS 
-            echo "value of name: $filename";
+            //echo "value of name: $filename";
             
-            $sql = "INSERT INTO $filename(NAME,LONGITUDE,LATITUDE) VALUES";
+            $sql = "INSERT INTO $filename(TIME,LATITUDE,LONGITUDE,GYRO_X,GYRO_Y) VALUES";
             $V1="";
             
             for($var =0;$var<sizeof($values)-1;$var++){
@@ -136,68 +119,30 @@
                 $array = $values[$var];  
                
                 if (!empty($array[0])){     
-                    $array[0] = preg_replace('/\D/', '', $array[0]);
-
+                    $array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
+                    $array[2] = preg_replace('/[A-Za-z]/', '', $array[2]);
                     if($var==sizeof($values)-2){
-                            $V1.="('$array[0]'".",$array[1]".",$array[2]);";
+                            //$V1.="($array[0]".",$array[1]".",$array[2]".",$array[3]".",$array[4]);";
+                            $V1.="($array[0],$array[1],$array[2],$array[3],$array[4]);";
                     }
                     else{                          
-                            $V1.="('$array[0]'".",$array[1]".",$array[2]),";
+                            $V1.="($array[0],$array[1],$array[2],$array[3],$array[4]),";
+                            //$V1.="('$array[0]'".",$array[1]".",$array[2]".",$array[3]".",$array[4]),";
                     }
-                }
-                else{
-                    echo "value is not valid";
                 }
             }
 
             $V1 = str_replace(' ', '', $V1);                    //remove spaces
             $V1 = preg_replace('/\s+/', '', $V1);               //remove tabs
             $sql= $sql.$V1;
+            echo $sql;
             
             $result = $this->dbconnect->query($sql);            //query             
             if(!$result){
-                echo "Data insertion unsuccessfull";
+                echo json_encode("wrong");
             }
         }
 
-
-
-        function insert($name,$lat,$long)
-        {
-            
-            echo "this function is being called";
-            $this->dbconnect->query("START TRANSACTION");
-            $sql = "INSERT INTO somename(NAME,LONGITUDE,LATITUDE) 
-                VALUES('$name','$lat','$long')";
-             if($this->dbconnect->query($sql))
-             {
-                 echo "Data inserted\r\n";
-             }
-             else
-             {
-                 echo "Failed\r\n";
-             }
-             $this->dbconnect->query("COMMIT");
-            
-            
-            //might be useful for speed entry multi-line entry
-             /*
-             $sql ="LOAD DATA LOCAL INFILE 'test/$filename' INTO TABLE somename
-             FIELDS TERMINATED BY ',' 
-             ENCLOSED BY '\"' 
-             LINES TERMINATED BY '\r\n'
-             IGNORE 1 LINES";
-             */
-
-             if($this->dbconnect->query($sql))
-             {
-                 echo "Data inserted";
-             }
-             else
-             {
-                 echo "Failed";
-             }
-        }
 
         function create_db(){  
             //echo "create db called";

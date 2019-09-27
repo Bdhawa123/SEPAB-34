@@ -33,7 +33,7 @@
         if ($valid==false)                                          //if file type is valid
         {
             http_response_code(400);
-            echo "validate false";                                                        //set response code to false
+            echo json_encode("1");                                                        //set response code to false
         }
         else
         {

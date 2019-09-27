@@ -2,37 +2,20 @@
 file =[];         //global variable for files
 window.onload = function () {
     let csvData;
-    console.log("This shouldn't be causing an issue");
-    //file input //
+      //file input //
     let fileone = document.getElementById("fileone");
-    let filetwo = document.getElementById("filetwo");
-
-    //file img 
     var img1 = document.getElementById("fileimg1");
-    var img2 = document.getElementById("fileimg2");
-
-    //input elements
     const inpElementA = document.getElementById("fileA");
-    const inpElementB = document.getElementById("fileB");
+    
 
     inpElementA.addEventListener('change', function () {
         showfiles("fileimg1", inpElementA.files[0].name, inpElementA.files[0]);
     });
 
-    inpElementB.addEventListener('change', function () {
-        showfiles("fileimg2", inpElementB.files[0].name, inpElementB.files[0]);
-    });
-
     //First file hidden input connected to the div area
     fileone.onclick = function () {
         document.getElementById("fileA").click();
-    }
-    //second file hidden input connected to the div area
-    filetwo.onclick = () => {
-        document.getElementById("fileB").click();
-    }
-
-    
+    }   
 }
 
     const dragOverHandler = (event) => { event.preventDefault(); }
@@ -41,6 +24,7 @@ window.onload = function () {
      * @param {*} ev
      */
     function dropHandler(ev, field) {
+      
         console.log("File Dropped");
         ev.preventDefault();
 
@@ -60,15 +44,12 @@ window.onload = function () {
 
     //display files in the webpage as icons
     function showfiles(idName, filename, fyl) {
-        document.getElementById(idName).style.display = "block";
+        file.length = 0;                                                //clear out the file array 
+        document.getElementById(idName).style.display = "flex";
         document.getElementById(idName + "2").innerHTML = filename;
+        $(".modal-dialog").css({"width":"500px"});      
         file.push(fyl);
     }
-
-
-
-
-
 
 function About() {
     document.getElementById("About").style.display = "block";

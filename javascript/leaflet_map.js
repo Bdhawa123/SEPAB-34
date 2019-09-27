@@ -128,19 +128,21 @@ document.addEventListener('DOMContentLoaded', () => {
       success: function (data, textStatus, response) {
         //console.log("success in function call");
         //JSON.parse(response.responseText)[0].GPS_Data;
-        let Content = JSON.parse(response.responseText)[0].GPS_Data;
-        //console.log(Content);
+        let Content = JSON.parse(response.responseText)[0].GPS_Data;          //GPS inside gps data
+        let Data = Content.data;
+        console.log(Content);
         console.log("Length of array " + Content.length);
 
         // fetch all the values to generate 
         for (let i = 0; i < Content.length; i++) {
-          console.log("File");
-          //console.log(Content[i].data[0].Latitude);
+          
           let datafile = Content[i].data[0];
-          console.log(datafile);
-          const circle = L.circle([parseFloat(datafile.Latitude), parseFloat(datafile.Longitude)], {
+          console.log(datafile.Latitude);
+          console.log("Datafile",datafile);
+          const circle = L.circle([parseFloat('33.8688'), parseFloat('151.2093')], {
             radius: 800,
           }).addTo(map);
+          console.log(circle)
 
           // circle add tooltip
           const circleTooltipText = 'Swinburne';

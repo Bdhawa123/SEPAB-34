@@ -20,17 +20,15 @@ switch($_POST['functionname']){
                 array_push($data,$con_file->fetch_table_data($var[0]));         //push the table data into data array
             }
 
+            
             for($var=0;$var<sizeof($filename_GPS);$var++){
-                $obj1=[];				//fetch all data from table
                 $obj2 = [];
-                /*---------------------------- Get all the data from table -------------------------------*/
-                foreach($data[$var] as $obj){
-                    array_push($obj1,array('Name'=>$obj[0],'Latitude'=>$obj[1],'Longitude'=>$obj[2]));          //create a new object in json file format
-                }
-
                 //					Get only first data out of the table
+                $obj = $data[$var][0];
+                //print_r($obj);
                 for($i=0;$i<1;$i++){
-                    array_push($obj2,array('Name'=>$obj[0],'Latitude'=>$obj[1],'Longitude'=>$obj[2]));
+                    
+                    array_push($obj2,array('Name'=>$obj[0],'Latitude'=>$obj[2],'Longitude'=>$obj[3],'Time'=>$obj[1]));
                 }
                 array_push($array_list,array('Table_Name'=>$filename_GPS[$var],'data'=>$obj2));                  //create final arraylist to push objects
             }
@@ -39,7 +37,7 @@ switch($_POST['functionname']){
             $new_array = [];
             array_push($new_array,array('root_file'=>$final_array));
            echo json_encode($final_array,JSON_PRETTY_PRINT);   
-           //print_r($new_array);
+           
            break;
 
     case 'showMap':
@@ -49,7 +47,7 @@ switch($_POST['functionname']){
         //print_r($con_file->fetch_table_data($_POST['arguments']));
         $array_return = $con_file->fetch_table_data($_POST['arguments']);
         foreach ($array_return as $obj){
-            array_push($new_array,array('Name'=>$obj[0],'latitude'=>$obj[1],'longitude'=>$obj[2]));
+            array_push($new_array,array('Name'=>$obj[0],'latitude'=>$obj[2],'longitude'=>$obj[3],'Time'=>$obj[1],'GYRO_X'=>$obj[4],'GYRO_Y'=>$obj[5]));
         }
         echo json_encode($new_array);
 
