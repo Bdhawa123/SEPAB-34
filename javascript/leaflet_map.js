@@ -2,20 +2,19 @@
 const { L, d3 } = window; // Define L, d3
 
 let csvData;
-let min;
-let max;
 let map;
-const polylines = [];
+let polylines = [];
+const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
 
 // function to initialize slider
 function sliderInit() {
-  let sliderHandlePreviousLocations = [min, max - 1];
+  let sliderHandlePreviousLocations = [0, Object.keys(polylines).length - 1];
   // slider function
   $('#slider-range').slider({
     range: true,
-    min,
-    max: max - 1,
-    values: [min, max],
+    min: 0,
+    max: Object.keys(polylines).length - 1,
+    values: [0, Object.keys(polylines).length - 1],
     slide: (event, ui) => {
       document.getElementById('my_point_start').innerHTML = `${ui.values[0] + 1}`;
       document.getElementById('my_point_end').innerHTML = `${ui.values[1] + 1}`;
@@ -57,14 +56,16 @@ const color = d3.scaleQuantize()
   .range(['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']);
 
 // function to calculate distance between 2 points
-function distance(lat1, lon1, lat2, lon2, unit) {
-  if ((lat1 === lat2) && (lon1 === lon2)) {
+function distance(latlngs, unit) {
+  const { lat: lat1, lng: lng1 } = latlngs[0];
+  const { lat: lat2, lng: lng2 } = latlngs[1];
+  if ((lat1 === lat2) && (lng1 === lng2)) {
     return 0;
   }
 
   const radlat1 = Math.PI * lat1 / 180;
   const radlat2 = Math.PI * lat2 / 180;
-  const theta = lon1 - lon2;
+  const theta = lng1 - lng2;
   const radtheta = Math.PI * theta / 180;
 
   let dist = Math.sin(radlat1) * Math.sin(radlat2)
@@ -86,84 +87,160 @@ function distance(lat1, lon1, lat2, lon2, unit) {
   return dist;
 }
 
-function drawPolylines() {
-  console.log(csvData)
-  for (let i = min; i < max; i += 1) {
-    console.log(csvData[2])
-    const lat1 = parseFloat(csvData[i].latitude);
-    const lon1 = parseFloat(csvData[i].longitude);
-    const lat2 = parseFloat(csvData[i + 1].latitude);
-    const lon2 = parseFloat(csvData[i + 1].longitude);
 
-    const latlngs = [L.latLng(lat1, lon1), L.latLng(lat2, lon2)];
-    const speed = distance(
-      lat1, lon1,
-      lat2, lon2,
-      'K',
-    ) / (1 / 600);
+function drawPolyline(latlngs) {
+  const speed = distance(
+    latlngs,
+    'K',
+  ) * (1000);
 
-    const polyline = L.polyline(latlngs, {
-      color: color(speed),
-      weight: 8,
-      lineCap: 'square',
-      smoothFactor: 1,
-    }).addTo(map);
+  // draw polylines
+  const polyline = L.polyline(latlngs, {
+    color: '#313695 ',
+    weight: 8,
+    lineCap: 'square',
+    smoothFactor: 1,
+  }).addTo(map);
 
-    const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
-    polyline.bindTooltip(polylineTooltipText).closeTooltip();
+  const polylineTooltipText = `${String(speed.toFixed(2))} km/h`;
+  polyline.bindTooltip(polylineTooltipText).closeTooltip();
 
-    polylines.push(polyline);
-  }
+  polylines.push(polyline);
 }
+
+
+function requestAdjustedWaypoints(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        resolve(xhr.response);
+      } else {
+        reject(xhr.statusText);
+      }
+    };
+    xhr.send();
+  });
+}
+
+
+async function ajaxPathAdjust(oldPoints, min, max) {
+  let count = -1;
+  const apiLimit = 25;
+  const newPoints = oldPoints;
+  const adjustedPoints = [];
+
+  for (let i = min; i < max - 1; i += apiLimit) {
+    count += 1;
+    // console.log(`Count${count}: ${i}`);
+    let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/';
+    // const geometry = '&geometries=geojson';
+    let waypointsList = '';
+
+    for (let j = i; j < apiLimit + i; j += 1) {
+      if (j === max - 1) {
+        break;
+      }
+      waypointsList += `${oldPoints[j].lng},${oldPoints[j].lat};`;
+    }
+    waypointsList = waypointsList.slice(0, -1);
+    url = `${url + waypointsList}?access_token=${accessToken}`;
+    console.log(url);
+
+    // eslint-disable-next-line no-await-in-loop
+    const result = await requestAdjustedWaypoints(url);
+    const { waypoints } = (JSON.parse(result));
+    for (let j = 0; j < waypoints.length; j += 1) {
+      const [lng, lat] = waypoints[j].location;
+      adjustedPoints.push(L.latLng(lat, lng));
+    }
+  }
+
+  count = 0;
+  for (let i = min; i < max - 1; i += 1) {
+    newPoints[i] = adjustedPoints[count];
+    count += 1;
+  }
+
+  for (let i = 0; i < polylines.length; i += 1) {
+    map.removeLayer(polylines[i]);
+  }
+  polylines = [];
+
+  for (let i = 0; i < newPoints.length - 1; i += 1) {
+    const latlngs = [newPoints[i], newPoints[i + 1]];
+    drawPolyline(latlngs);
+  }
+  $('#slider-range').slider('destroy');
+  sliderInit();
+}
+
+
+function createAdjustPathsButton(newPoints) {
+  const button = document.createElement('button');
+  button.innerHTML = 'Adjust';
+  button.id = 'adjust path';
+  button.classList.add('btn');
+  button.classList.add('btn-primary');
+
+  button.addEventListener('click', () => {
+    const sliderMin = $('#slider-range').slider('values', 0);
+    const sliderMax = $('#slider-range').slider('values', 1);
+    // XHR adjust paths
+    ajaxPathAdjust(newPoints, sliderMin, sliderMax);
+  });
+
+  return button;
+}
+
 
 // Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
-
-  //get First set of data to draw circles
+  // get First set of data to draw circles
   $.ajax(
     {
-      url: "server/newfile.php",
-      type: "POST",
+      url: 'server/newfile.php',
+      type: 'POST',
       data: { functionname: 'firstAPI' },
-      success: function (data, textStatus, response) {
-        //console.log("success in function call");
-        //JSON.parse(response.responseText)[0].GPS_Data;
-        let Content = JSON.parse(response.responseText)[0].GPS_Data;          //GPS inside gps data
-        let Data = Content.data;
-        console.log("Length of array " + Content.length);
+      success: (data, textStatus, response) => {
+        // console.log("success in function call");
+        // JSON.parse(response.responseText)[0].GPS_Data;
+        // GPS inside gps data
+        const content = JSON.parse(response.responseText)[0].GPS_Data;
+        // const Data = Content.data;
+        console.log(`Length of array ${content.length}`);
 
-        // fetch all the values to generate 
-        for (let i = 0; i < Content.length; i++) {
-          
-          let datafile = Content[i].data[0];
-          console.log(typeof(datafile.Latitude));
-          console.log("Datafile",datafile);
-          const circle = L.circle([(parseFloat(datafile.Latitude)*-1  ), parseFloat(datafile.Longitude)], {
+        // fetch all the values to generate
+        for (let i = 0; i < content.length; i += 1) {
+          const datafile = content[i].data[0];
+          console.log(`Datafile, ${datafile}`);
+          const circle = L.circle([(parseFloat(datafile.Latitude) * -1), parseFloat(datafile.Longitude)], {
             radius: 800,
           }).addTo(map);
-          console.log(circle)
 
           // circle add tooltip
           const circleTooltipText = 'Swinburne';
           circle.bindTooltip(circleTooltipText).openTooltip();
 
+          // eslint-disable-next-line no-loop-func
           circle.on('click', () => {
             min = 0
             max = 50
             console.log("Circle has been clicked");
-            console.log(Content[i].Table_Name);
+            console.log(content[i].Table_Name);
             console.log(map)
             map.removeLayer(circle);
 
             $.ajax({
-              type: "POST",
-              url: "server/newfile.php",
-              //dataType:'json',
-              data: { functionname: 'showMap', arguments: Content[i].Table_Name },
-              success: function (data, textStatus, response) {
-                console.log("Response being generated",JSON.parse(response.responseText));
-                json = JSON.parse(response.responseText);
-                csvData = json           
+              type: 'POST',
+              url: 'server/newfile.php',
+              // dataType:'json',
+              data: { functionname: 'showMap', arguments: content[i].Table_Name },
+              success: (data, textStatus, response) => {
+                const json = JSON.parse(response.responseText);
+                console.log(json);
+                csvData = json;
 
                 // fly to circle's latlng
                 const latlngCircle = circle.getLatLng();
@@ -171,38 +248,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // code is fired after animation ends, draw paths and slider
                 map.once('moveend', () => {
-                  // draw polylines
-                  drawPolylines();
+                  const points = [];
+                  let lat1; let lng1; let lat2; let lng2;
+                  for (let j = 0; j < json.length - 1; j += 1) {
+                    lat1 = parseFloat(json[j].latitude) * -1;
+                    lng1 = parseFloat(json[j].longitude);
+                    lat2 = parseFloat(json[j + 1].latitude) * -1;
+                    lng2 = parseFloat(json[j + 1].longitude);
+
+                    const latlngs = [L.latLng(lat1, lng1), L.latLng(lat2, lng2)];
+                    drawPolyline(latlngs);
+                  }
                   // init slider
                   sliderInit();
                 });
               },
-              error: function () {
-                console.log("Somekind of an error");
-              }
-
+              error: () => {
+                console.log('Somekind of an error');
+              },
             });
-
           });
-
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: (jqXHR, textStatus, errorThrown) => {
         alert("unsuccessful");
-      }
-    });
-
+      },
+    },
+  );
 
   // const { L, d3 } = window; // Define L, d3
   map = L.map('mapid', {
     zoomControl: false,
   }).setView([-37.843527, 145.010365], 12);
-  const tileurl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  const attribution = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+  const tileurl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}';
+  const attribution = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
 
   L.tileLayer(tileurl, {
     attribution,
-    maxZoom: 19,
+    maxNativeZoom: 20,
+    maxZoom: 20,
+    id: 'mapbox.streets',
+    accessToken,
   }).addTo(map);
 
   L.control.zoom({
@@ -210,63 +296,89 @@ document.addEventListener('DOMContentLoaded', () => {
   }).addTo(map);
 
   // load data
-  /*
-  $.get('dataprototype/GPSData.csv', (data) => {
-    csvData = $.csv.toObjects(data);
-    min = 0;
-    max = 50;
+  // $.get('dataprototype/GPS_1Hz_modified.csv', (data) => {
+  //   csvData = $.csv.toObjects(data);
+  //   const min = 0;
+  //   const max = Object.keys(csvData).length - 1;
 
-    // add circles
-    const circle = L.circle([parseFloat(csvData[0].latitude), parseFloat(csvData[0].longitude)], {
-      radius: 800,
-    }).addTo(map);
+  //   // add circles
+  //   const circle = L.circle([parseFloat(csvData[0].latitude), parseFloat(csvData[0].longitude)], {
+  //     radius: 800,
+  //   }).addTo(map);
 
-    // circle add tooltip
-    const circleTooltipText = 'Swinburne';
-    circle.bindTooltip(circleTooltipText).openTooltip();
+  //   // circle add tooltip
+  //   const circleTooltipText = 'Swinburne';
+  //   circle.bindTooltip(circleTooltipText).openTooltip();
 
-    // circle click event listener
-    circle.on('click', () => {
-      // hide circle
-      map.removeLayer(circle);
+  //   // circle click event listener
+  //   circle.on('click', () => {
+  //     // hide circle
+  //     map.removeLayer(circle);
+  //     document.getElementById(circleTooltipText).style.visibility = 'hidden';
 
-      // fly to circle's latlng
-      const latlngCircle = circle.getLatLng();
-      map.flyTo(latlngCircle, 16);
+  //     // fly to circle's latlng
+  //     const latlngCircle = circle.getLatLng();
+  //     map.flyTo(latlngCircle, 18);
 
-      // code is fired after animation ends, draw paths and slider
-      map.once('moveend', () => {
-        // draw polylines
-        drawPolylines();
-        // init slider
-        sliderInit();
-      });
-    });
+  //     // code is fired after animation ends, draw paths and slider
+  //     map.once('moveend', () => {
+  //       const newPoints = [];
+  //       const increment = 5;
+  //       for (let i = min; i < max; i += increment) {
+  //         const closeToLastCoords = max - i;
 
-    // create a dynamic alternative button for each circle
-    const button = document.createElement('button');
-    button.innerHTML = circleTooltipText;
-    button.id = circleTooltipText;
-    button.classList.add('btn');
-    button.classList.add('btn-primary');
+  //         let lat1; let lng1; let lat2; let lng2;
 
-    // button click event listener
-    button.addEventListener('click', () => {
-      // hide circle
-      map.removeLayer(circle);
+  //         if (closeToLastCoords > increment) {
+  //           lat1 = parseFloat(csvData[i].latitude);
+  //           lng1 = parseFloat(csvData[i].longitude);
+  //           lat2 = parseFloat(csvData[i + increment].latitude);
+  //           lng2 = parseFloat(csvData[i + increment].longitude);
+  //         } else {
+  //           lat1 = parseFloat(csvData[i].latitude);
+  //           lng1 = parseFloat(csvData[i].longitude);
+  //           lat2 = parseFloat(csvData[max].latitude);
+  //           lng2 = parseFloat(csvData[max].longitude);
+  //         }
+  //         newPoints.push(L.latLng(lat1, lng1));
 
-      // fly to circle's latlng
-      const latlngCircle = circle.getLatLng();
-      map.flyTo(latlngCircle, 16);
+  //         const latlngs = [L.latLng(lat1, lng1), L.latLng(lat2, lng2)];
+  //         drawPolyline(latlngs);
+  //       }
 
-      // code is fired after animation ends, draw paths and slider
-      map.once('moveend', () => {
-        // draw polylines
-        drawPolylines();
-        // init slider
-        sliderInit();
-      });
-    });
-    document.querySelector('.data-buttons').appendChild(button);
-  });*/
+  //       const adjustButton = createAdjustPathsButton(newPoints);
+  //       document.querySelector('.adjust-buttons').appendChild(adjustButton);
+
+  //       // init slider
+  //       sliderInit();
+  //     });
+  //   });
+
+  //   // create a dynamic alternative button for each circle
+  //   const button = document.createElement('button');
+  //   button.innerHTML = circleTooltipText;
+  //   button.id = circleTooltipText;
+  //   button.classList.add('btn');
+  //   button.classList.add('btn-primary');
+
+  //   // button click event listener
+  //   button.addEventListener('click', () => {
+  //     // hide circle
+  //     map.removeLayer(circle);
+  //     document.getElementById(circleTooltipText).style.visibility = 'hidden';
+
+  //     // fly to circle's latlng
+  //     const latlngCircle = circle.getLatLng();
+  //     map.flyTo(latlngCircle, 16);
+
+  //     // code is fired after animation ends, draw paths and slider
+  //     map.once('moveend', () => {
+  //       // draw polylines
+  //       drawPolyline();
+  //       // init slider;
+  //       sliderInit();
+  //     });
+  //   });
+  //   document.querySelector('.data-buttons').appendChild(button);
+  // });
 });
