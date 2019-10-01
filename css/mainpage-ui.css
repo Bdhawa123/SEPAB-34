@@ -25,6 +25,11 @@
   font-size: 32px;
 }
 
+a:hover {
+  color: rgb(255,64,129);
+  text-decoration: none;
+}
+
 .mdl-card__title {
   width: auto;
 }
