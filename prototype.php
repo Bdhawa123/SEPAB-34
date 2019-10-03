@@ -33,10 +33,10 @@ if (isset($_SESSION['id'])) {
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
     <!-- materializecss -->
-
   </head>
 
   <body>
+    <div class="container fixed-top pt-3 alert-container"></div>
 
     <div id="header" class="fixed-top">
       <nav class="navbar navbar-expand-lg navbar-transparent">
@@ -66,7 +66,6 @@ if (isset($_SESSION['id'])) {
 
     <!-- Map -->
     <div class="container-fluid overflow-hidden">
-
       <!-- Leaflet Maps -->
       <div id="mapid"></div>
 
@@ -255,72 +254,66 @@ if (isset($_SESSION['id'])) {
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header d-block">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
             <h5 class="modal-title text-center" id="exampleModalLabel">Import Data</h5>
-            
           </div>
           <div class="modal-body container align-items-center">
             <div>
-              <form onsubmit="submit_file(event)">
+              <form onsubmit="submitFile(event)">
                 <input type="file" class="hd_inp" id="fileA">
                 <!--File A should be the first gps co-ordinates-->
-               
-
-
                 <div id="dropzone" class="row container d-flex justify-content-center">
                   <!--Drop Zone to Each click will trigger file A or B respectively-->
-                    <div id="fileone" class="innercontainer col-sm-12 align-content-end" ondrop="dropHandler(event,'fileimg1')" ondragover="dragOverHandler(event)">
-                      <!--drop listener for fileone-->
-                      <div id="fileimg1" class="fileimg row">
-                      </div>
-                       <div id="fileimg12" class="fileimg">
-                        Please click or drop your files to upload
-                      </div>
+                  <div id="fileone" class="innercontainer col-sm-12 align-content-end" ondrop="dropHandler(event,'fileimg1')" ondragover="dragOverHandler(event)">
+                    <!--drop listener for fileone-->
+                    <div id="fileimg1" class="fileimg row">
+                    </div>
+                    <div id="fileimg12" class="fileimg">
+                      Please click or drop your files to upload
                     </div>
                   </div>
-
+                </div>
                 <input type="submit" class="btn btn-primary text-center" value="Submit">
-               </form>
-
-            </div>
+              </form>
             </div>
           </div>
         </div>
-        </div>
       </div>
     </div>
+    </div>
+    </div>
 
-      <!-- scripts-->
-      <!-- jQuery CDN -->
-      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-      <!-- Popper JS CDN -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-      <!-- Bootstrap JS CDN -->
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- scripts-->
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- Popper JS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-      <!-- jQuery CSV JS-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.3/jquery.csv.min.js"></script>
+    <!-- jQuery CSV JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.3/jquery.csv.min.js"></script>
 
-      <!-- Google Maps API	-->
-      <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap" async defer></script> -->
+    <!-- Google Maps API	-->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap" async defer></script> -->
 
-      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-      <!-- Leaflet -->
-      <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
 
-      <!-- D3 JS library -->
-      <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!-- D3 JS library -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
 
-      <!-- Main JS file -->
-      <script type="text/javascript" src="javascript/leaflet_map.js"></script>
-      <script type="text/javascript" src="javascript/mainpage.js"></script> 
-    
+    <!-- Main JS file -->
+    <script type="text/javascript" src="javascript/leaflet_map.js"></script>
+    <script type="text/javascript" src="javascript/mainpage.js"></script>
 
-      <!-- Custom UI CSS -->
-      <script type="text/javascript" src="javascript/mainpage-ui.js"></script>
+
+    <!-- Custom UI CSS -->
+    <script type="text/javascript" src="javascript/mainpage-ui.js"></script>
 
   </body>
 
