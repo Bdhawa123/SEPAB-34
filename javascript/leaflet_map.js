@@ -1,11 +1,103 @@
+import CallAlert from './callAlert.js';
+
 /* eslint-disable no-mixed-operators */
 const { L, d3 } = window; // Define L, d3
 
-let csvData;
 let map;
 let polylines = [];
 let circles = [];
 const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
+const file = [];
+
+// display files in the webpage as icons
+function showfiles(idName, filename, fyl) {
+  // clear out the file array
+  file.length = 0;
+  document.getElementById(idName).style.display = 'flex';
+  document.getElementById(`${idName}2`).innerHTML = filename;
+  $('.modal-dialog').css('width', '500px');
+  file.push(fyl);
+}
+
+const dragOverHandler = (event) => { event.preventDefault(); };
+
+/**
+ * Drop handler
+ * @param {*} ev
+ */
+function dropHandler(ev, field) {
+  console.log('File Dropped');
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items.length === 1) {
+    if (ev.dataTransfer.items[0].kind === 'file') {
+      console.log(ev.dataTransfer.files[0].name);
+      showfiles(field, ev.dataTransfer.files[0].name, ev.dataTransfer.files[0]);
+    }
+  } else {
+    console.log('Multiple files detected');
+  }
+  ev.dataTransfer.clearData();
+}
+
+
+function submitFile(ev) {
+  ev.preventDefault();
+  const formData = new FormData();
+
+  // create a form data to send the array of files
+  for (let val = 0; val < file.length; val += 1) {
+    formData.append(`file${val}`, file[val]);
+  }
+
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    console.log(evt.target.result);
+  };
+
+  const logfile = reader.readAsText(file[0]);
+  // TODO validation required
+
+
+  // post into the server
+  $.ajax(
+    {
+      url: 'server/test.php',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: (data, textStatus, response) => {
+        console.log('success in function call');
+        $('.hd_inp').val('');
+        $('.fileimg').css('display', 'none');
+        file.length = 0;
+        console.log(response);
+      },
+      // eslint-disable-next-line no-unused-vars
+      error: (jqXHR, textStatus, error) => {
+        CallAlert.danger(error);
+      },
+    },
+  );
+}
+
+
+function initializeImport() {
+  console.log('initialize import');
+  const fileone = document.getElementById('fileone');
+  const img1 = document.getElementById('fileimg1');
+  const inpElementA = document.getElementById('fileA');
+
+  inpElementA.addEventListener('change', () => {
+    showfiles('fileimg1', inpElementA.files[0].name, inpElementA.files[0]);
+  });
+
+  // First file hidden input connected to the div area
+  fileone.onclick = () => {
+    document.getElementById('fileA').click();
+  };
+}
 
 // function to initialize slider
 function sliderInit() {
@@ -48,7 +140,7 @@ function sliderInit() {
 
   // default data text value
   document.getElementById('my_point_start').innerHTML = `${$('#slider-range').slider('values', 0) + 1}`;
-  document.getElementById('my_point_end').innerHTML = `${$('#slider-range').slider('values', 1) + 1}`
+  document.getElementById('my_point_end').innerHTML = `${$('#slider-range').slider('values', 1) + 1}`;
 }
 
 // d3 color function
@@ -203,6 +295,7 @@ function createAdjustPathsButton(newPoints) {
     sliderInit();
     // eslint-disable-next-line no-use-before-define
     startUpdateButton();
+    CallAlert.destroy();
   });
 
   document.querySelector('.data-buttons').appendChild(buttonAdjust);
@@ -219,14 +312,13 @@ function startUpdateButton(gpsPoints) {
   button.addEventListener('click', () => {
     document.querySelector('.data-buttons').removeChild(button);
     createAdjustPathsButton(gpsPoints);
+    CallAlert.update();
   });
 
   document.querySelector('.data-buttons').appendChild(button);
 }
 
-
-// Dom content loaded
-document.addEventListener('DOMContentLoaded', () => {
+function initMap() {
   map = L.map('mapid', {
     zoomControl: false,
   }).setView([-37.843527, 145.010365], 12);
@@ -244,6 +336,14 @@ document.addEventListener('DOMContentLoaded', () => {
   L.control.zoom({
     position: 'bottomright',
   }).addTo(map);
+}
+
+// Dom content loaded
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded');
+  initializeImport();
+
+  initMap();
 
   // get First set of data to draw circles
   $.ajax(
@@ -251,29 +351,26 @@ document.addEventListener('DOMContentLoaded', () => {
       url: 'server/newfile.php',
       type: 'POST',
       data: { functionname: 'firstAPI' },
-      success: (data, textStatus, response) => {
+      success: (circleData, textStatus) => {
         if (textStatus !== 'nocontent') {
           // GPS inside gps data
-          const content = JSON.parse(response.responseText)[0].GPS_Data;
-          // const Data = Content.data;
+          const content = JSON.parse(circleData)[0].GPS_Data;
           console.log(`Length of array ${content.length}`);
 
           // fetch all the values to generate
           for (let i = 0; i < content.length; i += 1) {
             const datafile = content[i].data[0];
-            console.log(`Datafile, ${datafile}`);
             const circle = L.circle([(parseFloat(datafile.Latitude)), parseFloat(datafile.Longitude)], {
               radius: 800,
             }).addTo(map);
 
             // circle add tooltip
-            const circleTooltipText = 'Swinburne';
+            const circleTooltipText = content[i].Table_Name;
             circle.bindTooltip(circleTooltipText).openTooltip();
 
             // eslint-disable-next-line no-loop-func
             circle.on('click', () => {
               const gpsPoints = [];
-              console.log(content[i].Table_Name);
               map.removeLayer(circle);
 
               $.ajax({
@@ -281,11 +378,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 url: 'server/newfile.php',
                 // dataType:'json',
                 data: { functionname: 'showMap', arguments: content[i].Table_Name },
-                success: (data, textStatus, response) => {
-                  const json = JSON.parse(response.responseText);
+                success: (wheelchairData) => {
+                  const json = JSON.parse(wheelchairData);
                   console.log(json);
                   csvData = json;
-                  map.removeLayer(circle);
 
                   // fly to circle's latlng
                   const latlngCircle = circle.getLatLng();
@@ -321,100 +417,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             circles.push(circle);
           }
+        } else {
+          CallAlert.noData();
         }
       },
-      error: (jqXHR, textStatus, errorThrown) => {
-        alert("unsuccessful");
+      error: () => {
+        alert('unsuccessful');
       },
     },
   );
-
-
 });
-
-// load data
-// $.get('dataprototype/GPS_1Hz_modified.csv', (data) => {
-//   csvData = $.csv.toObjects(data);
-//   const min = 0;
-//   const max = Object.keys(csvData).length - 1;
-
-//   // add circles
-//   const circle = L.circle([parseFloat(csvData[0].latitude), parseFloat(csvData[0].longitude)], {
-//     radius: 800,
-//   }).addTo(map);
-
-//   // circle add tooltip
-//   const circleTooltipText = 'Swinburne';
-//   circle.bindTooltip(circleTooltipText).openTooltip();
-
-//   // circle click event listener
-//   circle.on('click', () => {
-//     // hide circle
-//     map.removeLayer(circle);
-//     document.getElementById(circleTooltipText).style.visibility = 'hidden';
-
-//     // fly to circle's latlng
-//     const latlngCircle = circle.getLatLng();
-//     map.flyTo(latlngCircle, 18);
-
-//     // code is fired after animation ends, draw paths and slider
-//     map.once('moveend', () => {
-//       const newPoints = [];
-//       const increment = 5;
-//       for (let i = min; i < max; i += increment) {
-//         const closeToLastCoords = max - i;
-
-//         let lat1; let lng1; let lat2; let lng2;
-
-//         if (closeToLastCoords > increment) {
-//           lat1 = parseFloat(csvData[i].latitude);
-//           lng1 = parseFloat(csvData[i].longitude);
-//           lat2 = parseFloat(csvData[i + increment].latitude);
-//           lng2 = parseFloat(csvData[i + increment].longitude);
-//         } else {
-//           lat1 = parseFloat(csvData[i].latitude);
-//           lng1 = parseFloat(csvData[i].longitude);
-//           lat2 = parseFloat(csvData[max].latitude);
-//           lng2 = parseFloat(csvData[max].longitude);
-//         }
-//         newPoints.push(L.latLng(lat1, lng1));
-
-//         const latlngs = [L.latLng(lat1, lng1), L.latLng(lat2, lng2)];
-//         drawPolyline(latlngs);
-//       }
-
-//       const adjustButton = createAdjustPathsButton(newPoints);
-//       document.querySelector('.adjust-buttons').appendChild(adjustButton);
-
-//       // init slider
-//       sliderInit();
-//     });
-//   });
-
-//   // create a dynamic alternative button for each circle
-//   const button = document.createElement('button');
-//   button.innerHTML = circleTooltipText;
-//   button.id = circleTooltipText;
-//   button.classList.add('btn');
-//   button.classList.add('btn-primary');
-
-//   // button click event listener
-//   button.addEventListener('click', () => {
-//     // hide circle
-//     map.removeLayer(circle);
-//     document.getElementById(circleTooltipText).style.visibility = 'hidden';
-
-//     // fly to circle's latlng
-//     const latlngCircle = circle.getLatLng();
-//     map.flyTo(latlngCircle, 16);
-
-//     // code is fired after animation ends, draw paths and slider
-//     map.once('moveend', () => {
-//       // draw polylines
-//       drawPolyline();
-//       // init slider;
-//       sliderInit();
-//     });
-//   });
-//   document.querySelector('.data-buttons').appendChild(button);
-// });

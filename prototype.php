@@ -308,8 +308,8 @@ if (isset($_SESSION['id'])) {
     <script src="https://d3js.org/d3.v4.min.js"></script>
 
     <!-- Main JS file -->
-    <script type="text/javascript" src="javascript/leaflet_map.js"></script>
-    <script type="text/javascript" src="javascript/mainpage.js"></script>
+    <script type="module" src="javascript/leaflet_map.js"></script>
+    <!-- <script type="text/javascript" src="javascript/mainpage.js"></script> -->
 
 
     <!-- Custom UI CSS -->
