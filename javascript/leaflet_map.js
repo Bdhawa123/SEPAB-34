@@ -7,100 +7,26 @@ let map;
 let polylines = [];
 let circles = [];
 const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
-const file = [];
 
-// display files in the webpage as icons
-function showfiles(idName, filename, fyl) {
-  // clear out the file array
-  file.length = 0;
-  document.getElementById(idName).style.display = 'flex';
-  document.getElementById(`${idName}2`).innerHTML = filename;
-  $('.modal-dialog').css('width', '500px');
-  file.push(fyl);
-}
-
-const dragOverHandler = (event) => { event.preventDefault(); };
-
-/**
- * Drop handler
- * @param {*} ev
- */
-function dropHandler(ev, field) {
-  console.log('File Dropped');
-  ev.preventDefault();
-
-  if (ev.dataTransfer.items.length === 1) {
-    if (ev.dataTransfer.items[0].kind === 'file') {
-      console.log(ev.dataTransfer.files[0].name);
-      showfiles(field, ev.dataTransfer.files[0].name, ev.dataTransfer.files[0]);
-    }
-  } else {
-    console.log('Multiple files detected');
-  }
-  ev.dataTransfer.clearData();
-}
-
-
-function submitFile(ev) {
-  ev.preventDefault();
-  const formData = new FormData();
-
-  // create a form data to send the array of files
-  for (let val = 0; val < file.length; val += 1) {
-    formData.append(`file${val}`, file[val]);
-  }
-
-  const reader = new FileReader();
-  reader.onload = (evt) => {
-    console.log(evt.target.result);
-  };
-
-  const logfile = reader.readAsText(file[0]);
-  // TODO validation required
-
-
-  // post into the server
-  $.ajax(
-    {
-      url: 'server/test.php',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: (data, textStatus, response) => {
-        console.log('success in function call');
-        $('.hd_inp').val('');
-        $('.fileimg').css('display', 'none');
-        file.length = 0;
-        console.log(response);
-      },
-      // eslint-disable-next-line no-unused-vars
-      error: (jqXHR, textStatus, error) => {
-        CallAlert.danger(error);
-      },
-    },
-  );
-}
-
-
-function initializeImport() {
-  console.log('initialize import');
-  const fileone = document.getElementById('fileone');
-  const img1 = document.getElementById('fileimg1');
-  const inpElementA = document.getElementById('fileA');
-
-  inpElementA.addEventListener('change', () => {
-    showfiles('fileimg1', inpElementA.files[0].name, inpElementA.files[0]);
-  });
-
-  // First file hidden input connected to the div area
-  fileone.onclick = () => {
-    document.getElementById('fileA').click();
-  };
-}
+let svg;
+let xAxis;
+let yAxis;
+let xScale;
+let yScale;
+let path;
+let valueline;
+let maxDomain;
 
 // function to initialize slider
 function sliderInit() {
+  function zoom(begin, end) {
+    xScale.domain([begin, end]);
+    const t = svg.transition().duration(0);
+
+    t.select('.x.axis').call(xAxis);
+    path.attr('d', valueline);
+  }
+
   let sliderHandlePreviousLocations = [0, Object.keys(polylines).length - 1];
   // slider function
   $('#slider-range').slider({
@@ -108,6 +34,7 @@ function sliderInit() {
     min: 0,
     max: Object.keys(polylines).length - 1,
     values: [0, Object.keys(polylines).length - 1],
+    step: 1,
     slide: (event, ui) => {
       document.getElementById('my_point_start').innerHTML = `${ui.values[0] + 1}`;
       document.getElementById('my_point_end').innerHTML = `${ui.values[1] + 1}`;
@@ -135,6 +62,12 @@ function sliderInit() {
 
       // assign handle values to array, to record handle position
       sliderHandlePreviousLocations = ui.values;
+
+      // graph
+      const begin = d3.min([ui.values[0] * 100, maxDomain]);
+      const end = d3.max([ui.values[1] * 100, 0]);
+      console.log('begin:', begin, 'end:', end);
+      zoom(begin, end);
     },
   });
 
@@ -338,10 +271,203 @@ function initMap() {
   }).addTo(map);
 }
 
+function linechartInit() {
+  // Margin
+  const margin = {
+    top: 50,
+    right: 50,
+    bottom: 50,
+    left: 50,
+  };
+
+  const widther = window.innerWidth;
+  const heighther = 200;
+
+  const w = widther - margin.left - margin.right;
+  const h = heighther - margin.top - margin.bottom;
+
+  const dataset = [];
+  maxDomain = 1;
+
+  const converter = 100;
+
+  const rowConverter = (d) => ({
+    time: parseInt(d.time, 10),
+    speed: parseFloat(d.speed),
+  });
+
+
+  // Set up the SVG and Path
+  svg = d3.select('#myLineGraph')
+    .append('svg')
+    .attr('width', w + margin.left + margin.right)
+    .attr('height', h + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+
+  function createLinechart() {
+    maxDomain = d3.max(dataset, (d) => d.time);
+    xScale = d3.scaleLinear()
+      .domain([0, maxDomain])
+      .range([0, w]);
+
+    // Y scale is static
+    yScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset, (d) => d.speed)]).range([h, 0]);
+
+    // Add X-Axis
+    // (1) Add translate to align x-axis at the bottom
+    xAxis = d3.axisBottom(xScale).tickSize(-h).tickPadding(8).ticks(5);
+
+    svg.append('g')
+      .attr('class', 'x axis')
+      .attr('transform', `translate(0, ${h})`)
+      .call(xAxis);
+
+    yAxis = d3.axisLeft(yScale).tickSize(-w).tickPadding(8).ticks(4);
+
+    // Add Y-Axis
+    svg.append('g')
+      .attr('class', 'y axis')
+      .call(yAxis);
+
+    // Data line
+    valueline = d3.line()
+      .x((d) => xScale(d.time))
+      .y((d) => yScale(d.speed))
+      .curve(d3.curveMonotoneX);
+
+    path = svg.append('path')
+      .datum(dataset);
+
+    // hide graph over-width when adjust timeline
+    const clip = svg.append('defs').append('clipPath')
+      .attr('id', 'clip')
+      .append('rect')
+      .attr('x', '0')
+      .attr('y', '0')
+      .attr('width', w)
+      .attr('height', h);
+
+    path.attr('clip-path', 'url(#clip)')
+      .attr('class', 'line')
+      .attr('d', valueline);
+
+    const focus = svg.append('g')
+      .attr('class', 'focus');
+    // .style('display', 'none');
+
+    // Adds circle to focus point on line
+    focus.append('circle')
+      .attr('r', 4);
+
+    // Adds text to focus point on line
+    focus.append('text')
+      .attr('x', 9)
+      .attr('dy', '.35em');
+
+    const bisectDate = d3.bisector((d) => d.time).left;
+
+    // Tooltip mouseovers
+    function mousemove() { // (1) Read More ***
+      const x0 = xScale.invert(d3.mouse(this)[0]);
+      const i = bisectDate(dataset, x0, 1);
+      const d0 = dataset[i - 1];
+      const d1 = dataset[i];
+      const d = x0 - d0.time > d1.time - x0 ? d1 : d0;
+      focus.attr('transform', `translate(${xScale(d.time)}, ${yScale(d.speed)})`);
+      focus.select('text').text(`${d.speed.toFixed(2)} r/s`);
+    }
+
+    function zoom(begin, end) {
+      xScale.domain([begin, end]);
+      const t = svg.transition().duration(0);
+
+      t.select('.x.axis').call(xAxis);
+      path.attr('d', valueline);
+    }
+
+    // Creates larger area for tooltip
+    const overlay = svg.append('rect')
+      .attr('class', 'overlay')
+      .attr('width', w)
+      .attr('height', h)
+      .on('mouseover', () => { focus.style('display', null); })
+      .on('mouseout', () => { focus.style('display', 'none'); })
+      .on('mousemove', mousemove);
+
+    // $(() => {
+    //   $('#slider-range2').slider({
+    //     range: true,
+    //     min: 0,
+    //     max: maxDomain,
+    //     step: converter,
+    //     values: [0, maxDomain], // Default value
+    //     slide: (event, ui) => {
+    //       const begin = d3.min([ui.values[0], maxDomain]);
+    //       const end = d3.max([ui.values[1], 0]);
+    //       console.log('begin:', begin, 'end:', end);
+    //       zoom(begin, end);
+    //     },
+    //   });
+    // });
+
+    // RESPONSIVENESS
+    function resized() {
+      const widther1 = window.innerWidth;
+      const w1 = widther1 - margin.left - margin.right;
+
+      // (1) Update xScale
+      xScale.range([0, w1]); // <- Scale knows value changes
+
+      svg.select('.x.axis').call(xAxis);
+
+      // (2) Update line chart
+      d3.select('svg').attr('width', widther1);
+
+      valueline = d3.line()
+        .x((d) => xScale(d.time))
+        .y((d) => yScale(d.speed))
+        .curve(d3.curveMonotoneX);
+
+      d3.select('.line').attr('d', valueline);
+
+      // (3) Update yAxis
+      yAxis.tickSize(-w1);
+
+      svg.select('.y.axis').call(yAxis);
+
+      // (4) update mouseover & invisible rectangle
+      d3.selectAll('rect').attr('width', w1);
+    }
+
+    d3.select(window).on('resize', resized);
+  }
+
+  d3.csv('dataprototype/line-chart.csv', rowConverter)
+    .then((data) => {
+      if ((Object.keys(polylines).length * 100) < data.length) {
+        for (let i = 0; i < Object.keys(polylines).length * 100; i += 1) {
+          if (i % converter === 0) {
+            dataset.push(data[i]);
+          }
+        }
+        createLinechart();
+      } else {
+        for (let i = 0; i < data.length - 1; i += 1) {
+          if (i % converter === 0) {
+            dataset.push(data[i]);
+          }
+        }
+        createLinechart();
+      }
+    });
+}
+
 // Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded');
-  initializeImport();
 
   initMap();
 
@@ -381,7 +507,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 success: (wheelchairData) => {
                   const json = JSON.parse(wheelchairData);
                   console.log(json);
-                  csvData = json;
 
                   // fly to circle's latlng
                   const latlngCircle = circle.getLatLng();
@@ -402,6 +527,8 @@ document.addEventListener('DOMContentLoaded', () => {
                       gpsPoints.push(L.latLng(lat1, lng1));
                     }
                     gpsPoints.push(L.latLng(json[json.length - 1].latitude, json[json.length - 1].longitude));
+                    // init speed graph
+                    linechartInit();
                     // init slider
                     sliderInit();
 

@@ -25,6 +25,11 @@
   font-size: 32px;
 }
 
+a:hover {
+  color: rgb(255,64,129);
+  text-decoration: none;
+}
+
 .mdl-card__title {
   width: auto;
 }
@@ -75,4 +80,18 @@ and (max-width : 450px) {
 
 .fixed-top {
   z-index: 777;
+}
+
+/* Line Graph */
+.graph {
+  display: none;
+  height: auto;
+  width: 100%;
+  position: fixed;
+  z-index: 2;
+  bottom: 0;
+  overflow-x: hidden;
+  padding-left: 8px;
+  margin-bottom: 8px;
+  padding-right: 8px;
 }

@@ -56,7 +56,7 @@ if (isset($_POST['login'])) {
 if (isset($_SESSION['id'])) {
 
 
-  header("location:../prototype.php");
+  header("location:../index.php");
 } else {
 
 

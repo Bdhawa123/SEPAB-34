@@ -1,3 +1,4 @@
+import CallAlert from './CallAlert.js';
 // global variable for files
 const file = [];
 
@@ -20,27 +21,6 @@ window.onload = () => {
   // file input
   initializeImport();
 };
-
-class callAlert {
-  static danger(error) {
-    const html = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <span class="alert-danger-text">Invalid csv file: ${error}</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>`;
-    document.querySelector('.alert-container').innerHTML = html;
-  }
-
-  static preview() {
-    const html = `<div class="alert alert-primary" role="alert">
-                    <h4>Preview: Snap noisy GPS to road</h4>
-                    <hr>
-                    <p class="alert-primary-text">Drag the sliders to select the range of GPS points to snap to road</p>
-                  </div>`;
-    document.querySelector('.alert-container').innerHTML = html;
-  }
-}
 
 // display files in the webpage as icons
 function showfiles(idName, filename, fyl) {
@@ -106,11 +86,11 @@ function submitFile(ev) {
         $('.fileimg').css('display', 'none');
         file.length = 0;
         console.log(response);
-        callAlert.preview();
+        CallAlert.preview();
       },
       // eslint-disable-next-line no-unused-vars
       error: (jqXHR, textStatus, error) => {
-        callAlert.danger(error);
+        CallAlert.danger(error);
       },
     },
   );
