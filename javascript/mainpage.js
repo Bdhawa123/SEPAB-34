@@ -1,6 +1,7 @@
 import CallAlert from './CallAlert.js';
 // global variable for files
 const file = [];
+let validation = false;
 
 function initializeImport() {
   const fileone = document.getElementById('fileone');
@@ -53,6 +54,43 @@ function dropHandler(ev, field) {
   ev.dataTransfer.clearData();
 }
 
+/**
+ * Validation for file input sentence
+ */
+const input_validation =()=>{
+  let file_value = $("#fileName").val();
+  const cantcontain = /[^\[\w+\]\.\[\w+\]$]/g;
+  console.log(file_value);
+ 
+  if(file_value.match(cantcontain)!=null){
+      $("#fileName").val("");
+      validation = false;
+      $("#validation-tooltip").text("Cannot contain illegal characters");
+  }
+  else{
+    validation=true;
+    $("#validation-tooltip").text("");
+    $.ajax(
+      {
+        url: 'server/newfile.php',
+        type: 'POST',
+        data: { functionname: 'firstAPI' },
+        success: (data, textStatus, response) => {
+          let fileresponse = JSON.parse(response.responseText)[0].GPS_Data;
+          
+          for(let i=0; i<fileresponse.length;i++){
+              if(fileresponse[i].Table_Name==file_value){
+                $("#validation-tooltip").text("Duplicate Name found!!! Please select another name.");
+              }
+          }
+          
+     },
+     error: (jqXHR, textStatus, errorThrown) => {
+       alert("unsuccessful");
+     },
+  });
+}
+}
 
 function submitFile(ev) {
   ev.preventDefault();
@@ -62,17 +100,22 @@ function submitFile(ev) {
   for (let val = 0; val < file.length; val += 1) {
     formData.append(`file${val}`, file[val]);
   }
+  formData.append('filename',$("#fileName").val());
+  
+
 
   const reader = new FileReader();
   reader.onload = (evt) => {
     console.log(evt.target.result);
   };
 
-  const logfile = reader.readAsText(file[0]);
+  // const logfile = reader.readAsText(file[0]);
   // TODO validation required
 
 
   // post into the server
+if(file.length!=0 && validation){  
+  
   $.ajax(
     {
       url: 'server/test.php',
@@ -86,7 +129,12 @@ function submitFile(ev) {
         $('.fileimg').css('display', 'none');
         file.length = 0;
         console.log(response);
+<<<<<<< HEAD
         CallAlert.preview();
+=======
+        location.reload(true);
+        //callAlert.preview();
+>>>>>>> Leaflet-map_issue
       },
       // eslint-disable-next-line no-unused-vars
       error: (jqXHR, textStatus, error) => {
@@ -94,4 +142,8 @@ function submitFile(ev) {
       },
     },
   );
+}
+else{
+  alert("file is not inserted");
+}
 }

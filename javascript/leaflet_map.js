@@ -6,6 +6,7 @@ const { L, d3 } = window; // Define L, d3
 let map;
 let polylines = [];
 let circles = [];
+let value = 234;
 const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
 
 let svg;

@@ -20,8 +20,10 @@ for ($val = 0; $val < sizeof($_FILES); $val++)
   // get file extension
   // filename
   $filename = $_FILES['file' . $val]['name'] . "\r\n";
+  $filename_wr = $_POST['filename'];
+  echo $filename_wr;
   $filetype = explode(".", $filename);
-  // get the number of file uplaoded
+  // get the number of file uploaded
   $filetype = $filetype[sizeof($filetype) - 1];
   //validate filetype
   $valid = validate($filetype);
@@ -43,7 +45,7 @@ else
 
   // write file into the location
   // write file name as numbers     
-  $filereader->writefiles($current_no);
+  $filereader->writefiles($filename_wr);
 
   // create table
   // open connection
