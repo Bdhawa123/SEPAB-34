@@ -129,12 +129,8 @@ if(file.length!=0 && validation){
         $('.fileimg').css('display', 'none');
         file.length = 0;
         console.log(response);
-<<<<<<< HEAD
-        CallAlert.preview();
-=======
         location.reload(true);
         //callAlert.preview();
->>>>>>> Leaflet-map_issue
       },
       // eslint-disable-next-line no-unused-vars
       error: (jqXHR, textStatus, error) => {
