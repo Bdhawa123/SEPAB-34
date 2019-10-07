@@ -1,130 +1,97 @@
+import CallAlert from './CallAlert.js';
+// global variable for files
+const file = [];
 
-file =[];         //global variable for files
-window.onload = function () {
-    let csvData;
-    console.log("This shouldn't be causing an issue");
-    //file input //
-    let fileone = document.getElementById("fileone");
-    let filetwo = document.getElementById("filetwo");
+function initializeImport() {
+  const fileone = document.getElementById('fileone');
+  const img1 = document.getElementById('fileimg1');
+  const inpElementA = document.getElementById('fileA');
 
-    //file img 
-    var img1 = document.getElementById("fileimg1");
-    var img2 = document.getElementById("fileimg2");
+  inpElementA.addEventListener('change', () => {
+    showfiles('fileimg1', inpElementA.files[0].name, inpElementA.files[0]);
+  });
 
-    //input elements
-    const inpElementA = document.getElementById("fileA");
-    const inpElementB = document.getElementById("fileB");
-
-    inpElementA.addEventListener('change', function () {
-        showfiles("fileimg1", inpElementA.files[0].name, inpElementA.files[0]);
-    });
-
-    inpElementB.addEventListener('change', function () {
-        showfiles("fileimg2", inpElementB.files[0].name, inpElementB.files[0]);
-    });
-
-    //First file hidden input connected to the div area
-    fileone.onclick = function () {
-        document.getElementById("fileA").click();
-    }
-    //second file hidden input connected to the div area
-    filetwo.onclick = () => {
-        document.getElementById("fileB").click();
-    }
-
-    
+  // First file hidden input connected to the div area
+  fileone.onclick = () => {
+    document.getElementById('fileA').click();
+  };
 }
 
-    const dragOverHandler = (event) => { event.preventDefault(); }
-    /**
-     * Drop handler
-     * @param {*} ev
-     */
-    function dropHandler(ev, field) {
-        console.log("File Dropped");
-        ev.preventDefault();
+window.onload = () => {
+  // file input
+  initializeImport();
+};
 
-        if (ev.dataTransfer.items.length == 1) {
+// display files in the webpage as icons
+function showfiles(idName, filename, fyl) {
+  // clear out the file array
+  file.length = 0;
+  document.getElementById(idName).style.display = 'flex';
+  document.getElementById(`${idName}2`).innerHTML = filename;
+  $('.modal-dialog').css('width', '500px');
+  file.push(fyl);
+}
 
-            if (ev.dataTransfer.items[0].kind === 'file') {
-                console.log(ev.dataTransfer.files[0].name);
-                showfiles(field, ev.dataTransfer.files[0].name, ev.dataTransfer.files[0]);
-            }
+const dragOverHandler = (event) => { event.preventDefault(); };
 
-        }
-        else {
-            console.log("Multiple files detected");
-        }
-        ev.dataTransfer.clearData();
+/**
+ * Drop handler
+ * @param {*} ev
+ */
+function dropHandler(ev, field) {
+  console.log('File Dropped');
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items.length === 1) {
+    if (ev.dataTransfer.items[0].kind === 'file') {
+      console.log(ev.dataTransfer.files[0].name);
+      showfiles(field, ev.dataTransfer.files[0].name, ev.dataTransfer.files[0]);
     }
-
-    //display files in the webpage as icons
-    function showfiles(idName, filename, fyl) {
-        document.getElementById(idName).style.display = "block";
-        document.getElementById(idName + "2").innerHTML = filename;
-        file.push(fyl);
-    }
-
-
-
-
-
-
-function About() {
-    document.getElementById("About").style.display = "block";
+  } else {
+    console.log('Multiple files detected');
+  }
+  ev.dataTransfer.clearData();
 }
 
-function Help() {
-    document.getElementById("Help").style.display = "block";
-}
 
-function Import()
-{
-    document.getElementById("Import").style.display ="block";
-}
+function submitFile(ev) {
+  ev.preventDefault();
+  const formData = new FormData();
 
-//function for login form 
-var login_modal = () =>{document.getElementById("Login").style.display ="block"};
+  // create a form data to send the array of files
+  for (let val = 0; val < file.length; val += 1) {
+    formData.append(`file${val}`, file[val]);
+  }
+
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    console.log(evt.target.result);
+  };
+
+  const logfile = reader.readAsText(file[0]);
+  // TODO validation required
 
 
-
-let submit_file =(ev)=> {
-    ev.preventDefault();
-    const formData = new FormData();
-
-    //create a form data to send the array of files
-    for(let val=0;val<file.length;val++)
+  // post into the server
+  $.ajax(
     {
-        formData.append('file'+val,file[val]);
-    }
-    
-    var reader = new FileReader();
-    reader.onload =(evt) =>{
-        console.log(evt.target.result);     
-    }
-   let logfile =reader.readAsText(file[0]);
-   //validation required
-
-
-    //post into the server
-    $.ajax(
-        {
-            url : "server/test.php",
-            type: "POST",
-            data : formData,
-            processData:false,
-            contentType:false,
-            success:function(data, textStatus, response)
-            {
-                alert("success in function call");
-                $(".hd_inp").val('');
-                $(".fileimg").css("display","none");
-                file.length =0;
-                console.log(response)
-            },
-            error: function(jqXHR, textStatus, errorThrown)
-            {
-                alert("unsuccessful");
-            }
-        });
+      url: 'server/test.php',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: (data, textStatus, response) => {
+        console.log('success in function call');
+        $('.hd_inp').val('');
+        $('.fileimg').css('display', 'none');
+        file.length = 0;
+        console.log(response);
+        CallAlert.preview();
+      },
+      // eslint-disable-next-line no-unused-vars
+      error: (jqXHR, textStatus, error) => {
+        CallAlert.danger(error);
+      },
+    },
+  );
 }
