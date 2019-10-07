@@ -20,18 +20,19 @@
                  }                
             } 
             
-            $this->readfiles();          
+            $this->readfiles($current_no);          
         }
 
         //read files into the database
-        function readfiles()                                        
+        function readfiles($current_no)                                        
         {
             $dirfiles = scandir('../test');                                 //scan the files of the directory   
             for($var = 2; $var<sizeof($dirfiles);$var++)                    //start with two  as the first two are occpupied by . and ..
             {
                 $f = "../test/".$dirfiles[$var];                            //var files is 2 because of two hidden inputs in the folder
                 $filename = fopen($f,"r");
-                $table_name = $dirfiles[$var];
+                $table_name = $current_no;
+                
 
                 fgets($filename);
                 $array =[];

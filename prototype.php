@@ -275,6 +275,18 @@ if (isset($_SESSION['id'])) {
                     </div>
                   </div>
                 </div>
+                <p>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-8 text-right">
+                        <input type="text" id ="fileName" onchange="input_validation()"/>
+                      </div>
+                      <div class="col-sm-4 text-left" style="align-self:center">
+                        <span id="validation-tooltip"></span><br>
+                      </div>
+                    </div>
+                  </div>
+                </p>
                 <input type="submit" class="btn btn-primary text-center" value="Submit">
               </form>
             </div>

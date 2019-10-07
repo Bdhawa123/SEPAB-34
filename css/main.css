@@ -133,6 +133,7 @@ input[type='file'] {
   color: transparent;
 }
 
+
 .container-fluid {
   width:100%;
   top:0;
@@ -154,6 +155,20 @@ input[type='file'] {
 }
 
 
+
+
+/***/
+
+#fileName{
+  width: 45%; 
+  text-align: right; 
+}
+
+#validation-tooltip{
+  color:red;
+  
+}
+  
 
 
 /*----------------------*/
