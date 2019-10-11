@@ -286,6 +286,7 @@ if (isset($_SESSION['id'])) {
                     </div>
                   </div>
                 </div>
+
                 <p>
                   <div class="col-sm-12">
                     <div class="row">
@@ -332,7 +333,8 @@ if (isset($_SESSION['id'])) {
 
     <!-- Main JS file -->
     <script type="module" src="javascript/leaflet_map.js"></script>
-    <script type="module" src="javascript/mainpage.js"></script>
+    <script type="text/javascript" src="javascript/mainpage.js"></script>
+  
 
 
     <!-- Custom UI CSS -->

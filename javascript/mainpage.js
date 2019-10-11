@@ -1,4 +1,4 @@
-import CallAlert from './CallAlert.js';
+//import CallAlert from './CallAlert.js';
 // global variable for files
 const file = [];
 let validation = false;
