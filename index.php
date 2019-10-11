@@ -83,6 +83,11 @@ if (isset($_SESSION['id'])) {
                 Visualize Speed
               </label>
             </div>
+            <!--Temperory button -->
+          <!-- Colored FAB button with ripple -->
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="updatetemp()">
+              <i class="material-icons">add</i>
+            </button>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
               <label class="form-check-label" for="defaultCheck1">
@@ -265,7 +270,7 @@ if (isset($_SESSION['id'])) {
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header d-block">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" onclick="modalreset()" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
             <h5 class="modal-title text-center" id="exampleModalLabel">Import Data</h5>
