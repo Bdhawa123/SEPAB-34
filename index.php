@@ -76,6 +76,9 @@ if (isset($_SESSION['id'])) {
             <!-- Back Button -->
             <button class="back-button">back</button>
             <h2 class="mdl-card__title-text">Around Swinburne</h2>
+            <input class="text-left" id="set_quantize_scale"/>
+            <button class="back-button" id ="limit">set limit</button>
+            Max Speed<p id="max_speed"></p>
           </div>
           <div class="mdl-card__supporting-text">
             <table class="table">

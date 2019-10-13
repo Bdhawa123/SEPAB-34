@@ -116,47 +116,47 @@ function submitFile(ev) {
 
 
   const reader = new FileReader();
- //client side validation
-  var val = false;
-  reader.readAsText(file[0]);
-  reader.onload = (evt) => {
+//  //client side validation
+//   var val = false;
+//   reader.readAsText(file[0]);
+//   reader.onload = (evt) => {
    
-    let fileapi =(evt.target.result);
-    console.log(typeof(fileapi));
+//     let fileapi =(evt.target.result);
+//     console.log(typeof(fileapi));
     
-    let ext = file[0].name.split(".")[1];
-    if (["csv","xls","xlsm","xlsx",".dbf"].includes(ext)){
+//     let ext = file[0].name.split(".")[1];
+//     if (["csv","xls","xlsm","xlsx",".dbf"].includes(ext)){
 
-    for(var i =0;i<fileapi.length;i++ ){
+//     for(var i =0;i<fileapi.length;i++ ){
      
-        if (fileapi[i]=="\n"){ 
+//         if (fileapi[i]=="\n"){ 
            
-            this.val = true;
-            console.log(val);
-            break;
-        }      
-    }
-     if(this.val==true){
-        let newstring = fileapi.substr(0,i);
-        if(newstring.split(",").length==5){
-            console.log("file valid");
-            console.log(val);
-            this.val =true;
-        }
-        else{
-          console.log("file Invalid");
-          console.log(val);
-        } 
-     }
-     else{
-       console.log("file Invalid");
-         console.log(val);
-     }
-    }
-    else{
-      console.log("file type is invalid");
-    }
-  };
+//             this.val = true;
+//             console.log(val);
+//             break;
+//         }      
+//     }
+//      if(this.val==true){
+//         let newstring = fileapi.substr(0,i);
+//         if(newstring.split(",").length==5){
+//             console.log("file valid");
+//             console.log(val);
+//             this.val =true;
+//         }
+//         else{
+//           console.log("file Invalid");
+//           console.log(val);
+//         } 
+//      }
+//      else{
+//        console.log("file Invalid");
+//          console.log(val);
+//      }
+//     }
+//     else{
+//       console.log("file type is invalid");
+//     }
+//   };
 
  
  // TODO validation required
@@ -164,8 +164,8 @@ function submitFile(ev) {
 
   //post into the server
   console.log('file validation',validation);
-  console.log('value',val)
-if(file.length!=0 && validation && val){
+  
+if(file.length!=0 && validation){
  
   console.log("File inside 1")
   $.ajax(
