@@ -38,8 +38,7 @@ if (isset($_SESSION['id'])) {
 
   <body>
     <div class="container fixed-top pt-3 alert-container"></div>
-
-    <div id="header" class="fixed-top">
+      <div id = "header_left" class="fixed-top">
       <nav class="navbar navbar-expand-lg navbar-transparent">
         <a class="navbar-brand" href="index.php">SABAQ</a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -58,6 +57,8 @@ if (isset($_SESSION['id'])) {
             </li>
           </ul>
         </div>
+      </div>
+      <div id = "header_right" class="fixed-top" >
         <div class="buttons">
           <button class="btn btn-primary" onclick="openNav()"><i class="fa fa-bars"></i></button>
         </div>
@@ -181,7 +182,7 @@ if (isset($_SESSION['id'])) {
 
       -->
 
-      <!-- 
+      <!--
       <div id="dragndrop">
         <h2>Import Data</h2>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
@@ -334,7 +335,7 @@ if (isset($_SESSION['id'])) {
     <!-- Main JS file -->
     <script type="module" src="javascript/leaflet_map.js"></script>
     <script type="text/javascript" src="javascript/mainpage.js"></script>
-  
+
 
 
     <!-- Custom UI CSS -->
