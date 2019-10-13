@@ -9,9 +9,9 @@ class connection
   // the version of php is 7 or higher which means the server update needs to have php version 7 installed any version below 7 would need some changes in the execution of mysql code and a slight amount of possibility in the the config files as well
 
 
-  private $database = "wheelchair";
+  private $database = "wheelchair-project";
   private $user = "root";
-  private $pwd = "123456";
+  private $pwd = "";
   private $host = "localhost";
   private $dbconnect;
 

@@ -79,8 +79,6 @@ if (isset($_SESSION['id'])) {
           
           
           <div class="mdl-card__supporting-text">
-
-
             <!-- Table Panel -->
             <div class="my_table_panel" id="myTablePanel">
               <div class="table-responsive">
@@ -98,42 +96,40 @@ if (isset($_SESSION['id'])) {
 
             <!-- Info Panel -->
             <div class="my_info_panel" id="myInfoPanel">         
-            <p class="my_subtitle">Filters</p>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="visSpeedCheck" onclick="controlGraph()">
-              <label class="form-check-label" for="visSpeedCheck">
-                Visualize Speed
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-              <label class="form-check-label" for="defaultCheck1">
-                Graph
-              </label>
-            </div>
-            <br />
-            <!-- <div id="slider-range" class="my-3"></div> -->
-            <div class="data-buttons"></div>
-            <p class="my_subtitle">Results</p>
-            <div class="row">
-              <div class="col-sm-6">
-
-                <label>From</label>
-                <br />
-                <h3 id="my_point_start" class="my_result_title">NaN</h3>
-                <span>point</span>
-                <!--<input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">-->
+              <p class="my_subtitle">Filters</p>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="visSpeedCheck" onclick="controlGraph()">
+                <label class="form-check-label" for="visSpeedCheck">
+                  Visualize Speed
+                </label>
               </div>
-              <div class="col-sm-6">
-                <label for="datapoint">To</label>
-                <br />
-                <h3 id="my_point_end" class="my_result_title">NaN</h3>
-                <span>point</span>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                <label class="form-check-label" for="defaultCheck1">
+                  Graph
+                </label>
+              </div>
+              <br />
+              <!-- <div id="slider-range" class="my-3"></div> -->
+              <div class="data-buttons"></div>
+              <p class="my_subtitle">Results</p>
+              <div class="row">
+                <div class="col-sm-6">
+
+                  <label>From</label>
+                  <br />
+                  <h3 id="my_point_start" class="my_result_title">NaN</h3>
+                  <span>point</span>
+                  <!--<input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">-->
+                </div>
+                <div class="col-sm-6">
+                  <label for="datapoint">To</label>
+                  <br />
+                  <h3 id="my_point_end" class="my_result_title">NaN</h3>
+                  <span>point</span>
+                </div>
               </div>
             </div>
-            </div>
-
-
           </div>
 
           <!-- -->
@@ -359,13 +355,14 @@ if (isset($_SESSION['id'])) {
     <script src="https://d3js.org/d3.v4.min.js"></script>
 
     <!-- Main JS file -->
+    
+    <script type="text/javascript" src="javascript/mainpage-ui.js"></script>
     <script type="module" src="javascript/leaflet_map.js"></script>
     <script type="text/javascript" src="javascript/mainpage.js"></script>
   
 
 
     <!-- Custom UI CSS -->
-    <script type="text/javascript" src="javascript/mainpage-ui.js"></script>
 
     <!-- Custom Line Chart -->
     <!-- <script src="javascript/lineGraphScript.js"></script> -->

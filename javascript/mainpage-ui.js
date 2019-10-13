@@ -23,7 +23,7 @@ function showTable() {
   console.log("show Table");
 }
 
-function hideTable(){
+function hideTable() {
   document.getElementById('myTablePanel').style.display = 'none';
   document.getElementById('myInfoPanel').style.display = 'block';
   console.log("hide Table");

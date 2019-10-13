@@ -510,15 +510,25 @@ const createBackButton = () => {
     map.flyTo([-37.843527, 145.010365], 12);
     map.once('moveend', () => {
       showCircles();
-      showTable();
+      
+      document.getElementById('myTablePanel').style.display = 'block';
+      document.getElementById('myInfoPanel').style.display = 'none';
     });
   });
 
   return {
-    showButton: () => { button.style.display = 'block'; },
-    hideButton: () => { 
-      button.style.display = 'block'; 
-      hideTable();
+    showButton: () => {
+      button.style.display = 'block';
+      
+      console.log('show single data tab');
+      console.log(document.getElementById('myTablePanel'));
+    },
+    hideButton: () => {
+      button.style.display = 'block';
+
+      console.log('show all data tab');
+      document.getElementById('myTablePanel').style.display = 'block';
+      document.getElementById('myInfoPanel').style.display = 'none';
     },
   };
 };
@@ -544,6 +554,9 @@ function onClickData(dataName, latlng) {
 
       // code is fired after animation ends, draw paths and slider
       map.once('moveend', () => {
+        document.getElementById('myTablePanel').style.display = 'none';
+        document.getElementById('myInfoPanel').style.display = 'block';
+
         let lat1; let lng1; let lat2; let lng2;
         for (let j = 0; j < json.length - 1; j += 1) {
           lat1 = parseFloat(json[j].latitude);
