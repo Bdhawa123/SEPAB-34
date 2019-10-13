@@ -36,6 +36,24 @@ class connection
             }*/
   }
 
+  function get_speed($table_name){
+    $sql = "SELECT TIME,GYRO_X, GYRO_Y FROM $table_name ORDER BY NAME";
+    $result = $this->dbconnect->query($sql);
+    $ret_arr = [];
+
+    if (mysqli_num_rows($result) > 0) {
+      while ($row = mysqli_fetch_array($result)) {
+        array_push($ret_arr, $row);
+      }
+    } else {
+      return false;
+    }
+
+    return $ret_arr;
+
+  }
+
+
   //should change database
   function changeDB($dbName)
   {

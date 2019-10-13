@@ -1,5 +1,5 @@
 <?php
-require_once('server_script.php');
+  require_once('server_script.php');
 // header('Content-Type: application/json');
 
 
@@ -59,6 +59,19 @@ switch ($_POST['functionname']) {
     echo json_encode($new_array);
 
     break;
+
+  case 'Graph_viz':
+    $con_file = new connection;
+    $new_array = [];
+    //print_r($con_file->fetch_table_data($_POST['arguments']));
+    $con_file->changeDB("gps_db");
+    $array_return = $con_file->get_speed($_POST['arguments']);
+
+    foreach ($array_return as $obj) {
+      array_push($new_array, array('Time' => $obj[1], 'Speed' => ($obj[4]+ $obj[5])/2));
+    }
+    echo json_encode($new_array);
+
 
   case 'DropTable':
     $con_file = new connection;

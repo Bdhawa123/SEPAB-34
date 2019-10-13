@@ -28,6 +28,9 @@ function linechartInit() {
     speed: parseFloat(d.speed),
   });
 
+
+  
+
   d3.csv('dataprototype/line-chart.csv', rowConverter)
     .then((data) => {
       for (let i = 0; i < data.length; i += 1) {
@@ -35,7 +38,8 @@ function linechartInit() {
           dataset.push(data[i]);
         }
       }
-      
+      alert(data.length);
+      alert(dataset.length);
       maxDomain = d3.max(dataset, (d) => d.time);
       console.log(dataset)
       console.log(maxDomain)
