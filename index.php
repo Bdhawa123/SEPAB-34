@@ -73,80 +73,31 @@ if (isset($_SESSION['id'])) {
       <div id="mySidenav" class="sidenav">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
           <div class="mdl-card__title">
-            <h2 class="mdl-card__title-text">Select</h2>
+
+            <h2 class="mdl-card__title-text">Choose Data</h2>
           </div>
           
-          <!-- Panel 1 -->
-          <div class="mdl-card__supporting-text my_panel_1" id="myTablePanel">
-            <p class="my_subtitle">Table 1</p>
-            
-            
-              <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
-                <thead>
-                  <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Material</th>
-                    <th>Quantity</th>
-                    <th>Unit price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-                    <td>25</td>
-                    <td>$2.90</td>
-                  </tr>
-                  <tr>
-                    <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-                    <td>50</td>
-                    <td>$1.25</td>
-                  </tr>
-                  <tr>
-                    <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-                    <td>10</td>
-                    <td>$2.35</td>
-                  </tr>
-                </tbody>
-              </table>
+          
+          <div class="mdl-card__supporting-text">
 
-              <p class="my_subtitle">Table 2</p>
 
-              <table class="table">
-                <thead>
-                  <tr>
+            <!-- Table Panel -->
+            <div class="my_table_panel" id="myTablePanel">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
                     <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
-                </tbody>
-              </table>
-                            
-        
-          </div>
+                    <th scope="col">Name</th>
+                    <th scope="col">Fly to</th>
+                    <th scope="col">Delete</th>
+                  </thead>
+                  <tbody class="table-body"></tbody>
+                </table>
+              </div>
+            </div>
 
-          
-          <!-- Panel 2 -->
-          <div class="mdl-card__supporting-text my_panel_2" id="myInfoPanel">
+            <!-- Info Panel -->
+            <div class="my_info_panel" id="myInfoPanel">         
             <p class="my_subtitle">Filters</p>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="visSpeedCheck" onclick="controlGraph()">
@@ -180,16 +131,13 @@ if (isset($_SESSION['id'])) {
                 <span>point</span>
               </div>
             </div>
+            </div>
 
 
           </div>
 
           <!-- -->
-          <div class="mdl-card__actions mdl-card--border">
-            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-              Exit Map
-            </a>
-          </div>
+          
           <div class="mdl-card__menu my_menu_left">
             <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect back-button">
               <i class="material-icons">arrow_back</i>

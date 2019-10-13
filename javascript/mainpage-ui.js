@@ -18,11 +18,13 @@ function closeNav() {
 }
 
 function showTable() {
-  document.getElementById('my_panel_1').style.display = 'block';
-  document.getElementById('my_panel_2').style.display = 'none';
+  document.getElementById('myTablePanel').style.display = 'block';
+  document.getElementById('myInfoPanel').style.display = 'none';
+  console.log("show Table");
 }
 
 function hideTable(){
-  document.getElementById('my_panel_1').style.display = 'none';
-  document.getElementById('my_panel_2').style.display = 'block';
+  document.getElementById('myTablePanel').style.display = 'none';
+  document.getElementById('myInfoPanel').style.display = 'block';
+  console.log("hide Table");
 }

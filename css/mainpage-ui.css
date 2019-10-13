@@ -1,6 +1,6 @@
 .sidenav {
   display: none;
-  height: auto;
+  height: 100%;
   width: 33%;
   position: fixed;
   z-index: 999;
@@ -40,6 +40,7 @@ a:hover {
 }
 
 .demo-card-wide.mdl-card {
+  height: 100% !important;
   width: auto;
 }
 
@@ -97,8 +98,12 @@ and (max-width : 450px) {
 }
 
 /* hide panel_2 first */
-.my_panel_2 {
+.my_info_panel {
   display: none;
+}
+.mdl-card__supporting-text {
+  overflow: auto !important;
+  width: 100% !important;
 }
 
 /* adjust menu back button */
@@ -106,10 +111,8 @@ and (max-width : 450px) {
   left: 16px;
 }
 
-/* make sidebar scrollable */
-.my_panel_2 {
-  overflow: auto;
-  max-height: 100vh;
+h2 {
+  font-weight: bold !important;
 }
 
 
