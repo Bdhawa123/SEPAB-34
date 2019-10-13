@@ -10,16 +10,34 @@ a{
   cursor:pointer;
 }
 
-
+/*
 #header {
-  z-index: 2;
-  position: fixed;
-  font-weight: bold;
-  top: 0px;
-  width: 100%;
-  height: 100px;
-}
 
+  position: fixed;
+
+  top: 0px;
+
+
+}*/
+#header_right{
+  z-index: 1;
+  font-weight: bold;
+  width: 10%;
+  position: fixed;
+  float: right;
+  padding-top:1%;
+  padding-left: 95%;
+  height: 1px
+
+}
+#header_left{
+
+
+  z-index: 1;
+  font-weight: bold;
+  width: 2%;
+
+}
 
 .nav{
   background-color: none;
@@ -30,6 +48,7 @@ a{
   color:black;
 
 }
+
 
 /* Drag and drop inside sidebar*/
 
@@ -161,15 +180,20 @@ input[type='file'] {
 /***/
 
 #fileName{
+<<<<<<< HEAD
   width: 45%; 
   text-align: center; 
+=======
+  width: 45%;
+  text-align: right;
+>>>>>>> Fix-header
 }
 
 #validation-tooltip{
   color:red;
-  
+
 }
-  
+
 
 
 /*----------------------*/
