@@ -227,9 +227,11 @@ function createAdjustPathsButton(gpsPoints) {
     const sliderMin = $('#slider-range').slider('values', 0);
     const sliderMax = $('#slider-range').slider('values', 1);
     // XHR adjust paths
-    const newPoints = ajaxPathAdjust(gpsPoints, sliderMin, sliderMax);
-
-    // TODO update newPoints
+    ajaxPathAdjust(gpsPoints, sliderMin, sliderMax)
+      .then((newPoints) => {
+        console.log(newPoints);
+        // TODO update newPoints
+      });
   });
 
   const buttonCancel = document.createElement('button');
