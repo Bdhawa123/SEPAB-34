@@ -489,8 +489,9 @@ function removePolylines() {
   polylines = [];
 }
 
-function createBackButton() {
+const createBackButton = () => {
   const button = document.querySelector('.back-button');
+  button.style.display = 'none';
 
   button.addEventListener('click', () => {
     deleteUpdateButton();
@@ -500,9 +501,51 @@ function createBackButton() {
 
     map.flyTo([-37.843527, 145.010365], 12);
     map.once('moveend', () => {
+      button.style.display = 'none';
       showCircles();
     });
   });
+
+  return {
+    hideButton: () => { button.style.display = 'block'; },
+  };
+};
+
+function createDataRow(name, number) {
+  const tableName = name;
+  const row = document.createElement('tr');
+
+  const rowHeader = document.createElement('th');
+  rowHeader.setAttribute('scope', 'row');
+  rowHeader.innerHTML = number;
+
+  const rowName = document.createElement('td');
+  rowName.innerHTML = tableName;
+
+  const rowFlyTo = document.createElement('td');
+  const flyToButton = document.createElement('button');
+  flyToButton.innerHTML = 'Go';
+  flyToButton.classList.add('btn');
+  flyToButton.classList.add('btn-primary');
+  rowFlyTo.appendChild(flyToButton);
+
+  const rowDelete = document.createElement('td');
+  const deleteButton = document.createElement('button');
+  deleteButton.innerHTML = 'Delete';
+  deleteButton.classList.add('btn');
+  deleteButton.classList.add('btn-primary');
+  deleteButton.addEventListener('click', () => {
+    console.log('Deleting', tableName);
+    // TODO Delete function
+  });
+  rowDelete.appendChild(deleteButton);
+
+  row.appendChild(rowHeader);
+  row.appendChild(rowName);
+  row.appendChild(rowFlyTo);
+  row.appendChild(rowDelete);
+
+  document.querySelector('.table-body').appendChild(row);
 }
 
 // Dom content loaded
@@ -510,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded');
 
   initMap();
-  createBackButton();
+  const backButton = createBackButton();
 
   // get First set of data to draw circles
   $.ajax(
@@ -526,6 +569,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // fetch all the values to generate
           for (let i = 0; i < content.length; i += 1) {
+            const cicleNumber = i + 1;
+            createDataRow(content[i].Table_Name, cicleNumber);
+
             const datafile = content[i].data[0];
             const circle = L.circle([(parseFloat(datafile.Latitude)), parseFloat(datafile.Longitude)], {
               radius: 800,
@@ -555,6 +601,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                   // code is fired after animation ends, draw paths and slider
                   map.once('moveend', () => {
+                    backButton.hideButton();
+
                     let lat1; let lng1; let lat2; let lng2;
                     for (let j = 0; j < json.length - 1; j += 1) {
                       lat1 = parseFloat(json[j].latitude);
