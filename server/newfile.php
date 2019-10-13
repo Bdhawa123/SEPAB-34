@@ -60,6 +60,16 @@ switch ($_POST['functionname']) {
 
     break;
 
+  case 'DropTable':
+    $con_file = new connection;
+    $return_drop = $con_file->delete_table($_POST['arguments']);
+    if($return_drop =1){
+      http_response_code(200);
+    }
+    else{
+      http_response_code(400);
+    }
+
   default:
     echo "here";
 }

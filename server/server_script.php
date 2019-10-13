@@ -88,6 +88,18 @@ class connection
   }
 
 
+  function delete_table($name){
+    $this->changeDB('GPS_DB');
+    $result = $this->dbconnect->query("DROP TABLE $name");   
+    if ($result){
+      return 1;
+    }
+    else{
+      return 0;
+    }
+  }
+
+
   //get table data from the defined table sorted
   function fetch_table_data($table_name)
   {
