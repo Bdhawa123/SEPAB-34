@@ -1,7 +1,12 @@
 import CallAlert from './callAlert.js';
 
 /* eslint-disable no-mixed-operators */
-const { L, d3 } = window; // Define L, d3
+const {
+  L,
+  d3,
+  confirm,
+  location,
+} = window; // Define L, d3
 
 let map;
 let maxspeed = 0;
@@ -621,19 +626,22 @@ function createDataRow(name, number, latlng) {
   deleteButton.classList.add('btn-danger');
   deleteButton.addEventListener('click', () => {
     console.log('Deleting', tableName);
-    // TODO Delete function
-    $.ajax({
-      url: 'server/newfile.php',
-      type: 'POST',
-      data: { functionname: 'DropTable', arguments: tableName },
-      success: (data, textStatus, response) => {
-        console.log("delete table", response);
-        location.reload();
-      },
-      error: (jqXHR, textStatus, errorThrown) => {
-        alert("unsuccessful");
-      },
-    });
+
+    // eslint-disable-next-line no-alert
+    if (confirm(`Are you sure you want to delete ${tableName}?`)) {
+      $.ajax({
+        url: 'server/newfile.php',
+        type: 'POST',
+        data: { functionname: 'DropTable', arguments: tableName },
+        success: () => {
+          location.reload();
+        },
+        error: () => {
+          alert('delete unsuccessful');
+        },
+      });
+    }
+    
   });
   rowDelete.appendChild(deleteButton);
 
