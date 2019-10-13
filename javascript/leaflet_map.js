@@ -252,6 +252,10 @@ function startUpdateButton(gpsPoints) {
   document.querySelector('.data-buttons').appendChild(button);
 }
 
+function deleteUpdateButton() {
+  document.querySelector('.data-buttons').innerHTML = '';
+}
+
 function initMap() {
   map = L.map('mapid', {
     zoomControl: false,
@@ -466,11 +470,47 @@ function linechartInit() {
     });
 }
 
+function removeCircles() {
+  for (let i = 0; i < circles.length; i += 1) {
+    map.removeLayer(circles[i]);
+  }
+}
+
+function showCircles() {
+  for (let i = 0; i < circles.length; i += 1) {
+    map.addLayer(circles[i]);
+  }
+}
+
+function removePolylines() {
+  for (let i = 0; i < polylines.length; i += 1) {
+    map.removeLayer(polylines[i]);
+  }
+  polylines = [];
+}
+
+function createBackButton() {
+  const button = document.querySelector('.back-button');
+
+  button.addEventListener('click', () => {
+    deleteUpdateButton();
+    $('#slider-range').slider('destroy');
+
+    removePolylines();
+    map.flyTo([-37.843527, 145.010365], 12);
+
+    map.once('moveend', () => {
+      showCircles();
+    });
+  });
+}
+
 // Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded');
 
   initMap();
+  createBackButton();
 
   // get First set of data to draw circles
   $.ajax(
@@ -498,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // eslint-disable-next-line no-loop-func
             circle.on('click', () => {
               const gpsPoints = [];
-              map.removeLayer(circle);
+              removeCircles();
 
               $.ajax({
                 type: 'POST',

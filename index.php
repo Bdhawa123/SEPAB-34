@@ -73,6 +73,7 @@ if (isset($_SESSION['id'])) {
       <div id="mySidenav" class="sidenav">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
           <div class="mdl-card__title">
+            <button class="back-button">back</button>
             <h2 class="mdl-card__title-text">Around Swinburne</h2>
           </div>
           <div class="mdl-card__supporting-text">
