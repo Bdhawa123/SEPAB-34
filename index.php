@@ -84,6 +84,12 @@ if (isset($_SESSION['id'])) {
             <p>Max Speed</p>
             <p id="max_speed"></p>
           </div>
+          <div class="spinner" style="display: none">
+            <div class="spinner-border cardSpinner" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+
 
           <div class="mdl-card__supporting-text">
             <!-- Table Panel -->

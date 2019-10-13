@@ -581,6 +581,8 @@ function onClickData(dataName, latlng) {
   resetData();
 
   backButton.showButton();
+  document.querySelector('.spinner').style.display = 'block';
+  document.getElementById('myTablePanel').style.display = 'none';
 
   $.ajax({
     type: 'POST',
@@ -596,8 +598,8 @@ function onClickData(dataName, latlng) {
 
       // code is fired after animation ends, draw paths and slider
       map.once('moveend', () => {
-        document.getElementById('myTablePanel').style.display = 'none';
         document.getElementById('myInfoPanel').style.display = 'block';
+        document.querySelector('.spinner').style.display = 'none';
 
         let lat1; let lng1; let lat2; let lng2;
         for (let j = 0; j < json.length - 1; j += 1) {
