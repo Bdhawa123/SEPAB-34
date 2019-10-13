@@ -6,7 +6,7 @@ const { L, d3 } = window; // Define L, d3
 let map;
 let polylines = [];
 let circles = [];
-let value = 234;
+let backButton;
 const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
 
 let svg;
@@ -489,11 +489,19 @@ function removePolylines() {
   polylines = [];
 }
 
+function resetData() {
+  deleteUpdateButton();
+  $('#slider-range').slider('destroy');
+  document.querySelector('#myLineGraph').innerHTML = '';
+  removePolylines();
+}
+
 const createBackButton = () => {
   const button = document.querySelector('.back-button');
   button.style.display = 'none';
 
   button.addEventListener('click', () => {
+    button.style.display = 'none';
     deleteUpdateButton();
     $('#slider-range').slider('destroy');
     document.querySelector('#myLineGraph').innerHTML = '';
@@ -501,17 +509,66 @@ const createBackButton = () => {
 
     map.flyTo([-37.843527, 145.010365], 12);
     map.once('moveend', () => {
-      button.style.display = 'none';
       showCircles();
     });
   });
 
   return {
-    hideButton: () => { button.style.display = 'block'; },
+    showButton: () => { button.style.display = 'block'; },
+    hideButton: () => { button.style.display = 'none'; },
   };
 };
 
-function createDataRow(name, number) {
+function onClickData(dataName, latlng) {
+  const gpsPoints = [];
+  removeCircles();
+  resetData();
+
+  backButton.showButton();
+
+  $.ajax({
+    type: 'POST',
+    url: 'server/newfile.php',
+    // dataType:'json',
+    data: { functionname: 'showMap', arguments: dataName },
+    success: (wheelchairData) => {
+      const json = JSON.parse(wheelchairData);
+      console.log(json);
+
+      // fly to circle's latlng
+      map.flyTo(latlng, 16);
+
+      // code is fired after animation ends, draw paths and slider
+      map.once('moveend', () => {
+        let lat1; let lng1; let lat2; let lng2;
+        for (let j = 0; j < json.length - 1; j += 1) {
+          lat1 = parseFloat(json[j].latitude);
+          lng1 = parseFloat(json[j].longitude);
+          lat2 = parseFloat(json[j + 1].latitude);
+          lng2 = parseFloat(json[j + 1].longitude);
+
+          const latlngs = [L.latLng(lat1, lng1), L.latLng(lat2, lng2)];
+          drawPolyline(latlngs);
+
+          gpsPoints.push(L.latLng(lat1, lng1));
+        }
+        gpsPoints.push(L.latLng(json[json.length - 1].latitude, json[json.length - 1].longitude));
+        // init speed graph
+        linechartInit();
+        // init slider
+        sliderInit();
+
+        // create update button
+        startUpdateButton(gpsPoints);
+      });
+    },
+    error: () => {
+      console.log('Somekind of an error');
+    },
+  });
+}
+
+function createDataRow(name, number, latlng) {
   const tableName = name;
   const row = document.createElement('tr');
 
@@ -527,6 +584,7 @@ function createDataRow(name, number) {
   flyToButton.innerHTML = 'Go';
   flyToButton.classList.add('btn');
   flyToButton.classList.add('btn-primary');
+  flyToButton.addEventListener('click', () => { onClickData(tableName, latlng); });
   rowFlyTo.appendChild(flyToButton);
 
   const rowDelete = document.createElement('td');
@@ -553,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded');
 
   initMap();
-  const backButton = createBackButton();
+  backButton = createBackButton();
 
   // get First set of data to draw circles
   $.ajax(
@@ -570,66 +628,22 @@ document.addEventListener('DOMContentLoaded', () => {
           // fetch all the values to generate
           for (let i = 0; i < content.length; i += 1) {
             const cicleNumber = i + 1;
-            createDataRow(content[i].Table_Name, cicleNumber);
 
             const datafile = content[i].data[0];
-            const circle = L.circle([(parseFloat(datafile.Latitude)), parseFloat(datafile.Longitude)], {
+            const dataName = content[i].Table_Name;
+            const latlngCircle = [(parseFloat(datafile.Latitude)), parseFloat(datafile.Longitude)];
+            createDataRow(dataName, cicleNumber, latlngCircle);
+
+            const circle = L.circle(latlngCircle, {
               radius: 800,
             }).addTo(map);
 
             // circle add tooltip
-            const circleTooltipText = content[i].Table_Name;
+            const circleTooltipText = dataName;
             circle.bindTooltip(circleTooltipText).openTooltip();
 
             // eslint-disable-next-line no-loop-func
-            circle.on('click', () => {
-              const gpsPoints = [];
-              removeCircles();
-
-              $.ajax({
-                type: 'POST',
-                url: 'server/newfile.php',
-                // dataType:'json',
-                data: { functionname: 'showMap', arguments: content[i].Table_Name },
-                success: (wheelchairData) => {
-                  const json = JSON.parse(wheelchairData);
-                  console.log(json);
-
-                  // fly to circle's latlng
-                  const latlngCircle = circle.getLatLng();
-                  map.flyTo(latlngCircle, 16);
-
-                  // code is fired after animation ends, draw paths and slider
-                  map.once('moveend', () => {
-                    backButton.hideButton();
-
-                    let lat1; let lng1; let lat2; let lng2;
-                    for (let j = 0; j < json.length - 1; j += 1) {
-                      lat1 = parseFloat(json[j].latitude);
-                      lng1 = parseFloat(json[j].longitude);
-                      lat2 = parseFloat(json[j + 1].latitude);
-                      lng2 = parseFloat(json[j + 1].longitude);
-
-                      const latlngs = [L.latLng(lat1, lng1), L.latLng(lat2, lng2)];
-                      drawPolyline(latlngs);
-
-                      gpsPoints.push(L.latLng(lat1, lng1));
-                    }
-                    gpsPoints.push(L.latLng(json[json.length - 1].latitude, json[json.length - 1].longitude));
-                    // init speed graph
-                    linechartInit();
-                    // init slider
-                    sliderInit();
-
-                    // create update button
-                    startUpdateButton(gpsPoints);
-                  });
-                },
-                error: () => {
-                  console.log('Somekind of an error');
-                },
-              });
-            });
+            circle.on('click', () => { onClickData(dataName, latlngCircle); });
 
             circles.push(circle);
           }
