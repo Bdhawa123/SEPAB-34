@@ -1,4 +1,4 @@
-.alert-container {
+.alert-container, #myGraph {
   z-index: 1000 !important;
 }
 

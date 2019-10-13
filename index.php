@@ -38,7 +38,7 @@ if (isset($_SESSION['id'])) {
 
   <body>
     <div class="container fixed-top pt-3 alert-container"></div>
-      <div id = "header_left" class="fixed-top">
+    <div id="header_left" class="fixed-top">
       <nav class="navbar navbar-expand-lg navbar-transparent">
         <a class="navbar-brand" href="index.php">SABAQ</a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -57,11 +57,11 @@ if (isset($_SESSION['id'])) {
             </li>
           </ul>
         </div>
+    </div>
+    <div id="header_right" class="fixed-top">
+      <div class="buttons">
+        <button class="btn btn-primary" onclick="openNav()"><i class="fa fa-bars"></i></button>
       </div>
-      <div id = "header_right" class="fixed-top" >
-        <div class="buttons">
-          <button class="btn btn-primary" onclick="openNav()"><i class="fa fa-bars"></i></button>
-        </div>
       </nav>
     </div>
 
@@ -76,15 +76,15 @@ if (isset($_SESSION['id'])) {
           <div class="mdl-card__title">
 
             <h2 class="mdl-card__title-text">Choose Data</h2>
-            
+
           </div>
           <div class="">
-            <input class="text-left" id="set_quantize_scale"/>
-            <button class="" id ="limit">set limit</button>
+            <input class="text-left" id="set_quantize_scale" />
+            <button class="" id="limit">set limit</button>
             <p>Max Speed</p>
             <p id="max_speed"></p>
           </div>
-          
+
           <div class="mdl-card__supporting-text">
             <!-- Table Panel -->
             <div class="my_table_panel" id="myTablePanel">
@@ -102,7 +102,7 @@ if (isset($_SESSION['id'])) {
             </div>
 
             <!-- Info Panel -->
-            <div class="my_info_panel" id="myInfoPanel">         
+            <div class="my_info_panel" id="myInfoPanel">
               <p class="my_subtitle">Filters</p>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="" id="visSpeedCheck" onclick="controlGraph()">
@@ -140,12 +140,12 @@ if (isset($_SESSION['id'])) {
           </div>
 
           <!-- -->
-          
+
           <div class="mdl-card__menu my_menu_left">
             <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect back-button">
               <i class="material-icons">arrow_back</i>
             </button>
-            
+
           </div>
           <div class="mdl-card__menu">
             <button id="my_vert_button" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
@@ -155,25 +155,6 @@ if (isset($_SESSION['id'])) {
               <i class="material-icons">close</i>
             </button>
           </div>
-          <!--<div id="accordion">
-          <div class="card">
-            <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-              <div class="card-header" id="headingOne">
-                Visualize Speed
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="collapse" id="collapseExample">
-          <div class="card card-body">
-            <p>
-              <label for="datapoint">Data range:</label>
-              <input type="text" id="datapoint" readonly style="border:0; color:#f6931f; font-weight:bold;">
-            </p>
-          </div>
-        </div>-->
-
-
         </div>
       </div>
 
@@ -189,42 +170,7 @@ if (isset($_SESSION['id'])) {
         </div>
       </div>
       <div id="slider-range" class="m-4 position-fixed fixed-bottom"></div>
-
-
-
-      <!--
-
-    <div id="mySidenav" class="sidenav">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-
-      <div class="row">
-        <div class="col-12">
-          <a data-toggle="modal" data-target="#import_modal">Import Data </a>
-
-        </div>
-
-      </div>
-
-      <a class="btn btn-primary" class="btn btn-primary" href="logout.php">Sign out</a>
-
-      <button class="btn btn-primary" data-toggle="modal" data-target="#login_modal">Sign in</button>
-
-      -->
-
-      <!--
-      <div id="dragndrop">
-        <h2>Import Data</h2>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import_modal"> Import Data
-        </button><br>
-        <h6><strong>button available only upon user login</strong></h6>
-      </div> -->
-      <!--resolve -->
-
-
     </div>
-
-    </div>
-
 
     <!-- About modal -->
     <div class="modal fade" id="about_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -321,7 +267,7 @@ if (isset($_SESSION['id'])) {
                   <div class="col-sm-12">
                     <div class="row">
                       <div class="col-sm-8 text-right">
-                        <input type="text" id ="fileName" onchange="input_validation()"/>
+                        <input type="text" id="fileName" onchange="input_validation()" />
                       </div>
                       <div class="col-sm-4 text-left" style="align-self:center">
                         <span id="validation-tooltip"></span><br>
@@ -359,7 +305,7 @@ if (isset($_SESSION['id'])) {
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
 
     <!-- Main JS file -->
-    
+
     <script type="text/javascript" src="javascript/mainpage-ui.js" async></script>
     <script type="module" src="javascript/leaflet_map.js"></script>
     <script type="text/javascript" src="javascript/mainpage.js" async></script>
