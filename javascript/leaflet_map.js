@@ -11,9 +11,13 @@ const {
 let map;
 let maxspeed = 0;
 let polylines = [];
-let circles = [];
+const circles = [];
 let backButton;
 const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
+
+let color = d3.scaleQuantize()
+  .domain([0, 10])
+  .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
 
 let svg;
 let xAxis;
@@ -82,15 +86,6 @@ function sliderInit() {
   document.getElementById('my_point_start').innerHTML = `${$('#slider-range').slider('values', 0) + 1}`;
   document.getElementById('my_point_end').innerHTML = `${$('#slider-range').slider('values', 1) + 1}`;
 }
-
-
-// d3 color function
-
-
-
-let color = d3.scaleQuantize()
-  .domain([0, 10])
-  .range(['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']);
 
 // function to calculate distance between 2 points
 function distance(latlngs, unit) {
