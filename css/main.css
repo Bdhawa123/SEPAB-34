@@ -47,6 +47,7 @@ a{
   margin-bottom: 5%;
 }
 
+
 /*
 #drag {
   font-weight: bold;
@@ -161,7 +162,7 @@ input[type='file'] {
 
 #fileName{
   width: 45%; 
-  text-align: right; 
+  text-align: center; 
 }
 
 #validation-tooltip{

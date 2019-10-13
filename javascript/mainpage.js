@@ -16,12 +16,21 @@ function initializeImport() {
   fileone.onclick = () => {
     document.getElementById('fileA').click();
   };
+ 
 }
+
+
 
 window.onload = () => {
   // file input
   initializeImport();
 };
+
+function modalreset(){
+  if (file.length==0){  
+    $('.modal-dialog').css('width', '800px');
+  }
+}
 
 // display files in the webpage as icons
 function showfiles(idName, filename, fyl) {
@@ -52,6 +61,7 @@ function dropHandler(ev, field) {
     console.log('Multiple files detected');
   }
   ev.dataTransfer.clearData();
+
 }
 
 /**
@@ -94,6 +104,7 @@ const input_validation =()=>{
 
 function submitFile(ev) {
   ev.preventDefault();
+  alert("File Submitted");
   const formData = new FormData();
 
   // create a form data to send the array of files
@@ -105,17 +116,58 @@ function submitFile(ev) {
 
 
   const reader = new FileReader();
+ //client side validation
+  var val = false;
+  reader.readAsText(file[0]);
   reader.onload = (evt) => {
-    console.log(evt.target.result);
+   
+    let fileapi =(evt.target.result);
+    console.log(typeof(fileapi));
+    
+    let ext = file[0].name.split(".")[1];
+    if (["csv","xls","xlsm","xlsx",".dbf"].includes(ext)){
+
+    for(var i =0;i<fileapi.length;i++ ){
+     
+        if (fileapi[i]=="\n"){ 
+           
+            this.val = true;
+            console.log(val);
+            break;
+        }      
+    }
+     if(this.val==true){
+        let newstring = fileapi.substr(0,i);
+        if(newstring.split(",").length==5){
+            console.log("file valid");
+            console.log(val);
+            this.val =true;
+        }
+        else{
+          console.log("file Invalid");
+          console.log(val);
+        } 
+     }
+     else{
+       console.log("file Invalid");
+         console.log(val);
+     }
+    }
+    else{
+      console.log("file type is invalid");
+    }
   };
 
-  // const logfile = reader.readAsText(file[0]);
-  // TODO validation required
+ 
+ // TODO validation required
 
 
-  // post into the server
-if(file.length!=0 && validation){  
-  
+  //post into the server
+  console.log('file validation',validation);
+  console.log('value',val)
+if(file.length!=0 && validation && val){
+ 
+  console.log("File inside 1")
   $.ajax(
     {
       url: 'server/test.php',
@@ -130,11 +182,13 @@ if(file.length!=0 && validation){
         file.length = 0;
         console.log(response);
         location.reload(true);
+        
         //callAlert.preview();
       },
       // eslint-disable-next-line no-unused-vars
       error: (jqXHR, textStatus, error) => {
         CallAlert.danger(error);
+
       },
     },
   );

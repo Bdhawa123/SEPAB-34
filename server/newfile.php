@@ -7,7 +7,7 @@ switch ($_POST['functionname']) {
   case 'firstAPI':
     /*----------------------------This will return a json request --------------------------------------------*/
     $filename_GPS = [];                                        //name of the files, should be sequenced in order
-    $data = [];                                                //hold data of the corresponding fiel list
+    $data = [];                                                //hold data of the corresponding file list
     $array_list = [];                                        //array list of table type    
     $final_array = [];                                       //final array list that will go out as json
     $con_file = new connection;
@@ -70,6 +70,14 @@ switch ($_POST['functionname']) {
       http_response_code(400);
     }
 
+
+  case 'updatePoints':
+    $con_file = new connection;
+    $con_file->changeDB("gps_db");
+
   default:
-    echo "here";
+
+
+
+    
 }
