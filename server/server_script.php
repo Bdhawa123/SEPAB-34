@@ -145,9 +145,18 @@ class connection
 
     $sql = "INSERT INTO $filename(TIME,LATITUDE,LONGITUDE,GYRO_X,GYRO_Y) VALUES";
     $V1 = "";
+
+    $gyrox_y =[];
+    for($var = 0; $var < sizeof($values) - 1; $var+=100){
+      $arr = $values[$var];
+      array_push($gyrox_y,$arr[3],$arr[4]);
+    }
+
+
     for ($var = 0; $var < sizeof($values) - 1; $var++)
     {
       $array = $values[$var];
+
       if (!empty($array[0]))
       {
         $array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
@@ -155,11 +164,11 @@ class connection
         if ($var == sizeof($values) - 2)
         {
           //$V1.="($array[0]".",$array[1]".",$array[2]".",$array[3]".",$array[4]);";
-          $V1 .= "($array[0],$array[1],$array[2],$array[3],$array[4]);";
+          $V1 .= "($array[0],$array[1],$array[2],$gyrox_y[3],$gyrox_y[4]);";
         }
         else
         {
-          $V1 .= "($array[0],$array[1],$array[2],$array[3],$array[4]),";
+          $V1 .= "($array[0],$array[1],$array[2],$gyrox_y[3],$gyrox_y[4]),";
           //$V1.="('$array[0]'".",$array[1]".",$array[2]".",$array[3]".",$array[4]),";
         }
       }
