@@ -495,10 +495,10 @@ function createBackButton() {
   button.addEventListener('click', () => {
     deleteUpdateButton();
     $('#slider-range').slider('destroy');
-
+    document.querySelector('#myLineGraph').innerHTML = '';
     removePolylines();
-    map.flyTo([-37.843527, 145.010365], 12);
 
+    map.flyTo([-37.843527, 145.010365], 12);
     map.once('moveend', () => {
       showCircles();
     });
