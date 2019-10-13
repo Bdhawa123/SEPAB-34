@@ -1,3 +1,7 @@
+.alert-container {
+  z-index: 1000 !important;
+}
+
 .sidenav {
   display: none;
   height: 100%;

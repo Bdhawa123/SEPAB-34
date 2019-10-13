@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/extensions
 import CallAlert from './callAlert.js';
 
 /* eslint-disable no-mixed-operators */
@@ -145,128 +146,174 @@ function drawPolyline(latlngs) {
   polylines.push(polyline);
 }
 
+const startUpdateButton = (gpsPoints) => {
+  function requestAdjustedWaypoints(url) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resolve(xhr.response);
+        } else {
+          reject(xhr.statusText);
+        }
+      };
+      xhr.send();
+    });
+  }
 
-function requestAdjustedWaypoints(url) {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        resolve(xhr.response);
-      } else {
-        reject(xhr.statusText);
+  async function ajaxPathAdjust(oldPoints, min, max) {
+    let count = -1;
+    const apiLimit = 25;
+    const newPoints = oldPoints;
+    const adjustedPoints = [];
+
+    for (let i = min; i < max - 1; i += apiLimit) {
+      count += 1;
+      // console.log(`Count${count}: ${i}`);
+      let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/';
+      // const geometry = '&geometries=geojson';
+      let waypointsList = '';
+
+      for (let j = i; j < apiLimit + i; j += 1) {
+        if (j === max - 1) {
+          break;
+        }
+        waypointsList += `${oldPoints[j].lng},${oldPoints[j].lat};`;
       }
-    };
-    xhr.send();
-  });
-}
+      waypointsList = waypointsList.slice(0, -1);
+      url = `${url + waypointsList}?access_token=${accessToken}`;
+      console.log(url);
 
-
-async function ajaxPathAdjust(oldPoints, min, max) {
-  let count = -1;
-  const apiLimit = 25;
-  const newPoints = oldPoints;
-  const adjustedPoints = [];
-
-  for (let i = min; i < max - 1; i += apiLimit) {
-    count += 1;
-    // console.log(`Count${count}: ${i}`);
-    let url = 'https://api.mapbox.com/directions/v5/mapbox/walking/';
-    // const geometry = '&geometries=geojson';
-    let waypointsList = '';
-
-    for (let j = i; j < apiLimit + i; j += 1) {
-      if (j === max - 1) {
-        break;
+      // eslint-disable-next-line no-await-in-loop
+      const result = await requestAdjustedWaypoints(url);
+      const { waypoints } = (JSON.parse(result));
+      for (let j = 0; j < waypoints.length; j += 1) {
+        const [lng, lat] = waypoints[j].location;
+        adjustedPoints.push(L.latLng(lat, lng));
       }
-      waypointsList += `${oldPoints[j].lng},${oldPoints[j].lat};`;
     }
-    waypointsList = waypointsList.slice(0, -1);
-    url = `${url + waypointsList}?access_token=${accessToken}`;
-    console.log(url);
 
-    // eslint-disable-next-line no-await-in-loop
-    const result = await requestAdjustedWaypoints(url);
-    const { waypoints } = (JSON.parse(result));
-    for (let j = 0; j < waypoints.length; j += 1) {
-      const [lng, lat] = waypoints[j].location;
-      adjustedPoints.push(L.latLng(lat, lng));
+    count = 0;
+    for (let i = min; i < max - 1; i += 1) {
+      newPoints[i] = adjustedPoints[count];
+      count += 1;
     }
-  }
 
-  count = 0;
-  for (let i = min; i < max - 1; i += 1) {
-    newPoints[i] = adjustedPoints[count];
-    count += 1;
-  }
+    for (let i = 0; i < polylines.length; i += 1) {
+      map.removeLayer(polylines[i]);
+    }
+    polylines = [];
 
-  for (let i = 0; i < polylines.length; i += 1) {
-    map.removeLayer(polylines[i]);
-  }
-  polylines = [];
-
-  for (let i = 0; i < newPoints.length - 1; i += 1) {
-    const latlngs = [newPoints[i], newPoints[i + 1]];
-    drawPolyline(latlngs);
-  }
-  $('#slider-range').slider('destroy');
-  sliderInit();
-
-  return newPoints;
-}
-
-
-function createAdjustPathsButton(gpsPoints) {
-  const buttonAdjust = document.createElement('button');
-  buttonAdjust.innerHTML = 'Adjust';
-  buttonAdjust.id = 'adjust path';
-  buttonAdjust.classList.add('btn');
-  buttonAdjust.classList.add('btn-primary');
-
-  buttonAdjust.addEventListener('click', () => {
-    const sliderMin = $('#slider-range').slider('values', 0);
-    const sliderMax = $('#slider-range').slider('values', 1);
-    // XHR adjust paths
-    ajaxPathAdjust(gpsPoints, sliderMin, sliderMax)
-      .then((newPoints) => {
-        console.log(newPoints);
-        // TODO update newPoints
-      });
-  });
-
-  const buttonCancel = document.createElement('button');
-  buttonCancel.innerHTML = 'cancel';
-  buttonCancel.classList.add('btn');
-  buttonCancel.classList.add('btn-primary');
-
-  buttonCancel.addEventListener('click', () => {
-    document.querySelector('.data-buttons').innerHTML = '';
+    for (let i = 0; i < newPoints.length - 1; i += 1) {
+      const latlngs = [newPoints[i], newPoints[i + 1]];
+      drawPolyline(latlngs);
+    }
     $('#slider-range').slider('destroy');
     sliderInit();
-    // eslint-disable-next-line no-use-before-define
-    startUpdateButton();
-    CallAlert.destroy();
-  });
 
-  document.querySelector('.data-buttons').appendChild(buttonAdjust);
-  document.querySelector('.data-buttons').appendChild(buttonCancel);
-}
+    return newPoints;
+  }
+
+  function createSnapGPSButtons() {
+    let currentPoints = gpsPoints;
+
+    const buttonSnapGPS = document.createElement('button');
+    const buttonUpdateServerFileTable = document.createElement('button');
+    const buttonCancel = document.createElement('button');
+
+    const IDSnapGPS = 'snapGPS';
+    const IDUploadGPS = 'uploadGPS';
+    const IDCancelGPS = 'cancelGPS';
+
+    const disableAllButtons = () => {
+      document.querySelector(`#${IDSnapGPS}`).disabled = true;
+      document.querySelector(`#${IDUploadGPS}`).disabled = true;
+      document.querySelector(`#${IDCancelGPS}`).disabled = true;
+    };
+
+    const enableAllButtons = () => {
+      document.querySelector(`#${IDSnapGPS}`).disabled = false;
+      document.querySelector(`#${IDUploadGPS}`).disabled = false;
+      document.querySelector(`#${IDCancelGPS}`).disabled = false;
+    };
+
+    // button Snap GPS
+    buttonSnapGPS.innerHTML = 'Snap GPS';
+    buttonSnapGPS.id = IDSnapGPS;
+    buttonSnapGPS.classList.add('btn');
+    buttonSnapGPS.classList.add('btn-primary');
+
+    buttonSnapGPS.addEventListener('click', () => {
+      disableAllButtons();
+      const sliderMin = $('#slider-range').slider('values', 0);
+      const sliderMax = $('#slider-range').slider('values', 1);
+      // XHR adjust paths
+      ajaxPathAdjust(gpsPoints, sliderMin, sliderMax)
+        .then((newPoints) => {
+          currentPoints = newPoints;
+          enableAllButtons();
+        });
+    });
+
+    // button Update to server
+    buttonUpdateServerFileTable.innerHTML = 'Update new GPS to server';
+    buttonUpdateServerFileTable.id = IDUploadGPS;
+    buttonUpdateServerFileTable.classList.add('btn');
+    buttonUpdateServerFileTable.classList.add('btn-primary');
+    buttonUpdateServerFileTable.classList.add('float-right');
+
+    buttonUpdateServerFileTable.addEventListener('click', () => {
+      if (confirm('Are you sure you want to update GPS to the server?')) {
+        // Disable all buttons after confirmation
+        disableAllButtons();
+        console.log(currentPoints);
+        // TODO update currentPoints to server
 
 
-function startUpdateButton(gpsPoints) {
-  const button = document.createElement('button');
-  button.innerHTML = 'UpdateGPS';
-  button.classList.add('btn');
-  button.classList.add('btn-primary');
+        // Add this enableAllButtons() inside ajax success call
+        enableAllButtons();
+      }
+    });
 
-  button.addEventListener('click', () => {
-    document.querySelector('.data-buttons').removeChild(button);
-    createAdjustPathsButton(gpsPoints);
-    CallAlert.update();
-  });
+    // button Cancel
+    buttonCancel.innerHTML = 'cancel';
+    buttonCancel.id = IDCancelGPS;
+    buttonCancel.classList.add('btn');
+    buttonCancel.classList.add('btn-primary');
+    buttonCancel.classList.add('mx-2');
 
-  document.querySelector('.data-buttons').appendChild(button);
-}
+    buttonCancel.addEventListener('click', () => {
+      document.querySelector('.data-buttons').innerHTML = '';
+      $('#slider-range').slider('destroy');
+      sliderInit();
+      // eslint-disable-next-line no-use-before-define
+      startUpdateButton();
+      CallAlert.destroy();
+    });
+
+    document.querySelector('.update-alert').appendChild(buttonSnapGPS);
+    document.querySelector('.update-alert').appendChild(buttonCancel);
+    document.querySelector('.update-alert').appendChild(buttonUpdateServerFileTable);
+  }
+
+  function createUpdateGPSButton() {
+    const button = document.createElement('button');
+    button.innerHTML = 'UpdateGPS';
+    button.classList.add('btn');
+    button.classList.add('btn-primary');
+
+    button.addEventListener('click', () => {
+      document.querySelector('.data-buttons').removeChild(button);
+      CallAlert.update();
+      createSnapGPSButtons();
+    });
+
+    document.querySelector('.data-buttons').appendChild(button);
+  }
+
+  return createUpdateGPSButton();
+};
 
 function deleteUpdateButton() {
   document.querySelector('.data-buttons').innerHTML = '';
@@ -519,14 +566,9 @@ const createBackButton = () => {
   return {
     showButton: () => {
       button.style.display = 'block';
-
-      console.log('show single data tab');
-      console.log(document.getElementById('myTablePanel'));
     },
     hideButton: () => {
       button.style.display = 'block';
-
-      console.log('show all data tab');
       document.getElementById('myTablePanel').style.display = 'block';
       document.getElementById('myInfoPanel').style.display = 'none';
     },
@@ -662,7 +704,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (textStatus !== 'nocontent') {
           // GPS inside gps data
           const content = JSON.parse(circleData)[0].GPS_Data;
-          console.log(`Length of array ${content.length}`);
 
           // fetch all the values to generate
           for (let i = 0; i < content.length; i += 1) {

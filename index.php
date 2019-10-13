@@ -358,16 +358,11 @@ if (isset($_SESSION['id'])) {
     <!-- Leaflet -->
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
 
-    <!-- D3 JS library -->
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-
     <!-- Main JS file -->
     
-    <script type="text/javascript" src="javascript/mainpage-ui.js"></script>
+    <script type="text/javascript" src="javascript/mainpage-ui.js" async></script>
     <script type="module" src="javascript/leaflet_map.js"></script>
-    <script type="text/javascript" src="javascript/mainpage.js"></script>
-
-
+    <script type="text/javascript" src="javascript/mainpage.js" async></script>
 
     <!-- Custom UI CSS -->
 

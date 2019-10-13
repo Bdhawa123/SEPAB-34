@@ -17,7 +17,7 @@ export default class CallAlert {
   }
 
   static update() {
-    const html = `<div class="alert alert-primary" role="alert">
+    const html = `<div class="alert alert-primary update-alert" role="alert">
                     <h4>Update: Snap noisy GPS to road</h4>
                     <hr>
                     <p class="alert-primary-text">Drag the sliders to select the range of GPS points to snap to road</p>
