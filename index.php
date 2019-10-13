@@ -73,10 +73,20 @@ if (isset($_SESSION['id'])) {
       <div id="mySidenav" class="sidenav">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
           <div class="mdl-card__title">
+            <!-- Back Button -->
             <button class="back-button">back</button>
             <h2 class="mdl-card__title-text">Around Swinburne</h2>
           </div>
           <div class="mdl-card__supporting-text">
+            <table class="table">
+              <thead>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Fly to</th>
+                <th scope="col">Delete</th>
+              </thead>
+              <tbody class="table-body"></tbody>
+            </table>
             <p class="my_subtitle">Filters</p>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="visSpeedCheck" onclick="controlGraph()">
