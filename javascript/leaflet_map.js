@@ -128,7 +128,7 @@ function drawPolyline(latlngs) {
 
   if (speed > maxspeed) {
     maxspeed = speed;
-    $("#max_speed").html(maxspeed);
+    document.querySelector('#max_speed').innerHTML = maxspeed;
   }
 
   // draw polylines
@@ -211,10 +211,12 @@ async function ajaxPathAdjust(oldPoints, min, max) {
   }
   $('#slider-range').slider('destroy');
   sliderInit();
+
+  return newPoints;
 }
 
 
-function createAdjustPathsButton(newPoints) {
+function createAdjustPathsButton(gpsPoints) {
   const buttonAdjust = document.createElement('button');
   buttonAdjust.innerHTML = 'Adjust';
   buttonAdjust.id = 'adjust path';
@@ -225,7 +227,9 @@ function createAdjustPathsButton(newPoints) {
     const sliderMin = $('#slider-range').slider('values', 0);
     const sliderMax = $('#slider-range').slider('values', 1);
     // XHR adjust paths
-    ajaxPathAdjust(newPoints, sliderMin, sliderMax);
+    const newPoints = ajaxPathAdjust(gpsPoints, sliderMin, sliderMax);
+
+    // TODO update newPoints
   });
 
   const buttonCancel = document.createElement('button');
@@ -411,22 +415,6 @@ function linechartInit() {
       .on('mouseover', () => { focus.style('display', null); })
       .on('mouseout', () => { focus.style('display', 'none'); })
       .on('mousemove', mousemove);
-
-    // $(() => {
-    //   $('#slider-range2').slider({
-    //     range: true,
-    //     min: 0,
-    //     max: maxDomain,
-    //     step: converter,
-    //     values: [0, maxDomain], // Default value
-    //     slide: (event, ui) => {
-    //       const begin = d3.min([ui.values[0], maxDomain]);
-    //       const end = d3.max([ui.values[1], 0]);
-    //       console.log('begin:', begin, 'end:', end);
-    //       zoom(begin, end);
-    //     },
-    //   });
-    // });
 
     // RESPONSIVENESS
     function resized() {
@@ -636,7 +624,6 @@ function createDataRow(name, number, latlng) {
         },
       });
     }
-    
   });
   rowDelete.appendChild(deleteButton);
 
@@ -706,7 +693,4 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     },
   );
-
-
 });
-
