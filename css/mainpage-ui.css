@@ -95,3 +95,22 @@ and (max-width : 450px) {
   margin-bottom: 8px;
   padding-right: 8px;
 }
+
+/* hide panel_2 first */
+.my_panel_2 {
+  display: none;
+}
+
+/* adjust menu back button */
+.my_menu_left {
+  left: 16px;
+}
+
+/* make sidebar scrollable */
+.my_panel_2 {
+  overflow: auto;
+  max-height: 100vh;
+}
+
+
+

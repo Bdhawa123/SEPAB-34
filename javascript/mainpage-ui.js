@@ -16,3 +16,13 @@ function openNav() {
 function closeNav() {
   document.getElementById('mySidenav').style.display = 'none';
 }
+
+function showTable() {
+  document.getElementById('my_panel_1').style.display = 'block';
+  document.getElementById('my_panel_2').style.display = 'none';
+}
+
+function hideTable(){
+  document.getElementById('my_panel_1').style.display = 'none';
+  document.getElementById('my_panel_2').style.display = 'block';
+}
