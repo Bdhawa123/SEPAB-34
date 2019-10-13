@@ -75,8 +75,14 @@ if (isset($_SESSION['id'])) {
           <div class="mdl-card__title">
 
             <h2 class="mdl-card__title-text">Choose Data</h2>
+            
           </div>
-          
+          <div class="">
+            <input class="text-left" id="set_quantize_scale"/>
+            <button class="" id ="limit">set limit</button>
+            <p>Max Speed</p>
+            <p id="max_speed"></p>
+          </div>
           
           <div class="mdl-card__supporting-text">
             <!-- Table Panel -->
@@ -288,7 +294,7 @@ if (isset($_SESSION['id'])) {
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header d-block">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" onclick="modalreset()" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
             <h5 class="modal-title text-center" id="exampleModalLabel">Import Data</h5>

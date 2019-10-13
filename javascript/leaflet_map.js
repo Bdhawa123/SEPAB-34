@@ -4,6 +4,7 @@ import CallAlert from './callAlert.js';
 const { L, d3 } = window; // Define L, d3
 
 let map;
+let maxspeed = 0;
 let polylines = [];
 let circles = [];
 let backButton;
@@ -77,8 +78,12 @@ function sliderInit() {
   document.getElementById('my_point_end').innerHTML = `${$('#slider-range').slider('values', 1) + 1}`;
 }
 
+
 // d3 color function
-const color = d3.scaleQuantize()
+
+
+
+let color = d3.scaleQuantize()
   .domain([0, 10])
   .range(['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']);
 
@@ -120,6 +125,11 @@ function drawPolyline(latlngs) {
     latlngs,
     'K',
   ) * (1000);
+
+  if (speed > maxspeed) {
+    maxspeed = speed;
+    $("#max_speed").html(maxspeed);
+  }
 
   // draw polylines
   const polyline = L.polyline(latlngs, {
@@ -510,7 +520,7 @@ const createBackButton = () => {
     map.flyTo([-37.843527, 145.010365], 12);
     map.once('moveend', () => {
       showCircles();
-      
+
       document.getElementById('myTablePanel').style.display = 'block';
       document.getElementById('myInfoPanel').style.display = 'none';
     });
@@ -519,7 +529,7 @@ const createBackButton = () => {
   return {
     showButton: () => {
       button.style.display = 'block';
-      
+
       console.log('show single data tab');
       console.log(document.getElementById('myTablePanel'));
     },
@@ -612,6 +622,18 @@ function createDataRow(name, number, latlng) {
   deleteButton.addEventListener('click', () => {
     console.log('Deleting', tableName);
     // TODO Delete function
+    $.ajax({
+      url: 'server/newfile.php',
+      type: 'POST',
+      data: { functionname: 'DropTable', arguments: tableName },
+      success: (data, textStatus, response) => {
+        console.log("delete table", response);
+        location.reload();
+      },
+      error: (jqXHR, textStatus, errorThrown) => {
+        alert("unsuccessful");
+      },
+    });
   });
   rowDelete.appendChild(deleteButton);
 
@@ -623,9 +645,17 @@ function createDataRow(name, number, latlng) {
   document.querySelector('.table-body').appendChild(row);
 }
 
+function colorQuantize() {
+  color = d3.scaleQuantize()
+    .domain([0, document.querySelector('#set_quantize_scale').value])
+    .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
+}
+
 // Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded');
+
+  document.querySelector('#limit').addEventListener('click', () => { colorQuantize(); });
 
   initMap();
   backButton = createBackButton();
@@ -673,4 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     },
   );
+
+
 });
+

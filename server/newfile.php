@@ -1,5 +1,5 @@
 <?php
-require_once('server_script.php');
+  require_once('server_script.php');
 // header('Content-Type: application/json');
 
 
@@ -7,7 +7,7 @@ switch ($_POST['functionname']) {
   case 'firstAPI':
     /*----------------------------This will return a json request --------------------------------------------*/
     $filename_GPS = [];                                        //name of the files, should be sequenced in order
-    $data = [];                                                //hold data of the corresponding fiel list
+    $data = [];                                                //hold data of the corresponding file list
     $array_list = [];                                        //array list of table type    
     $final_array = [];                                       //final array list that will go out as json
     $con_file = new connection;
@@ -60,6 +60,19 @@ switch ($_POST['functionname']) {
 
     break;
 
+  case 'Graph_viz':
+    $con_file = new connection;
+    $new_array = [];
+    //print_r($con_file->fetch_table_data($_POST['arguments']));
+    $con_file->changeDB("gps_db");
+    $array_return = $con_file->get_speed($_POST['arguments']);
+
+    foreach ($array_return as $obj) {
+      array_push($new_array, array('Time' => $obj[1], 'Speed' => ($obj[4]+ $obj[5])/2));
+    }
+    echo json_encode($new_array);
+
+
   case 'DropTable':
     $con_file = new connection;
     $return_drop = $con_file->delete_table($_POST['arguments']);
@@ -70,6 +83,14 @@ switch ($_POST['functionname']) {
       http_response_code(400);
     }
 
+
+  case 'updatePoints':
+    $con_file = new connection;
+    $con_file->changeDB("gps_db");
+
   default:
-    echo "here";
+
+
+
+    
 }
