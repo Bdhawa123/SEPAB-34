@@ -510,12 +510,16 @@ const createBackButton = () => {
     map.flyTo([-37.843527, 145.010365], 12);
     map.once('moveend', () => {
       showCircles();
+      showTable();
     });
   });
 
   return {
     showButton: () => { button.style.display = 'block'; },
-    hideButton: () => { button.style.display = 'none'; },
+    hideButton: () => { 
+      button.style.display = 'block'; 
+      hideTable();
+    },
   };
 };
 
@@ -591,7 +595,7 @@ function createDataRow(name, number, latlng) {
   const deleteButton = document.createElement('button');
   deleteButton.innerHTML = 'Delete';
   deleteButton.classList.add('btn');
-  deleteButton.classList.add('btn-primary');
+  deleteButton.classList.add('btn-danger');
   deleteButton.addEventListener('click', () => {
     console.log('Deleting', tableName);
     // TODO Delete function

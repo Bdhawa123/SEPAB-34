@@ -1,6 +1,6 @@
 .sidenav {
   display: none;
-  height: auto;
+  height: 100%;
   width: 33%;
   position: fixed;
   z-index: 999;
@@ -40,6 +40,7 @@ a:hover {
 }
 
 .demo-card-wide.mdl-card {
+  height: 100% !important;
   width: auto;
 }
 
@@ -95,3 +96,24 @@ and (max-width : 450px) {
   margin-bottom: 8px;
   padding-right: 8px;
 }
+
+/* hide panel_2 first */
+.my_info_panel {
+  display: none;
+}
+.mdl-card__supporting-text {
+  overflow: auto !important;
+  width: 100% !important;
+}
+
+/* adjust menu back button */
+.my_menu_left {
+  left: 16px;
+}
+
+h2 {
+  font-weight: bold !important;
+}
+
+
+
