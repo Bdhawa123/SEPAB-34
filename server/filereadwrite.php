@@ -14,7 +14,7 @@
                 //place where the files get temperorily saved
                 $file2upload = $_FILES['file'.$val]['tmp_name'];                                    // $_FILES['id']['array']-> name, type, error, size
                  
-                $resutlt =move_uploaded_file($file2upload,'../test/'.basename("file".$val));        //upload file(file,directory and the filename(filename needs to be there otherwise it won't work))
+                $resutlt =move_uploaded_file($file2upload,'../test/'.basename($current_no));        //upload file(file,directory and the filename(filename needs to be there otherwise it won't work))
                 if ($resutlt==false){                                                              //if the files aren't copied echo a false result for the moment
                      echo "file not copied into test folder";
                  }                

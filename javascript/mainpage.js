@@ -180,8 +180,8 @@ if(file.length!=0 && validation){
         $('.hd_inp').val('');
         $('.fileimg').css('display', 'none');
         file.length = 0;
-        console.log(response);
-        location.reload(true);
+        console.log(response.responseText);
+        //location.reload(true);
         
         //callAlert.preview();
       },
