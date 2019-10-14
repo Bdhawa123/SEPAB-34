@@ -178,6 +178,49 @@ class connection
   }
 
 
+  function create_table_newfile($values, $filename)
+  {
+    $this->create_table_location($filename);                     //create table GPS 
+    //echo "value of name: $filename";
+
+    $sql = "INSERT INTO $filename(TIME,LATITUDE,LONGITUDE,GYRO_X,GYRO_Y) VALUES";
+    $V1 = "";
+    for ($var = 0; $var < sizeof($values) - 1; $var++)
+    {
+      $array = $values[$var];
+      if (!empty($array[0]))
+      {
+        $array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
+        $array[2] = preg_replace('/[A-Za-z]/', '', $array[2]);
+        if ($var == sizeof($values) - 2)
+        {
+          //$V1.="($array[0]".",$array[1]".",$array[2]".",$array[3]".",$array[4]);";
+          $V1 .= "($array[0],$array[1],$array[2],$array[3],$array[4]);";
+        }
+        else
+        {
+          $V1 .= "($array[0],$array[1],$array[2],$array[3],$array[4]),";
+          //$V1.="('$array[0]'".",$array[1]".",$array[2]".",$array[3]".",$array[4]),";
+        }
+      }
+    }
+
+    $V1 = str_replace(' ', '', $V1);                    //remove spaces
+    $V1 = preg_replace('/\s+/', '', $V1);               //remove tabs
+    $sql = $sql . $V1;
+    echo $sql;
+
+    $result = $this->dbconnect->query($sql);            //query             
+    if (!$result)
+    {
+      echo json_encode("wrong");
+    }
+  }
+
+
+
+
+
   function create_db()
   {
     //echo "create db called";

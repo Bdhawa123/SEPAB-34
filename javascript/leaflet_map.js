@@ -10,6 +10,7 @@ const {
 } = window; // Define L, d3
 
 let map;
+let currenttable;
 let maxspeed = 0;
 let polylines = [];
 const circles = [];
@@ -268,11 +269,32 @@ const startUpdateButton = (gpsPoints) => {
         // Disable all buttons after confirmation
         disableAllButtons();
         console.log(currentPoints);
-        // TODO update currentPoints to server
+        let transferobjet = {"tableName":currenttable,"latlng":currentPoints};
+        console.log(transferobjet);
 
+        
+       
+        // TODO update currentPoints to server
+        console.log("ajax call is being thrown");
+        $.ajax(
+          {
+            url:'server/newfile.php',
+            type:'POST',
+            data:{functionname:'updatePoints',arguments:JSON.stringify(transferobjet)},
+            success:(response)=>{
+              console.log(response);
+            },
+            error:()=>{
+              console.log("Error is created");
+            }
+          },
+          
+        ).done(()=>{
+          enableAllButtons();
+        });
 
         // Add this enableAllButtons() inside ajax success call
-        enableAllButtons();
+     
       }
     });
 
@@ -576,6 +598,7 @@ const createBackButton = () => {
 };
 
 function onClickData(dataName, latlng) {
+  currenttable = dataName;
   const gpsPoints = [];
   removeCircles();
   resetData();

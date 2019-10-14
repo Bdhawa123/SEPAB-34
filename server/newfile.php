@@ -87,6 +87,21 @@ switch ($_POST['functionname']) {
   case 'updatePoints':
     $con_file = new connection;
     $con_file->changeDB("gps_db");
+    
+    $array = json_decode($_POST['arguments'],true);
+    
+    $tableName =  $array['tableName'];
+    $lat_lng = $array['latlng'];
+    $newtable =[];
+
+    $array_return = $con_file->fetch_table_data($tableName);
+   
+    for($i=0;$i<sizeof($array_return);$i++){
+        array_push($newtable,array($array_return[$i][1],$lat_lng[$i]['lat'],$lat_lng[$i]['lng'],$array_return[$i][3],$array_return[$i][4]));
+    }
+
+    $con_file->delete_table($tableName);
+    $con_file->create_table_newfile($newtable,$tableName);
 
   default:
 
