@@ -168,12 +168,14 @@ class connection
     $V1 = str_replace(' ', '', $V1);                    //remove spaces
     $V1 = preg_replace('/\s+/', '', $V1);               //remove tabs
     $sql = $sql . $V1;
-    echo $sql;
+    //echo $sql;
 
     $result = $this->dbconnect->query($sql);            //query             
     if (!$result)
     {
       echo json_encode("wrong");
+      $this->delete_table($filename);
+      http_response_code(400);
     }
   }
 
@@ -194,7 +196,7 @@ class connection
 			array_push($gyrox_y,array($arr[3],$arr[4]));
 		}
 		//print_r($gyrox_y);
-		echo sizeof($gyrox_y);
+		
 		
 
 		for ($var = 0; $var < sizeof($values) - 1; $var++)
