@@ -42,24 +42,7 @@ else
 
   // write files into the system
   $filereader = new filereadwrite;
-
-  // write file into the location
-  // write file name as numbers     
-  $filereader->writefiles($filename_wr);
-
-  // create table
-  // open connection
-  $dbstp = new connection;
-  //$dbstp->createtable("somename");
-
-
-
-  // write files into the database
-
-
-
-  // delete files from the location
+       
+  $filereader->writefile($filename_wr);
   $filereader->deletefiles();
 }
-
-  // database execution

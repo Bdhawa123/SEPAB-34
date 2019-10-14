@@ -180,14 +180,14 @@ if(file.length!=0 && validation){
         $('.hd_inp').val('');
         $('.fileimg').css('display', 'none');
         file.length = 0;
-        console.log(response);
+        console.log(response.responseText);
         location.reload(true);
         
         //callAlert.preview();
       },
       // eslint-disable-next-line no-unused-vars
       error: (jqXHR, textStatus, error) => {
-        CallAlert.danger(error);
+        //CallAlert.danger(error);
 
       },
     },
