@@ -146,8 +146,8 @@ class connection
 		$sql = "INSERT INTO $filename(TIME,LATITUDE,LONGITUDE,GYRO_X,GYRO_Y) VALUES";
 		$V1 = "";
 
-	 $gyrox_y =[];
-		for($var = 0; $var < sizeof($values) - 1; $var+=87){
+		 $gyrox_y =[];
+		for($var = 0; $var < sizeof($values) - 1; $var+=81){		//gps syncs with gyro at 81.smthn hrthz cannot filter within
 			$arr = $values[$var];
 			array_push($gyrox_y,array($arr[3],$arr[4]));
 		}
@@ -167,8 +167,8 @@ class connection
 					$gyro=[0,0];
 				}
 				
-				// $array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
-				// $array[2] = preg_replace('/[A-Za-z]/', '', $array[2]);
+				 $array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
+				 $array[2] = preg_replace('/[A-Za-z]/', '', $array[2]);
 				if (empty($values[$var+1][0]))
 				{
 					//$V1.="($array[0]".",$array[1]".",$array[2]".",$array[3]".",$array[4]);";
@@ -185,12 +185,15 @@ class connection
 		$V1 = str_replace(' ', '', $V1);                    //remove spaces
 		$V1 = preg_replace('/\s+/', '', $V1);               //remove tabs
 		$sql = $sql . $V1;
-		echo $sql;
+		//echo $sql;
 
 		$result = $this->dbconnect->query($sql);            //query             
 		if (!$result)
 		{
 			echo json_encode("wrong");
+			$this->delete_table($filename); 
+			http_response_code(400);
+
 		}
 	}
 

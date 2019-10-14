@@ -44,21 +44,17 @@ else
   $filereader = new filereadwrite;
   // write file into the location
   // write file name as numbers     
-  $filereader->writefiles($filename_wr);
+  $filereader->writefile($filename_wr);
 
   // create table
   // open connection
  
-  //$dbstp->createtable("somename");
-
-
-
-  // write files into the database
+   // write files into the database
 
 
 
   // delete files from the location
-  //$filereader->deletefiles();
+  $filereader->deletefiles();
 }
 
   // database execution
