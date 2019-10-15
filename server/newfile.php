@@ -68,21 +68,23 @@ switch ($_POST['functionname']) {
     $array_return = $con_file->get_speed($_POST['arguments']);
 
     foreach ($array_return as $obj) {
-      array_push($new_array, array('Time' => $obj[1], 'Speed' => ($obj[4]+ $obj[5])/2));
+      $gyro_avg = ($obj[4]+ $obj[5])/2;
+      $speed = abs((($gyro_avg*57.2958)/360/(0.6*22/7)));
+      array_push($new_array, array('Time' => $obj[1], 'Speed' => $speed));
     }
     echo json_encode($new_array);
-
+    break;
 
   case 'DropTable':
     $con_file = new connection;
     $return_drop = $con_file->delete_table($_POST['arguments']);
-    if($return_drop =1){
+    if($return_drop==1){
       http_response_code(200);
     }
     else{
       http_response_code(400);
     }
-
+    break;
 
   case 'updatePoints':
     $con_file = new connection;
@@ -97,11 +99,13 @@ switch ($_POST['functionname']) {
     $array_return = $con_file->fetch_table_data($tableName);
    
     for($i=0;$i<sizeof($array_return);$i++){
-        array_push($newtable,array($array_return[$i][1],$lat_lng[$i]['lat'],$lat_lng[$i]['lng'],$array_return[$i][3],$array_return[$i][4]));
+        array_push($newtable,array($array_return[$i][1],$lat_lng[$i]['lat'],$lat_lng[$i]['lng'],$array_return[$i][4],$array_return[$i][5]));
     }
 
     $con_file->delete_table($tableName);
     $con_file->create_table_newfile($newtable,$tableName);
+
+    break;
 
   default:
 

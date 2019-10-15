@@ -33,11 +33,13 @@ function linechartInit() {
 
   d3.csv('dataprototype/line-chart.csv', rowConverter)
     .then((data) => {
+      alert(data);
       for (let i = 0; i < data.length; i += 1) {
         if (i % converter === 0) {
           dataset.push(data[i]);
         }
       }
+      
       alert(data.length);
       alert(dataset.length);
       maxDomain = d3.max(dataset, (d) => d.time);

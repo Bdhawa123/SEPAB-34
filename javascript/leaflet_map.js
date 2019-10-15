@@ -688,8 +688,9 @@ function createDataRow(name, number, latlng) {
         success: () => {
           location.reload();
         },
-        error: () => {
-          alert('delete unsuccessful');
+        error: (e) => {
+          alert('delete unsuccessful',e);
+          console.log(e);
         },
       });
     }

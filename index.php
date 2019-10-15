@@ -78,11 +78,26 @@ if (isset($_SESSION['id'])) {
             <h2 class="mdl-card__title-text">Choose Data</h2>
 
           </div>
-          <div class="">
-            <input class="text-left" id="set_quantize_scale" />
-            <button class="" id="limit">set limit</button>
-            <p>Max Speed</p>
-            <p id="max_speed"></p>
+          <p></p>
+          <div class="container row">
+            <div class="col-sm-12">
+              <div class="row"> 
+                <div class="col-sm-6">
+                <input id="set_quantize_scale" />
+                </div>
+                
+                <div class="col-sm-6">
+                  <button class="btn btn-primary" id="limit">set limit</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <h3 id ="margin"><small>Max Speed</small><br>
+                  <small><span class="my_subtitle " id="max_speed"></span></small>
+                  </h3>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="spinner" style="display: none">
             <div class="spinner-border cardSpinner" role="status">
