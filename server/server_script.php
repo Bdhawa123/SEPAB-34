@@ -11,8 +11,8 @@ class connection
 
 	private $database = "wheelchair-project";
 	private $user = "root";
-	private $pwd = "";
-	private $host = "localhost";
+	private $pwd = "ujutMhtVYaPnZwJRbCcgNPgsJFp6fMgXmaAs";
+	private $host = "v3c7qjrpudy.db.cloud.edu.au";
 	private $dbconnect;
 
 	function __construct()
