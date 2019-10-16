@@ -17,7 +17,7 @@ const circles = [];
 let backButton;
 const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
 
-const graphDataset = [];
+let graphDataset = [];
 let svg;
 let xAxis;
 let yAxis;
@@ -373,6 +373,7 @@ function initMap() {
 }
 
 function linechartInit() {
+  graphDataset = [];
   // Margin
   const margin = {
     top: 50,
