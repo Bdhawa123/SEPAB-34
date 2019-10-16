@@ -20,9 +20,10 @@
   },
   "homepage": "https://github.com/Bdhawa123/SEPAB-34#readme",
   "devDependencies": {
-    "eslint": "^6.1.0",
+    "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-google": "^0.13.0",
     "eslint-plugin-import": "^2.18.2"
-  }
+  },
+  "dependencies": {}
 }

@@ -143,6 +143,10 @@ function drawPolyline(latlngs) {
 
   const polylineTooltipText = `${String(speed.toFixed(2))} m/s`;
   polyline.bindTooltip(polylineTooltipText).closeTooltip();
+  polyline.on('mouseover', function polyMouseover() {
+    this.openTooltip();
+    console.log(path);
+  });
 
   polylines.push(polyline);
 }
@@ -451,7 +455,7 @@ function linechartInit() {
       .attr('dy', '.35em');
 
     const bisectDate = d3.bisector((d) => d.time).left;
-
+    let prevPoint = 0;
     // Tooltip mouseovers
     function mousemove() { // (1) Read More ***
       const x0 = xScale.invert(d3.mouse(this)[0]);
@@ -460,7 +464,12 @@ function linechartInit() {
       const d1 = dataset[i];
       const d = x0 - d0.time > d1.time - x0 ? d1 : d0;
       focus.attr('transform', `translate(${xScale(d.time)}, ${yScale(d.speed)})`);
-      focus.select('text').text(`${d.speed.toFixed(2)} r/s`);
+      focus.select('text').text(`${d.speed.toFixed(3)} r/s`);
+
+      polylines[prevPoint].closeTooltip();
+      const polylineIndex = (d.time / 100) - 1;
+      polylines[polylineIndex].openTooltip();
+      prevPoint = polylineIndex;
     }
 
     function zoom(begin, end) {
@@ -477,7 +486,10 @@ function linechartInit() {
       .attr('width', w)
       .attr('height', h)
       .on('mouseover', () => { focus.style('display', null); })
-      .on('mouseout', () => { focus.style('display', 'none'); })
+      .on('mouseout', () => {
+        focus.style('display', 'none');
+        polylines[prevPoint].closeTooltip();
+      })
       .on('mousemove', mousemove);
 
     // RESPONSIVENESS
@@ -515,7 +527,7 @@ function linechartInit() {
   d3.csv('dataprototype/line-chart.csv', rowConverter)
     .then((data) => {
       if ((Object.keys(polylines).length * 100) < data.length) {
-        for (let i = 0; i < Object.keys(polylines).length * 100; i += 1) {
+        for (let i = 1; i < (Object.keys(polylines).length + 1) * 100; i += 1) {
           if (i % converter === 0) {
             dataset.push(data[i]);
           }
