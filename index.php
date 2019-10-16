@@ -184,7 +184,7 @@ if (isset($_SESSION['id'])) {
         <li class="mdl-menu__item"><a href="server/logout.php">Logout</a></li>
       </ul>
 
-      <div id="legend" class="position-fixed fixed-bottom ml-3 bg-white"></div>
+      <div id="legend" class="position-fixed fixed-bottom ml-2 bg-white"></div>
 
       <div id="myGraph" class="graph">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
