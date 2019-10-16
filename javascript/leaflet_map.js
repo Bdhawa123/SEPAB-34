@@ -165,17 +165,19 @@ const colorQuantizeHandler = (() => {
 
       createLegends();
 
-      for (let i = 0; i < polylines.length; i += 1) {
-        map.removeLayer(polylines[i]);
-      }
-      polylines = [];
+      if (mapDataset.length !== 0) {
+        for (let i = 0; i < polylines.length; i += 1) {
+          map.removeLayer(polylines[i]);
+        }
+        polylines = [];
 
-      for (let i = 0; i < mapDataset.length - 1; i += 1) {
-        const latlngs = [mapDataset[i], mapDataset[i + 1]];
-        drawPolyline(latlngs);
+        for (let i = 0; i < mapDataset.length - 1; i += 1) {
+          const latlngs = [mapDataset[i], mapDataset[i + 1]];
+          drawPolyline(latlngs);
+        }
+        $('#slider-range').slider('destroy');
+        sliderInit();
       }
-      $('#slider-range').slider('destroy');
-      sliderInit();
     },
 
     color: (speed) => color(speed),
