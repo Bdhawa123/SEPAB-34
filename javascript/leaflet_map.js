@@ -17,18 +17,19 @@ const circles = [];
 let backButton;
 const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
 
-let color = d3.scaleQuantize()
-  .domain([0, 10])
-  .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
-
+const graphDataset = [];
 let svg;
 let xAxis;
 let yAxis;
 let xScale;
 let yScale;
+let focus;
 let path;
 let valueline;
 let maxDomain;
+let color = d3.scaleQuantize()
+  .domain([0, 10])
+  .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
 
 // function to initialize slider
 function sliderInit() {
@@ -123,6 +124,10 @@ function distance(latlngs, unit) {
 
 
 function drawPolyline(latlngs) {
+  // get polylines index
+  let index = polylines.length - 1;
+  if (index < 0) index = 0;
+
   const speed = distance(
     latlngs,
     'K',
@@ -144,8 +149,17 @@ function drawPolyline(latlngs) {
   const polylineTooltipText = `${String(speed.toFixed(2))} m/s`;
   polyline.bindTooltip(polylineTooltipText).closeTooltip();
   polyline.on('mouseover', function polyMouseover() {
+    // map paths hover
     this.openTooltip();
-    console.log(path);
+
+    // graph hover
+    const d = graphDataset[index];
+    focus.attr('transform', `translate(${xScale(d.time)}, ${yScale(d.speed)})`);
+    focus.select('text').text(`${d.speed.toFixed(3)} r/s`);
+    focus.style('display', 'block');
+  }).on('mouseout', function polyMouseout() {
+    this.closeTooltip();
+    focus.style('display', 'none');
   });
 
   polylines.push(polyline);
@@ -373,7 +387,6 @@ function linechartInit() {
   const w = widther - margin.left - margin.right;
   const h = heighther - margin.top - margin.bottom;
 
-  const dataset = [];
   maxDomain = 1;
 
   const converter = 100;
@@ -382,7 +395,6 @@ function linechartInit() {
     time: parseInt(d.time, 10),
     speed: parseFloat(d.speed),
   });
-
 
   // Set up the SVG and Path
   svg = d3.select('#myLineGraph')
@@ -394,14 +406,14 @@ function linechartInit() {
 
 
   function createLinechart() {
-    maxDomain = d3.max(dataset, (d) => d.time);
+    maxDomain = d3.max(graphDataset, (d) => d.time);
     xScale = d3.scaleLinear()
       .domain([0, maxDomain])
       .range([0, w]);
 
     // Y scale is static
     yScale = d3.scaleLinear()
-      .domain([0, d3.max(dataset, (d) => d.speed)]).range([h, 0]);
+      .domain([0, d3.max(graphDataset, (d) => d.speed)]).range([h, 0]);
 
     // Add X-Axis
     // (1) Add translate to align x-axis at the bottom
@@ -426,7 +438,7 @@ function linechartInit() {
       .curve(d3.curveMonotoneX);
 
     path = svg.append('path')
-      .datum(dataset);
+      .datum(graphDataset);
 
     // hide graph over-width when adjust timeline
     const clip = svg.append('defs').append('clipPath')
@@ -441,7 +453,7 @@ function linechartInit() {
       .attr('class', 'line')
       .attr('d', valueline);
 
-    const focus = svg.append('g')
+    focus = svg.append('g')
       .attr('class', 'focus');
     // .style('display', 'none');
 
@@ -459,17 +471,16 @@ function linechartInit() {
     // Tooltip mouseovers
     function mousemove() { // (1) Read More ***
       const x0 = xScale.invert(d3.mouse(this)[0]);
-      const i = bisectDate(dataset, x0, 1);
-      const d0 = dataset[i - 1];
-      const d1 = dataset[i];
+      const i = bisectDate(graphDataset, x0, 1);
+      const d0 = graphDataset[i - 1];
+      const d1 = graphDataset[i];
       const d = x0 - d0.time > d1.time - x0 ? d1 : d0;
       focus.attr('transform', `translate(${xScale(d.time)}, ${yScale(d.speed)})`);
       focus.select('text').text(`${d.speed.toFixed(3)} r/s`);
 
       polylines[prevPoint].closeTooltip();
-      const polylineIndex = (d.time / 100) - 1;
-      polylines[polylineIndex].openTooltip();
-      prevPoint = polylineIndex;
+      polylines[i].openTooltip();
+      prevPoint = i;
     }
 
     function zoom(begin, end) {
@@ -529,14 +540,14 @@ function linechartInit() {
       if ((Object.keys(polylines).length * 100) < data.length) {
         for (let i = 1; i < (Object.keys(polylines).length + 1) * 100; i += 1) {
           if (i % converter === 0) {
-            dataset.push(data[i]);
+            graphDataset.push(data[i]);
           }
         }
         createLinechart();
       } else {
         for (let i = 0; i < data.length - 1; i += 1) {
           if (i % converter === 0) {
-            dataset.push(data[i]);
+            graphDataset.push(data[i]);
           }
         }
         createLinechart();
