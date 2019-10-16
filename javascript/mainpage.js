@@ -1,4 +1,4 @@
-//import CallAlert from './CallAlert.js';
+// import CallAlert from './CallAlert.js';
 // global variable for files
 const file = [];
 let validation = false;
@@ -16,18 +16,15 @@ function initializeImport() {
   fileone.onclick = () => {
     document.getElementById('fileA').click();
   };
- 
 }
-
-
 
 window.onload = () => {
   // file input
   initializeImport();
 };
 
-function modalreset(){
-  if (file.length==0){  
+function modalreset() {
+  if (file.length === 0) {
     $('.modal-dialog').css('width', '800px');
   }
 }
@@ -61,139 +58,129 @@ function dropHandler(ev, field) {
     console.log('Multiple files detected');
   }
   ev.dataTransfer.clearData();
-
 }
 
 /**
  * Validation for file input sentence
  */
-const input_validation =()=>{
-  let file_value = $("#fileName").val();
-  const cantcontain = /[^\[\w+\]\.\[\w+\]$]/g;
-  console.log(file_value);
- 
-  if(file_value.match(cantcontain)!=null){
-      $("#fileName").val("");
-      validation = false;
-      $("#validation-tooltip").text("Cannot contain illegal characters");
-  }
-  else{
-    validation=true;
-    $("#validation-tooltip").text("");
+const input_validation = () => {
+  const fileValue = $('#fileName').val();
+  // eslint-disable-next-line no-useless-escape
+  const cantContain = /[^\[\w+\]\.\[\w+\]$]/g;
+  console.log(fileValue);
+  if (fileValue === '') {
+    document.querySelector('#validation-tooltip').innerHTML = 'File name cannot be empty';
+  } else if (fileValue.match(cantContain) != null) {
+    $('#fileName').val('');
+    validation = false;
+    document.querySelector('#validation-tooltip').innerHTML = 'Cannot contain illegal characters';
+  } else {
+    validation = true;
+    $('#validation-tooltip').text('');
     $.ajax(
       {
         url: 'server/newfile.php',
         type: 'POST',
-        data: { functionname: 'firstAPI' },
-        success: (data, textStatus, response) => {
-          let fileresponse = JSON.parse(response.responseText)[0].GPS_Data;
-          
-          for(let i=0; i<fileresponse.length;i++){
-              if(fileresponse[i].Table_Name==file_value){
-                $("#validation-tooltip").text("Duplicate Name found!!! Please select another name.");
-              }
+        data: { functionname: 'ifTableExists', arguments: fileValue },
+        success: (data) => {
+          const ifExists = JSON.parse(data);
+          if (ifExists) {
+            document.querySelector('#validation-tooltip').innerHTML = 'Duplicate Name found!!! Please select another name.';
           }
-          
-     },
-     error: (jqXHR, textStatus, errorThrown) => {
-       alert("unsuccessful");
-     },
-  });
-}
-}
+        },
+        error: () => {
+          alert('unsuccessful');
+        },
+      },
+    );
+  }
+};
 
 function submitFile(ev) {
   ev.preventDefault();
-  alert("File Submitted");
   const formData = new FormData();
 
   // create a form data to send the array of files
   for (let val = 0; val < file.length; val += 1) {
     formData.append(`file${val}`, file[val]);
   }
-  formData.append('filename',$("#fileName").val());
-  
-
+  formData.append('filename', $('#fileName').val());
 
   const reader = new FileReader();
-//  //client side validation
-//   var val = false;
-//   reader.readAsText(file[0]);
-//   reader.onload = (evt) => {
-   
-//     let fileapi =(evt.target.result);
-//     console.log(typeof(fileapi));
-    
-//     let ext = file[0].name.split(".")[1];
-//     if (["csv","xls","xlsm","xlsx",".dbf"].includes(ext)){
+  //  //client side validation
+  //   var val = false;
+  //   reader.readAsText(file[0]);
+  //   reader.onload = (evt) => {
 
-//     for(var i =0;i<fileapi.length;i++ ){
-     
-//         if (fileapi[i]=="\n"){ 
-           
-//             this.val = true;
-//             console.log(val);
-//             break;
-//         }      
-//     }
-//      if(this.val==true){
-//         let newstring = fileapi.substr(0,i);
-//         if(newstring.split(",").length==5){
-//             console.log("file valid");
-//             console.log(val);
-//             this.val =true;
-//         }
-//         else{
-//           console.log("file Invalid");
-//           console.log(val);
-//         } 
-//      }
-//      else{
-//        console.log("file Invalid");
-//          console.log(val);
-//      }
-//     }
-//     else{
-//       console.log("file type is invalid");
-//     }
-//   };
+  //     let fileapi =(evt.target.result);
+  //     console.log(typeof(fileapi));
 
- 
- // TODO validation required
+  //     let ext = file[0].name.split(".")[1];
+  //     if (["csv","xls","xlsm","xlsx",".dbf"].includes(ext)){
+
+  //     for(var i =0;i<fileapi.length;i++ ){
+
+  //         if (fileapi[i]=="\n"){
+
+  //             this.val = true;
+  //             console.log(val);
+  //             break;
+  //         }
+  //     }
+  //      if(this.val==true){
+  //         let newstring = fileapi.substr(0,i);
+  //         if(newstring.split(",").length==5){
+  //             console.log("file valid");
+  //             console.log(val);
+  //             this.val =true;
+  //         }
+  //         else{
+  //           console.log("file Invalid");
+  //           console.log(val);
+  //         }
+  //      }
+  //      else{
+  //        console.log("file Invalid");
+  //          console.log(val);
+  //      }
+  //     }
+  //     else{
+  //       console.log("file type is invalid");
+  //     }
+  //   };
 
 
-  //post into the server
-  console.log('file validation',validation);
-  
-if(file.length!=0 && validation){
- 
-  console.log("File inside 1")
-  $.ajax(
-    {
-      url: 'server/test.php',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: (data, textStatus, response) => {
-        console.log('success in function call');
-        $('.hd_inp').val('');
-        $('.fileimg').css('display', 'none');
-        file.length = 0;
-        console.log(response.responseText);
-        location.reload(true);
-        
-        //callAlert.preview();
+  // TODO validation required
+
+  input_validation();
+  // post into the server
+  console.log('file validation', validation);
+
+  if (file.length !== 0 && validation) {
+    console.log('File inside 1');
+    console.log(formData);
+    $.ajax(
+      {
+        url: 'server/test.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: (data, textStatus, response) => {
+          console.log('success in function call');
+          $('.hd_inp').val('');
+          $('.fileimg').css('display', 'none');
+          file.length = 0;
+          console.log(response.responseText);
+          location.reload(true);
+        },
+        // eslint-disable-next-line no-unused-vars
+        error: (jqXHR, textStatus, error) => {
+          // CallAlert.danger(error);
+        },
       },
-      // eslint-disable-next-line no-unused-vars
-      error: (jqXHR, textStatus, error) => {
-        //CallAlert.danger(error);
-
-      },
-    },
-  );
-}
-else{
-  alert("file is not inserted");
-}
+    );
+  } else {
+    document.querySelector('#validation-tooltip').innerHTML = 'file is not inserted';
+  }
 }

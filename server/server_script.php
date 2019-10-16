@@ -36,7 +36,8 @@ class connection
 						}*/
 	}
 
-	function get_speed($table_name){
+	function get_speed($table_name)
+	{
 		$sql = "SELECT TIME,GYRO_X, GYRO_Y FROM $table_name ORDER BY NAME";
 		$result = $this->dbconnect->query($sql);
 		$ret_arr = [];
@@ -50,9 +51,7 @@ class connection
 		}
 
 		return $ret_arr;
-
 	}
-
 
 	//should change database
 	function changeDB($dbName)
@@ -105,14 +104,21 @@ class connection
 		return $return_array;
 	}
 
+	function check_if_table_exists($table_name)
+	{
+		$result = $this->dbconnect->query("SELECT 1 from {$table_name} LIMIT 1");
 
-	function delete_table($name){
+		return $result;
+	}
+
+
+	function delete_table($name)
+	{
 		$this->changeDB('GPS_DB');
-		$result = $this->dbconnect->query("DROP TABLE $name");   
-		if ($result){
+		$result = $this->dbconnect->query("DROP TABLE $name");
+		if ($result) {
 			return 1;
-		}
-		else{
+		} else {
 			return 0;
 		}
 	}
@@ -134,50 +140,44 @@ class connection
 		}
 
 		return $ret_arr;
-  }
-  
-  
-  //Table gets created without any consideration of syncing with gps
-  function create_table_newfile($values, $filename)
-  {
-    $this->create_table_location($filename);                     //create table GPS 
-    //echo "value of name: $filename";
+	}
 
-    $sql = "INSERT INTO $filename(TIME,LATITUDE,LONGITUDE,GYRO_X,GYRO_Y) VALUES";
-    $V1 = "";
-    for ($var = 0; $var < sizeof($values) - 1; $var++)
-    {
-      $array = $values[$var];
-      if (!empty($array[0]))
-      {
-        $array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
-        $array[2] = preg_replace('/[A-Za-z]/', '', $array[2]);
-        if ($var == sizeof($values) - 2)
-        {
-          //$V1.="($array[0]".",$array[1]".",$array[2]".",$array[3]".",$array[4]);";
-          $V1 .= "($array[0],$array[1],$array[2],$array[3],$array[4]);";
-        }
-        else
-        {
-          $V1 .= "($array[0],$array[1],$array[2],$array[3],$array[4]),";
-          //$V1.="('$array[0]'".",$array[1]".",$array[2]".",$array[3]".",$array[4]),";
-        }
-      }
-    }
 
-    $V1 = str_replace(' ', '', $V1);                    //remove spaces
-    $V1 = preg_replace('/\s+/', '', $V1);               //remove tabs
-    $sql = $sql . $V1;
-    //echo $sql;
+	//Table gets created without any consideration of syncing with gps
+	function create_table_newfile($values, $filename)
+	{
+		$this->create_table_location($filename);                     //create table GPS 
+		//echo "value of name: $filename";
 
-    $result = $this->dbconnect->query($sql);            //query             
-    if (!$result)
-    {
-      echo json_encode("wrong");
-      $this->delete_table($filename);
-      http_response_code(400);
-    }
-  }
+		$sql = "INSERT INTO $filename(TIME,LATITUDE,LONGITUDE,GYRO_X,GYRO_Y) VALUES";
+		$V1 = "";
+		for ($var = 0; $var < sizeof($values) - 1; $var++) {
+			$array = $values[$var];
+			if (!empty($array[0])) {
+				$array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
+				$array[2] = preg_replace('/[A-Za-z]/', '', $array[2]);
+				if ($var == sizeof($values) - 2) {
+					//$V1.="($array[0]".",$array[1]".",$array[2]".",$array[3]".",$array[4]);";
+					$V1 .= "($array[0],$array[1],$array[2],$array[3],$array[4]);";
+				} else {
+					$V1 .= "($array[0],$array[1],$array[2],$array[3],$array[4]),";
+					//$V1.="('$array[0]'".",$array[1]".",$array[2]".",$array[3]".",$array[4]),";
+				}
+			}
+		}
+
+		$V1 = str_replace(' ', '', $V1);                    //remove spaces
+		$V1 = preg_replace('/\s+/', '', $V1);               //remove tabs
+		$sql = $sql . $V1;
+		//echo $sql;
+
+		$result = $this->dbconnect->query($sql);            //query             
+		if (!$result) {
+			echo json_encode("wrong");
+			$this->delete_table($filename);
+			http_response_code(400);
+		}
+	}
 
 
 
@@ -190,36 +190,31 @@ class connection
 		$sql = "INSERT INTO $filename(TIME,LATITUDE,LONGITUDE,GYRO_X,GYRO_Y) VALUES";
 		$V1 = "";
 
-		 $gyrox_y =[];
-		for($var = 0; $var < sizeof($values) - 1; $var+=81){		//gps syncs with gyro at 81.smthn hrthz cannot filter within
+		$gyrox_y = [];
+		for ($var = 0; $var < sizeof($values) - 1; $var += 81) {		//gps syncs with gyro at 81.smthn hrthz cannot filter within
 			$arr = $values[$var];
-			array_push($gyrox_y,array($arr[3],$arr[4]));
+			array_push($gyrox_y, array($arr[3], $arr[4]));
 		}
 		//print_r($gyrox_y);
-		
-		
 
-		for ($var = 0; $var < sizeof($values) - 1; $var++)
-		{
+
+
+		for ($var = 0; $var < sizeof($values) - 1; $var++) {
 			$array = $values[$var];
-			
-			if (!empty($array[0]))
-			{
-				if(sizeof($gyrox_y)>$var){
-						$gyro=$gyrox_y[$var];
-				}else{
-					$gyro=[0,0];
+
+			if (!empty($array[0])) {
+				if (sizeof($gyrox_y) > $var) {
+					$gyro = $gyrox_y[$var];
+				} else {
+					$gyro = [0, 0];
 				}
-				
-				 $array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
-				 $array[2] = preg_replace('/[A-Za-z]/', '', $array[2]);
-				if (empty($values[$var+1][0]))
-				{
+
+				$array[1] = preg_replace('/[A-Za-z]/', '', $array[1]);
+				$array[2] = preg_replace('/[A-Za-z]/', '', $array[2]);
+				if (empty($values[$var + 1][0])) {
 					//$V1.="($array[0]".",$array[1]".",$array[2]".",$array[3]".",$array[4]);";
 					$V1 .= "($array[0],$array[1],$array[2],$gyro[0],$gyro[1]);";
-				}
-				else
-				{
+				} else {
 					$V1 .= "($array[0],$array[1],$array[2],$gyro[0],$gyro[1]),";
 					//$V1.="('$array[0]'".",$array[1]".",$array[2]".",$array[3]".",$array[4]),";
 				}
@@ -232,12 +227,10 @@ class connection
 		//echo $sql;
 
 		$result = $this->dbconnect->query($sql);            //query             
-		if (!$result)
-		{
+		if (!$result) {
 			echo json_encode("wrong");
-			$this->delete_table($filename); 
+			$this->delete_table($filename);
 			http_response_code(400);
-
 		}
 	}
 
@@ -254,8 +247,7 @@ class connection
 
 		$query_result = $this->dbconnect->query($query);
 
-		if ($query_result)
-		{
+		if ($query_result) {
 			if (mysqli_num_rows($query_result) == 1) {
 				echo "Correct password";
 
@@ -268,9 +260,7 @@ class connection
 
 				// header("location:prototype.php");
 
-			}
-			else
-			{
+			} else {
 				$error = "wrong";
 
 				return $error;

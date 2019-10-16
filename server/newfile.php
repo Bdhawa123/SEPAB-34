@@ -1,5 +1,5 @@
 <?php
-  require_once('server_script.php');
+require_once('server_script.php');
 // header('Content-Type: application/json');
 
 
@@ -15,8 +15,7 @@ switch ($_POST['functionname']) {
     $table_GPS = $con_file->fetch_table();                  //gets array of table in database
 
     //get the data in table 
-    if($table_GPS != false)
-    {
+    if ($table_GPS != false) {
       foreach ($table_GPS as $var) {
         array_push($filename_GPS, $var[0]);                               //push the filenames of the table into a different array
         array_push($data, $con_file->fetch_table_data($var[0]));         //push the table data into data array
@@ -27,8 +26,7 @@ switch ($_POST['functionname']) {
         //					Get only first data out of the table
         $obj = $data[$var][0];
         //print_r($obj);
-        for ($i = 0; $i < 1; $i++) 
-        {
+        for ($i = 0; $i < 1; $i++) {
           array_push($obj2, array('Name' => $obj[0], 'Latitude' => $obj[2], 'Longitude' => $obj[3], 'Time' => $obj[1]));
         }
         array_push($array_list, array('Table_Name' => $filename_GPS[$var], 'data' => $obj2));                  //create final arraylist to push objects
@@ -38,12 +36,25 @@ switch ($_POST['functionname']) {
       $new_array = [];
       array_push($new_array, array('root_file' => $final_array));
       echo json_encode($final_array, JSON_PRETTY_PRINT);
-    }
-    else
-    {
+    } else {
       http_response_code(204);
     }
+    mysqli_close($con_file);
     break;
+
+  case 'ifTableExists':
+    $con_file = new connection;
+    $con_file->changeDB("gps_db");
+    $result = $con_file->check_if_table_exists($_POST['arguments']);
+
+    if ($result) {
+      echo json_encode(true);
+    } else {
+      echo json_encode($result);
+    }
+    mysqli_close($con_file);
+    break;
+
 
   case 'showMap':
     //get the table data
@@ -57,7 +68,7 @@ switch ($_POST['functionname']) {
       array_push($new_array, array('Name' => $obj[0], 'latitude' => $obj[2], 'longitude' => $obj[3]));
     }
     echo json_encode($new_array);
-
+    mysqli_close($con_file);
     break;
 
   case 'Graph_viz':
@@ -68,48 +79,46 @@ switch ($_POST['functionname']) {
     $array_return = $con_file->get_speed($_POST['arguments']);
 
     foreach ($array_return as $obj) {
-      $gyro_avg = ($obj[4]+ $obj[5])/2;
-      $speed = abs((($gyro_avg*57.2958)/360/(0.6*22/7)));
+      $gyro_avg = ($obj[4] + $obj[5]) / 2;
+      $speed = abs((($gyro_avg * 57.2958) / 360 / (0.6 * 22 / 7)));
       array_push($new_array, array('Time' => $obj[1], 'Speed' => $speed));
     }
     echo json_encode($new_array);
+    mysqli_close($con_file);
     break;
 
   case 'DropTable':
     $con_file = new connection;
     $return_drop = $con_file->delete_table($_POST['arguments']);
-    if($return_drop==1){
+    if ($return_drop == 1) {
       http_response_code(200);
-    }
-    else{
+    } else {
       http_response_code(400);
     }
+    mysqli_close($con_file);
     break;
 
   case 'updatePoints':
     $con_file = new connection;
     $con_file->changeDB("gps_db");
-    
-    $array = json_decode($_POST['arguments'],true);
-    
+
+    $array = json_decode($_POST['arguments'], true);
+
     $tableName =  $array['tableName'];
     $lat_lng = $array['latlng'];
-    $newtable =[];
+    $newtable = [];
 
     $array_return = $con_file->fetch_table_data($tableName);
-   
-    for($i=0;$i<sizeof($array_return);$i++){
-        array_push($newtable,array($array_return[$i][1],$lat_lng[$i]['lat'],$lat_lng[$i]['lng'],$array_return[$i][4],$array_return[$i][5]));
+
+    for ($i = 0; $i < sizeof($array_return); $i++) {
+      array_push($newtable, array($array_return[$i][1], $lat_lng[$i]['lat'], $lat_lng[$i]['lng'], $array_return[$i][4], $array_return[$i][5]));
     }
 
     $con_file->delete_table($tableName);
-    $con_file->create_table_newfile($newtable,$tableName);
-
+    $con_file->create_table_newfile($newtable, $tableName);
+    mysqli_close($con_file);
     break;
-
+  
   default:
-
-
-
-    
 }
+

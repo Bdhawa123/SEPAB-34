@@ -10,7 +10,7 @@ const {
 } = window; // Define L, d3
 
 let map;
-let currenttable;
+let currentTable;
 let maxspeed = 0;
 let polylines = [];
 const circles = [];
@@ -269,32 +269,25 @@ const startUpdateButton = (gpsPoints) => {
         // Disable all buttons after confirmation
         disableAllButtons();
         console.log(currentPoints);
-        let transferobjet = {"tableName":currenttable,"latlng":currentPoints};
-        console.log(transferobjet);
+        const newObject = { tableName: currentTable, latlng: currentPoints };
 
-        
-       
         // TODO update currentPoints to server
-        console.log("ajax call is being thrown");
         $.ajax(
           {
-            url:'server/newfile.php',
-            type:'POST',
-            data:{functionname:'updatePoints',arguments:JSON.stringify(transferobjet)},
-            success:(response)=>{
+            url: 'server/newfile.php',
+            type: 'POST',
+            data: { functionname: 'updatePoints', arguments: JSON.stringify(newObject) },
+            success: (response) => {
               console.log(response);
             },
-            error:()=>{
-              console.log("Error is created");
-            }
+            error: () => {
+              console.log('Error is created');
+            },
           },
-          
-        ).done(()=>{
+
+        ).done(() => {
           enableAllButtons();
         });
-
-        // Add this enableAllButtons() inside ajax success call
-     
       }
     });
 
@@ -598,7 +591,7 @@ const createBackButton = () => {
 };
 
 function onClickData(dataName, latlng) {
-  currenttable = dataName;
+  currentTable = dataName;
   const gpsPoints = [];
   removeCircles();
   resetData();
@@ -689,7 +682,7 @@ function createDataRow(name, number, latlng) {
           location.reload();
         },
         error: (e) => {
-          alert('delete unsuccessful',e);
+          alert('delete unsuccessful', e);
           console.log(e);
         },
       });
@@ -716,7 +709,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded');
 
   document.querySelector('#limit').addEventListener('click', () => { colorQuantize(); });
-
   initMap();
   backButton = createBackButton();
 
