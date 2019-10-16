@@ -17,6 +17,7 @@ const circles = [];
 let backButton;
 const accessToken = 'pk.eyJ1Ijoid2hlZWxjaGFpcnZpc3VhbGlzYXRpb25zIiwiYSI6ImNqenYwY3hydjBiMTkzbnBodnFva2o3dXQifQ.zZ9bELRgpQ6EN_1wmgNuew';
 
+let mapDataset = [];
 let graphDataset = [];
 let svg;
 let xAxis;
@@ -27,57 +28,6 @@ let focus;
 let path;
 let valueline;
 let maxDomain;
-
-const colorQuantizeHandler = (() => {
-  let color;
-
-  const createLegends = () => {
-    const svgLegend = d3.select('#legend')
-      .append('svg')
-      .attr('height', 250)
-      .attr('width', 170);
-
-    svgLegend.append('g')
-      .attr('class', 'legendQuant')
-      .attr('transform', 'translate(10, 20)');
-
-    const legend = d3.legendColor()
-      .labelFormat(d3.format('.2f'))
-      .title('Speed m/s')
-      .titleWidth(100)
-      .scale(color);
-
-    svgLegend.select('.legendQuant')
-      .call(legend);
-  };
-
-  const clearHTML = () => {
-    document.querySelector('#legend').innerHTML = '';
-  };
-
-  const init = () => {
-    color = d3.scaleQuantize()
-      .domain([0, 5])
-      .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
-
-    createLegends();
-  };
-  init();
-
-  return {
-    reset: (newValue) => {
-      clearHTML();
-
-      color = d3.scaleQuantize()
-        .domain([0, newValue])
-        .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
-
-      createLegends();
-    },
-
-    color: (speed) => color(speed),
-  };
-})();
 
 // function to initialize slider
 function sliderInit() {
@@ -169,6 +119,68 @@ function distance(latlngs, unit) {
   return dist;
 }
 
+const colorQuantizeHandler = (() => {
+  let color;
+
+  const createLegends = () => {
+    const svgLegend = d3.select('#legend')
+      .append('svg')
+      .attr('height', 250)
+      .attr('width', 170);
+
+    svgLegend.append('g')
+      .attr('class', 'legendQuant')
+      .attr('transform', 'translate(10, 20)');
+
+    const legend = d3.legendColor()
+      .labelFormat(d3.format('.2f'))
+      .title('Speed m/s')
+      .titleWidth(100)
+      .scale(color);
+
+    svgLegend.select('.legendQuant')
+      .call(legend);
+  };
+
+  const clearHTML = () => {
+    document.querySelector('#legend').innerHTML = '';
+  };
+
+  const init = () => {
+    color = d3.scaleQuantize()
+      .domain([0, 5])
+      .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
+
+    createLegends();
+  };
+  init();
+
+  return {
+    reset: (newValue) => {
+      clearHTML();
+
+      color = d3.scaleQuantize()
+        .domain([0, newValue])
+        .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
+
+      createLegends();
+
+      for (let i = 0; i < polylines.length; i += 1) {
+        map.removeLayer(polylines[i]);
+      }
+      polylines = [];
+
+      for (let i = 0; i < mapDataset.length - 1; i += 1) {
+        const latlngs = [mapDataset[i], mapDataset[i + 1]];
+        drawPolyline(latlngs);
+      }
+      $('#slider-range').slider('destroy');
+      sliderInit();
+    },
+
+    color: (speed) => color(speed),
+  };
+})();
 
 function drawPolyline(latlngs) {
   // get polylines index
@@ -318,6 +330,7 @@ const startUpdateButton = (gpsPoints) => {
       ajaxPathAdjust(gpsPoints, sliderMin, sliderMax)
         .then((newPoints) => {
           currentPoints = newPoints;
+          mapDataset = newPoints;
           enableAllButtons();
         });
     });
@@ -708,6 +721,7 @@ function onClickData(dataName, latlng) {
 
         // create update button
         startUpdateButton(gpsPoints);
+        mapDataset = gpsPoints;
       });
     },
     error: () => {
