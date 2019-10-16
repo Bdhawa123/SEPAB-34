@@ -25,7 +25,7 @@ for ($val = 0; $val < sizeof($_FILES); $val++) {
 
   // get the number of file uploaded
   $filetype = $filetype[sizeof($filetype) - 1];
-  
+
   //validate filetype
   $valid = validate($filetype);
 }

@@ -146,8 +146,7 @@ class connection
 	//Table gets created without any consideration of syncing with gps
 	function create_table_newfile($values, $filename)
 	{
-		$this->create_table_location($filename);                     //create table GPS 
-		//echo "value of name: $filename";
+		$this->create_table_location($filename);
 
 		$sql = "INSERT INTO $filename(TIME,LATITUDE,LONGITUDE,GYRO_X,GYRO_Y) VALUES";
 		$V1 = "";

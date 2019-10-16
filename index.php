@@ -91,8 +91,8 @@ if (isset($_SESSION['id'])) {
               </div>
               <div class="row">
                 <div class="col-sm-12">
-                  <h3 id ="margin"><small>Max Speed</small><br>
-                  <small><span class="my_subtitle " id="max_speed"></span></small>
+                  <h3 id ="margin">
+                    <small id="max_speed">Max Speed:</small>
                   </h3>
                 </div>
               </div>
@@ -138,7 +138,6 @@ if (isset($_SESSION['id'])) {
               </div>
               <br />
               <!-- <div id="slider-range" class="my-3"></div> -->
-              <div class="data-buttons"></div>
               <p class="my_subtitle">Results</p>
               <div class="row">
                 <div class="col-sm-6">
@@ -156,6 +155,7 @@ if (isset($_SESSION['id'])) {
                   <span>point</span>
                 </div>
               </div>
+              <div class="row p-3 data-buttons"></div>
             </div>
           </div>
 
@@ -184,11 +184,14 @@ if (isset($_SESSION['id'])) {
         <li class="mdl-menu__item"><a href="server/logout.php">Logout</a></li>
       </ul>
 
+      <div id="legend" class="position-fixed fixed-bottom ml-3 bg-white"></div>
+
       <div id="myGraph" class="graph">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
           <div id="myLineGraph"></div>
         </div>
       </div>
+
       <div id="slider-range" class="m-4 position-fixed fixed-bottom"></div>
     </div>
 
@@ -278,7 +281,7 @@ if (isset($_SESSION['id'])) {
                     <div id="fileimg1" class="fileimg row">
                     </div>
                     <div id="fileimg12" class="fileimg">
-                      Please click or drop your files to upload
+                    Please click or drop your files to upload
                     </div>
                   </div>
                 </div>
@@ -316,9 +319,6 @@ if (isset($_SESSION['id'])) {
     <!-- jQuery CSV JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.3/jquery.csv.min.js"></script>
 
-    <!-- Google Maps API	-->
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZxhwbU7de4SpOdGBu3KnTNxJqUyQHMxI&callback=initMap" async defer></script> -->
-
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- Leaflet -->
@@ -337,6 +337,7 @@ if (isset($_SESSION['id'])) {
 
     <!-- D3 and others -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>  
 
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 

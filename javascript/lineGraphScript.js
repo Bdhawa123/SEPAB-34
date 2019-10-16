@@ -29,8 +29,6 @@ function linechartInit() {
   });
 
 
-  
-
   d3.csv('dataprototype/line-chart.csv', rowConverter)
     .then((data) => {
       alert(data);
@@ -39,12 +37,12 @@ function linechartInit() {
           dataset.push(data[i]);
         }
       }
-      
+
       alert(data.length);
       alert(dataset.length);
       maxDomain = d3.max(dataset, (d) => d.time);
-      console.log(dataset)
-      console.log(maxDomain)
+      console.log(dataset);
+      console.log(maxDomain);
       const xScale = d3.scaleLinear()
         .domain([0, maxDomain])
         .range([0, w]);

@@ -192,6 +192,18 @@ input[type='file'] {
 
 }
 
+#legend {
+  width: 10%;
+  margin-bottom: 20%;
+  display:flex;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 576px) {
+  #legend {
+    width: 30%;
+  }
+}
 
 
 /*----------------------*/

@@ -17,7 +17,6 @@ class filereadwrite
     $array = [];
     $conn = new connection;
 
-
     $array_sz = sizeof(explode(",", fgets($filename)));                      //get data out of the csv files
     /** --Timestamp, X-Axis, Y-Axis, Speed, Gyrox, Gyroy      */
     echo $array_sz;

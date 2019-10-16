@@ -27,9 +27,57 @@ let focus;
 let path;
 let valueline;
 let maxDomain;
-let color = d3.scaleQuantize()
-  .domain([0, 10])
-  .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
+
+const colorQuantizeHandler = (() => {
+  let color;
+
+  const createLegends = () => {
+    const svgLegend = d3.select('#legend')
+      .append('svg')
+      .attr('height', 250)
+      .attr('width', 170);
+
+    svgLegend.append('g')
+      .attr('class', 'legendQuant')
+      .attr('transform', 'translate(10, 20)');
+
+    const legend = d3.legendColor()
+      .labelFormat(d3.format('.2f'))
+      .title('Speed m/s')
+      .titleWidth(100)
+      .scale(color);
+
+    svgLegend.select('.legendQuant')
+      .call(legend);
+  };
+
+  const clearHTML = () => {
+    document.querySelector('#legend').innerHTML = '';
+  };
+
+  const init = () => {
+    color = d3.scaleQuantize()
+      .domain([0, 5])
+      .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
+
+    createLegends();
+  };
+  init();
+
+  return {
+    reset: (newValue) => {
+      clearHTML();
+
+      color = d3.scaleQuantize()
+        .domain([0, newValue])
+        .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
+
+      createLegends();
+    },
+
+    color: (speed) => color(speed),
+  };
+})();
 
 // function to initialize slider
 function sliderInit() {
@@ -80,7 +128,6 @@ function sliderInit() {
       // graph
       const begin = d3.min([ui.values[0] * 100, maxDomain]);
       const end = d3.max([ui.values[1] * 100, 0]);
-      console.log('begin:', begin, 'end:', end);
       zoom(begin, end);
     },
   });
@@ -135,12 +182,12 @@ function drawPolyline(latlngs) {
 
   if (speed > maxspeed) {
     maxspeed = speed;
-    document.querySelector('#max_speed').innerHTML = maxspeed;
+    document.querySelector('#max_speed').innerHTML = `GPS Max Speed: ${maxspeed.toFixed(3)} m/s`;
   }
 
   // draw polylines
   const polyline = L.polyline(latlngs, {
-    color: color(speed),
+    color: colorQuantizeHandler.color(speed),
     weight: 8,
     lineCap: 'square',
     smoothFactor: 1,
@@ -722,17 +769,14 @@ function createDataRow(name, number, latlng) {
   document.querySelector('.table-body').appendChild(row);
 }
 
-function colorQuantize() {
-  color = d3.scaleQuantize()
-    .domain([0, document.querySelector('#set_quantize_scale').value])
-    .range(['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']);
-}
-
 // Dom content loaded
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded');
 
-  document.querySelector('#limit').addEventListener('click', () => { colorQuantize(); });
+  document.querySelector('#limit').addEventListener('click', () => {
+    colorQuantizeHandler.reset(document.querySelector('#set_quantize_scale').value);
+  });
+
   initMap();
   backButton = createBackButton();
 

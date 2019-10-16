@@ -172,7 +172,7 @@ function submitFile(ev) {
           $('.fileimg').css('display', 'none');
           file.length = 0;
           console.log(response.responseText);
-          location.reload(true);
+          // location.reload(true);
         },
         // eslint-disable-next-line no-unused-vars
         error: (jqXHR, textStatus, error) => {
