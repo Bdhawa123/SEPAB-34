@@ -39,7 +39,6 @@ switch ($_POST['functionname']) {
     } else {
       http_response_code(204);
     }
-    mysqli_close($con_file);
     break;
 
   case 'ifTableExists':
@@ -52,7 +51,6 @@ switch ($_POST['functionname']) {
     } else {
       echo json_encode($result);
     }
-    mysqli_close($con_file);
     break;
 
 
@@ -68,7 +66,6 @@ switch ($_POST['functionname']) {
       array_push($new_array, array('Name' => $obj[0], 'latitude' => $obj[2], 'longitude' => $obj[3]));
     }
     echo json_encode($new_array);
-    mysqli_close($con_file);
     break;
 
   case 'Graph_viz':
@@ -84,7 +81,6 @@ switch ($_POST['functionname']) {
       array_push($new_array, array('Time' => $obj[1], 'Speed' => $speed));
     }
     echo json_encode($new_array);
-    mysqli_close($con_file);
     break;
 
   case 'DropTable':
@@ -95,7 +91,6 @@ switch ($_POST['functionname']) {
     } else {
       http_response_code(400);
     }
-    mysqli_close($con_file);
     break;
 
   case 'updatePoints':
@@ -116,7 +111,6 @@ switch ($_POST['functionname']) {
 
     $con_file->delete_table($tableName);
     $con_file->create_table_newfile($newtable, $tableName);
-    mysqli_close($con_file);
     break;
   
   default:
