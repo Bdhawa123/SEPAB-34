@@ -6,7 +6,7 @@ $data=[];                                                //hold data of the corr
 $array_list = [];                                        //array list of table type    
 $final_array = [];                                       //final array list that will go out as json
 $con_file = new connection;
-$con_file->changeDB("gps_db");
+$con_file->changeDB("GPS_DB");
 $table_GPS = $con_file->fetch_table();                  //gets array of table in database
 
 //get the data in table 

@@ -11,7 +11,7 @@ switch ($_POST['functionname']) {
     $array_list = [];                                        //array list of table type    
     $final_array = [];                                       //final array list that will go out as json
     $con_file = new connection;
-    $con_file->changeDB("gps_db");
+    $con_file->changeDB("GPS_DB");
     $table_GPS = $con_file->fetch_table();                  //gets array of table in database
 
     //get the data in table 
@@ -43,7 +43,7 @@ switch ($_POST['functionname']) {
 
   case 'ifTableExists':
     $con_file = new connection;
-    $con_file->changeDB("gps_db");
+    $con_file->changeDB("GPS_DB");
     $result = $con_file->check_if_table_exists($_POST['arguments']);
 
     if ($result) {
@@ -59,7 +59,7 @@ switch ($_POST['functionname']) {
     $con_file = new connection;
     $new_array = [];
     //print_r($con_file->fetch_table_data($_POST['arguments']));
-    $con_file->changeDB("gps_db");
+    $con_file->changeDB("GPS_DB");
     $array_return = $con_file->fetch_table_data($_POST['arguments']);
 
     foreach ($array_return as $obj) {
@@ -72,7 +72,7 @@ switch ($_POST['functionname']) {
     $con_file = new connection;
     $new_array = [];
     //print_r($con_file->fetch_table_data($_POST['arguments']));
-    $con_file->changeDB("gps_db");
+    $con_file->changeDB("GPS_DB");
     $array_return = $con_file->get_speed($_POST['arguments']);
 
     foreach ($array_return as $obj) {
@@ -95,7 +95,7 @@ switch ($_POST['functionname']) {
 
   case 'updatePoints':
     $con_file = new connection;
-    $con_file->changeDB("gps_db");
+    $con_file->changeDB("GPS_DB");
 
     $array = json_decode($_POST['arguments'], true);
 

@@ -4,7 +4,7 @@ require_once('server/server_script.php');
 $con_file = new connection;
 $new_array = [];
 //print_r($con_file->fetch_table_data($_POST['arguments']));
-$con_file->changeDB("gps_db");
+$con_file->changeDB("GPS_DB");
 $array_return = $con_file->get_speed('asde');
 
 
