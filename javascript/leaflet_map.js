@@ -76,8 +76,8 @@ function sliderInit() {
       sliderHandlePreviousLocations = ui.values;
 
       // graph
-      const begin = d3.min([ui.values[0] * 100, maxDomain]);
-      const end = d3.max([ui.values[1] * 100, 0]);
+      const begin = d3.min([ui.values[0], maxDomain]);
+      const end = d3.max([ui.values[1], 0]);
       zoom(begin, end);
     },
   });
