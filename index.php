@@ -77,32 +77,7 @@ if (isset($_SESSION['id'])) {
             <h2 class="mdl-card__title-text">Choose Data</h2>
 
           </div>
-          <p></p>
-          <div class="container row">
-            <div class="col-sm-12">
-              <div class="row"> 
-                <div class="col-sm-6">
-                <input id="set_quantize_scale" />
-                </div>
-                
-                <div class="col-sm-6">
-                  <button class="btn btn-primary" id="limit">set limit</button>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12">
-                  <h3 id ="margin">
-                    <small id="max_speed">Max Speed:</small>
-                  </h3>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="spinner" style="display: none">
-            <div class="spinner-border cardSpinner" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-          </div>
+          
 
 
           <div class="mdl-card__supporting-text">
@@ -113,8 +88,8 @@ if (isset($_SESSION['id'])) {
                   <thead>
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Fly to</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col" colspan="2">Action</th>
+                    
                   </thead>
                   <tbody class="table-body"></tbody>
                 </table>
@@ -123,7 +98,25 @@ if (isset($_SESSION['id'])) {
 
             <!-- Info Panel -->
             <div class="my_info_panel" id="myInfoPanel">
+            
+          <div class="spinner" style="display: none">
+            <div class="spinner-border cardSpinner" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
               <p class="my_subtitle">Filters</p>
+              
+              
+              <div>
+              <input id="set_quantize_scale" />
+              
+              <button class="btn btn-primary btn-sm" id="limit">set limit</button>
+              </div>
+              
+              
+                
+              
+            
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="" id="visSpeedCheck" onclick="controlGraph()">
                 <label class="form-check-label" for="visSpeedCheck">
@@ -131,11 +124,19 @@ if (isset($_SESSION['id'])) {
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                <label class="form-check-label" for="defaultCheck1">
-                  Graph
+                <input class="form-check-input" type="checkbox" value="" id="legendCheck" onclick="controlLegend()" checked>
+                <label class="form-check-label" for="legendCheck">
+                  Show Legend
                 </label>
               </div>
+              <br />
+              <!-- Showing Max Speed -->
+              
+              <p class="my_subtitle">Max Speed</p>
+                <h3 id="max_speed" class="my_result_title">   
+              </h3>
+              <span>m/s</span>
+              <br />
               <br />
               <!-- <div id="slider-range" class="my-3"></div> -->
               <p class="my_subtitle">Results</p>
@@ -158,6 +159,8 @@ if (isset($_SESSION['id'])) {
               <div class="row p-3 data-buttons"></div>
             </div>
           </div>
+          
+          
 
           <!-- -->
 
@@ -180,11 +183,12 @@ if (isset($_SESSION['id'])) {
 
       <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="my_vert_button">
         <li class="mdl-menu__item" data-toggle="modal" data-target="#import_modal">Import Data</li>
-        <li class="mdl-menu__item">Settings</li>
         <li class="mdl-menu__item"><a href="server/logout.php">Logout</a></li>
       </ul>
 
-      <div id="legend" class="position-fixed fixed-bottom ml-2 bg-white"></div>
+      
+        <div id="legend" class="position-fixed fixed-bottom ml-2 bg-white"></div>
+      
 
       <div id="myGraph" class="graph">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
