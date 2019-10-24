@@ -196,7 +196,7 @@ function drawPolyline(latlngs) {
 
   if (speed > maxspeed) {
     maxspeed = speed;
-    document.querySelector('#max_speed').innerHTML = `GPS Max Speed: ${maxspeed.toFixed(3)} m/s`;
+    document.querySelector('#max_speed').innerHTML = `${maxspeed.toFixed(3)}`;
   }
 
   // draw polylines

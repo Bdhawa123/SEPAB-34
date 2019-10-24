@@ -28,3 +28,14 @@ function hideTable() {
   document.getElementById('myInfoPanel').style.display = 'block';
   console.log("hide Table");
 }
+
+function controlLegend() {
+  const showLegend = document.getElementById('legendCheck');
+
+
+  if (showLegend.checked) {
+    document.getElementById('legend').style.display = 'flex';
+  } else {
+    document.getElementById('legend').style.display = 'none';
+  }
+}
