@@ -434,7 +434,7 @@ function initMap() {
   }).addTo(map);
 }
 
-function linechartInit() {
+function linechartInit(json) {
   graphDataset = [];
   // Margin
   const margin = {
@@ -467,8 +467,17 @@ function linechartInit() {
     .append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-
+  createLinechart();
   function createLinechart() {
+    const angularVelocity = [];
+    for (let i = 0; i < json.length; i += 1) {
+      const gyroAverage = (parseFloat(json[i].gyro_x) * 57.2958 + parseFloat(json[i].gyro_y) * 57.2958) / 2.0;
+      const speed = Math.abs(gyroAverage / 360.0 / (Math.PI * 0.6));
+      const data = { time: (i + 1), speed };
+      angularVelocity.push(data);
+    }
+    console.log(angularVelocity);
+    graphDataset = angularVelocity;
     maxDomain = d3.max(graphDataset, (d) => d.time);
     xScale = d3.scaleLinear()
       .domain([0, maxDomain])
@@ -539,7 +548,7 @@ function linechartInit() {
       const d1 = graphDataset[i];
       const d = x0 - d0.time > d1.time - x0 ? d1 : d0;
       focus.attr('transform', `translate(${xScale(d.time)}, ${yScale(d.speed)})`);
-      focus.select('text').text(`${d.speed.toFixed(3)} r/s`);
+      focus.select('text').text(`${d.speed.toFixed(3)} m/s`);
 
       polylines[prevPoint].closeTooltip();
       polylines[i].openTooltip();
@@ -597,25 +606,6 @@ function linechartInit() {
 
     d3.select(window).on('resize', resized);
   }
-
-  d3.csv('dataprototype/line-chart.csv', rowConverter)
-    .then((data) => {
-      if ((Object.keys(polylines).length * 100) < data.length) {
-        for (let i = 1; i < (Object.keys(polylines).length + 1) * 100; i += 1) {
-          if (i % converter === 0) {
-            graphDataset.push(data[i]);
-          }
-        }
-        createLinechart();
-      } else {
-        for (let i = 0; i < data.length - 1; i += 1) {
-          if (i % converter === 0) {
-            graphDataset.push(data[i]);
-          }
-        }
-        createLinechart();
-      }
-    });
 }
 
 function removeCircles() {
@@ -717,7 +707,7 @@ function onClickData(dataName, latlng) {
         }
         gpsPoints.push(L.latLng(json[json.length - 1].latitude, json[json.length - 1].longitude));
         // init speed graph
-        linechartInit();
+        linechartInit(json);
         // init slider
         sliderInit();
 

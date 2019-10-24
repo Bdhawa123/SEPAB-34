@@ -63,7 +63,7 @@ switch ($_POST['functionname']) {
     $array_return = $con_file->fetch_table_data($_POST['arguments']);
 
     foreach ($array_return as $obj) {
-      array_push($new_array, array('Name' => $obj[0], 'latitude' => $obj[2], 'longitude' => $obj[3]));
+      array_push($new_array, array('Name' => $obj[0], 'latitude' => $obj[2], 'longitude' => $obj[3], 'gyro_x' => $obj[4], 'gyro_y' => $obj[5]));
     }
     echo json_encode($new_array);
     break;
