@@ -210,7 +210,29 @@ if (isset($_SESSION['id'])) {
             </button>
           </div>
           <div class="modal-body">
-            About goes here
+          About Wheelchair Visualisation Website
+
+We beleive accessibility is everyone's right. Improving urabn mobility and accessibility makes us happy. Our project aims to help a group of researchers by making meaningful visualisations to interpret urban mobility data. This
+websites illustrates visualisations on maps and uses line graphs to visualise speed.
+
+About Members
+
+This website is created as a part of final year Software Engineering Project for Swinburne University of Technology. 
+The concerned stakeholders are listed below:
+
+Team Leader: Binay Dhawa: 101187399@student.swin.edu.au
+Team Members: Andres Alvarez: 101742154@student.swin.edu.au
+	      Aylwin Sim: 100074144@student.swin.edu.au
+	      Quan Chong: 100076483@student.swin.edu.au
+	      Sanee Salim: 101887181@student.swin.edu.au
+Convener: Prof Jun Han: jhan@swin.edu.au
+Supervisor: Dr Graham Farrell: gfarrell@swin.edu.au
+Client: Professor Tino Fuss: fkfuss@swin.edu.au
+Co-Client:Dr YEHUDA (UDI) Weizman: uweizman@swin.edu.au
+	  Adin Ming Tan: amtan@swin.edu.au
+
+
+
           </div>
         </div>
       </div>
@@ -227,7 +249,29 @@ if (isset($_SESSION['id'])) {
             </button>
           </div>
           <div class="modal-body">
-            Documentation of how it would work
+          Frequently Asked Questions
+
+Q. How to upload data to visualise?
+1. Click on the blue navigation tab in the top right hand corner of your screen
+2. Click on the ellipse next to the close button
+3. Click on Import data
+4. Drap & Drop or upload the data file
+5. Give that data file a name	
+6. Click Submit.
+Q. How to get credentials for login?
+The credentials were provided to the authorized party upon website creation. Kindly visit the about us page and
+get in touch with relevant personnel to get access.
+Q. Can I visualise anything besides speed?
+Unfortunately, at this point of the project only speed visualisation is implemented but stay tuned for further updates :-)
+Q. How can I change the range for visualising speed?
+Yes, click on the blue circle with the name of your data
+Q. Can I get a line chart for the speed?
+Yes, just click on the visualise speed button to view the line chart
+Q. The data on the map looks messy, is there a way to fix it?
+Yes, just select the path you want to fix and click the update GPS button.
+Q. Can I delete the uploaded data?
+Yes. Just click on the delete button from the list of uploaded datasets
+
           </div>
         </div>
       </div>
